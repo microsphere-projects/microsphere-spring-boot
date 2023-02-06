@@ -18,6 +18,11 @@
     <name>Microsphere Projects :: Spring Boot :: Parent</name>
     <description>Microsphere Spring Boot Parent</description>
 
+    <properties>
+        <spring-boot.version>2.7.7</spring-boot.version>
+        <microsphere-spring.version>${revision}</microsphere-spring.version>
+    </properties>
+
     <dependencyManagement>
         <dependencies>
             <!-- Spring Boot Dependencies -->
@@ -33,10 +38,33 @@
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-spring-dependencies</artifactId>
-                <version>${revision}</version>
+                <version>${microsphere-spring.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <profiles>
+        <profile>
+            <id>spring-boot-2.6</id>
+            <properties>
+                <spring-boot.version>2.6.16</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.5</id>
+            <properties>
+                <spring-boot.version>2.5.14</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.4</id>
+            <properties>
+                <spring-boot.version>2.4.13</spring-boot.version>
+            </properties>
+        </profile>
+    </profiles>
 </project>
