@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.github.microsphere.spring.boot.security.autoconfigure.web.servlet.ServletWebSecurityAutoConfiguration
