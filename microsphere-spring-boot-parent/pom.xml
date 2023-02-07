@@ -34,7 +34,7 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- Microsphere Dependencies -->
+            <!-- Microsphere Spring Dependencies -->
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-spring-dependencies</artifactId>
