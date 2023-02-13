@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.PropertyValues;
-import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -51,23 +51,18 @@ public class ApplicationAutoConfigurationTest {
         private static final Logger logger = LoggerFactory.getLogger(LoggingBeanEventListener.class);
 
         @Override
-        public void onBeanDefinitionReady(String beanName, BeanDefinition beanDefinition) {
-            logger.info("onBeanDefinitionReady - bean name : {} , definition : {}", beanName, beanDefinition);
+        public void onBeanDefinitionReady(String beanName, RootBeanDefinition mergedBeanDefinition) {
+            logger.info("onBeanDefinitionReady - bean name : {} , definition : {}", beanName, mergedBeanDefinition);
         }
 
         @Override
-        public void onBeforeBeanInstantiate(String beanName, Class<?> beanClass) {
-            logger.info("onBeforeBeanInstantiate - bean name : {} , class : {}", beanName, beanClass);
+        public void onBeforeBeanInstantiate(String beanName, RootBeanDefinition mergedBeanDefinition) {
+            logger.info("onBeforeBeanInstantiate - bean name : {} , definition : {}", beanName, mergedBeanDefinition);
         }
 
         @Override
-        public void onBeanInstantiating(String beanName, Object bean) {
-            logger.info("onBeanInstantiating - bean name : {} , instance : {}", beanName, bean);
-        }
-
-        @Override
-        public void onAfterBeanInstantiated(String beanName, Object bean) {
-            logger.info("onAfterBeanInstantiated - bean name : {} , instance : {}", beanName, bean);
+        public void onAfterBeanInstantiated(String beanName, RootBeanDefinition mergedBeanDefinition, Object bean) {
+            logger.info("onAfterBeanInstantiated - bean name : {} , definition : {} , instance : {}", beanName, mergedBeanDefinition, bean);
         }
 
         @Override
