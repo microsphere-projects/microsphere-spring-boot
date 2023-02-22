@@ -17,7 +17,7 @@
 package io.github.microsphere.spring.boot.autoconfigure;
 
 import io.github.microsphere.spring.context.event.BeanTimeStatistics;
-import io.github.microsphere.spring.context.event.LoggingBeanEventListener;
+import io.github.microsphere.spring.context.event.LoggingBeanListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,15 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ApplicationAutoConfigurationTest.class, LoggingBeanEventListener.class, BeanTimeStatistics.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = {ApplicationAutoConfigurationTest.class,
+        LoggingBeanListener.class,
+        BeanTimeStatistics.class},
+        properties = {
+                "server.port=12345",
+                "spring.mvc.dispatchTraceRequest=true",
+                "spring.mvc.format.date=dd/MM/yyyy"
+        },
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
 public class ApplicationAutoConfigurationTest {
 
