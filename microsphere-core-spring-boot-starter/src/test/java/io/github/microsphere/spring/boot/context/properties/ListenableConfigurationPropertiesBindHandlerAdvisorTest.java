@@ -28,23 +28,23 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 import org.springframework.boot.test.context.SpringBootTest;
 
 /**
- * {@link ListableConfigurationPropertiesBindHandlerAdvisor} Test
+ * {@link ListenableConfigurationPropertiesBindHandlerAdvisor} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 @SpringBootTest(
         classes = {
-                ListableConfigurationPropertiesBindHandlerAdvisor.class,
-                ListableConfigurationPropertiesBindHandlerAdvisorTest.class,
-                ListableConfigurationPropertiesBindHandlerAdvisorTest.MyBindListener.class
+                ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+                ListenableConfigurationPropertiesBindHandlerAdvisorTest.class,
+                ListenableConfigurationPropertiesBindHandlerAdvisorTest.MyBindListener.class
         }
 )
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class ListableConfigurationPropertiesBindHandlerAdvisorTest {
+public class ListenableConfigurationPropertiesBindHandlerAdvisorTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ListableConfigurationPropertiesBindHandlerAdvisorTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(ListenableConfigurationPropertiesBindHandlerAdvisorTest.class);
 
     @Test
     public void test() {

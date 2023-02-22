@@ -33,7 +33,7 @@ import org.springframework.boot.context.properties.bind.BindHandler;
  * @see ConfigurationPropertiesBindHandlerAdvisor
  * @since 1.0.0
  */
-public class ListableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
+public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
 
     private ObjectProvider<BindListener> bindListeners;
 
