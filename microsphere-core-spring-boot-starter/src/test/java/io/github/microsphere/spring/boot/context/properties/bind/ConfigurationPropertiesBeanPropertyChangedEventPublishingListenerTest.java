@@ -17,6 +17,7 @@
 package io.github.microsphere.spring.boot.context.properties.bind;
 
 import io.github.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import io.github.microsphere.spring.context.event.BeanPropertyChangedEvent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -24,38 +25,50 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link PublishingConfigurationPropertiesBeanPropertyChangedEventListener} Test
+ * {@link ConfigurationPropertiesBeanPropertyChangedEventPublishingListener} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
 @SpringBootTest(classes = {
         ListenableConfigurationPropertiesBindHandlerAdvisor.class,
-        PublishingConfigurationPropertiesBeanPropertyChangedEventListener.class,
-        PublishingConfigurationPropertiesBeanPropertyChangedEventListenerTest.class
-},
-        properties = {
-                "spring.jackson.dateFormat=yyyy-MM-dd HH:mm:ss",
-        }
-)
+        ConfigurationPropertiesBeanPropertyChangedEventPublishingListener.class,
+        ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTest.class
+})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class PublishingConfigurationPropertiesBeanPropertyChangedEventListenerTest {
+public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
+
+    @Autowired
+    private ConfigurableApplicationContext context;
 
     @Autowired
     private JacksonProperties jacksonProperties;
 
     @Test
     public void test() {
-        assertEquals("yyyy-MM-dd HH:mm:ss", jacksonProperties.getDateFormat());
+        assertNull(jacksonProperties.getDateFormat());
+        System.setProperty("spring.jackson.dateFormat", "yyyy-MM-dd HH:mm:ss");
+
+        context.addApplicationListener((ApplicationListener<BeanPropertyChangedEvent>) event -> {
+            assertEquals(jacksonProperties, event.getSource());
+            assertEquals("dateFormat", event.getPropertyName());
+            assertNull(event.getOldValue());
+            assertEquals("yyyy-MM-dd HH:mm:ss", event.getNewValue());
+        });
+
         beanFactory.destroyBean(jacksonProperties);
         beanFactory.initializeBean(jacksonProperties, "spring.jackson-jacksonProperties");
+        assertEquals("yyyy-MM-dd HH:mm:ss", jacksonProperties.getDateFormat());
     }
 }

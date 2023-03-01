@@ -14,20 +14,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.microsphere.spring.boot.util;
+package io.github.microsphere.spring.boot.context.properties.source.util;
 
-import org.springframework.boot.context.properties.bind.BindResult;
-import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
-import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
-import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
-import org.springframework.core.env.ConfigurableEnvironment;
-
-import java.util.Map;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 import static io.github.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.github.microsphere.util.ClassLoaderUtils.resolveClass;
-import static org.springframework.util.StringUtils.hasText;
 
 /**
  * The utilities class of {@link ConfigurationProperty}
@@ -57,30 +51,17 @@ public abstract class ConfigurationPropertyUtils {
         throw new InstantiationException();
     }
 
-    public static <T> T bind(ConfigurableEnvironment environment, String propertyNamePrefix, Class<T> targetType) {
-        Binder binder = Binder.get(environment);
-        return bind(binder, propertyNamePrefix, targetType);
-    }
-
-    public static <T> T bind(Map<?, ?> properties, String propertyNamePrefix, Class<T> targetType) {
-        ConfigurationPropertySource propertySource = new MapConfigurationPropertySource(properties);
-        Binder binder = new Binder(propertySource);
-        return bind(binder, propertyNamePrefix, targetType);
-    }
-
-    protected static <T> T bind(Binder binder, String name, Class<T> targetType) {
-        BindResult<T> result = binder.bind(resolveBindName(name), targetType);
-        return result.orElse(null);
-    }
-
-    public static String resolveBindName(String propertyName) {
-        if (hasText(propertyName)) {
-            int lastDotIndex = propertyName.lastIndexOf('.');
-            if (lastDotIndex == propertyName.length() - 1) {
-                return propertyName.substring(0, lastDotIndex);
+    public static final String getPrefix(ConfigurationPropertyName name, BindContext context) {
+        int depth = context.getDepth();
+        String propertyName = name.toString();
+        String prefix = propertyName;
+        for (int i = 0; i < depth; i++) {
+            int lastIndex = prefix.lastIndexOf('.');
+            if (lastIndex > -1) {
+                prefix = prefix.substring(0, lastIndex);
             }
         }
-        return propertyName;
+        return prefix;
     }
 
     /**

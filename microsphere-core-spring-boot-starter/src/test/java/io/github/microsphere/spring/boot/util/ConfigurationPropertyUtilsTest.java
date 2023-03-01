@@ -16,9 +16,10 @@
  */
 package io.github.microsphere.spring.boot.util;
 
+import io.github.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils;
 import org.junit.jupiter.api.Test;
 
-import static io.github.microsphere.spring.boot.util.ConfigurationPropertyUtils.toDashedForm;
+import static io.github.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
