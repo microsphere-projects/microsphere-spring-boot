@@ -16,8 +16,10 @@
  */
 package io.github.microsphere.spring.boot.context.properties.bind.util;
 
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindResult;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
@@ -38,8 +40,8 @@ public abstract class BindUtils {
         throw new InstantiationException();
     }
 
-    public static boolean isConfigurationPropertiesBean(BindContext context) {
-        return context.getDepth() == 0;
+    public static boolean isConfigurationPropertiesBean(Bindable<?> target, BindContext context) {
+        return target.getAnnotation(ConfigurationProperties.class) != null && context.getDepth() == 0;
     }
 
     public static <T> T bind(ConfigurableEnvironment environment, String propertyNamePrefix, Class<T> targetType) {

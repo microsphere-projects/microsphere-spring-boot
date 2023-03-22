@@ -78,7 +78,7 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener i
     }
 
     private void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
-        if (isConfigurationPropertiesBean(context)) {
+        if (isConfigurationPropertiesBean(target, context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             Supplier<?> value = target.getValue();
             Object bean = value.get();
@@ -99,7 +99,7 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener i
 
     private void updateConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
-        if (isConfigurationPropertiesBean(context)) {
+        if (isConfigurationPropertiesBean(target, context)) {
         } else {
             configurationPropertiesBeanContext.setProperty(name, result);
         }
