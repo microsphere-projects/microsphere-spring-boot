@@ -33,11 +33,13 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(
-        classes = {
-                ListenableConfigurationPropertiesBindHandlerAdvisor.class,
-                ListenableConfigurationPropertiesBindHandlerAdvisorTest.class,
-                ListenableConfigurationPropertiesBindHandlerAdvisorTest.MyBindListener.class
+@SpringBootTest(classes = {
+        ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+        ListenableConfigurationPropertiesBindHandlerAdvisorTest.class,
+        ListenableConfigurationPropertiesBindHandlerAdvisorTest.MyBindListener.class
+},
+        properties = {
+                "spring.jackson.dateFormat=yyyy-MM-dd HH:mm:ss",
         }
 )
 @EnableAutoConfiguration
