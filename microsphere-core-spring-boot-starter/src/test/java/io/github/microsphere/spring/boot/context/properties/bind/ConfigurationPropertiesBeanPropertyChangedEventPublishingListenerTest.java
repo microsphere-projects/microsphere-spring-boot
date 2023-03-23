@@ -17,7 +17,6 @@
 package io.github.microsphere.spring.boot.context.properties.bind;
 
 import io.github.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
-import io.github.microsphere.spring.context.event.BeanPropertyChangedEvent;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -75,11 +74,16 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTe
     public void testJacksonProperties() {
         assertNull(jacksonProperties.getDateFormat());
 
-        context.addApplicationListener((ApplicationListener<BeanPropertyChangedEvent>) event -> {
-            assertEquals(jacksonProperties, event.getSource());
-            assertEquals("dateFormat", event.getPropertyName());
-            assertNull(event.getOldValue());
-            assertEquals("yyyy-MM-dd HH:mm:ss", event.getNewValue());
+        context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
+            ConfigurationProperty configurationProperty = event.getConfigurationProperty();
+            String propertyName = event.getPropertyName();
+            if ("dateFormat".equals(propertyName)) {
+                assertEquals(jacksonProperties, event.getSource());
+                assertNull(event.getOldValue());
+                assertEquals("yyyy-MM-dd HH:mm:ss", event.getNewValue());
+                assertEquals("spring.jackson.date-format", configurationProperty.getName().toString());
+                assertEquals(event.getNewValue(), configurationProperty.getValue());
+            }
         });
 
         mockPropertySource.setProperty("spring.jackson.dateFormat", "yyyy-MM-dd HH:mm:ss");
@@ -92,29 +96,17 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTe
     public void testServerProperties() {
         assertNull(serverProperties.getPort());
 
-
-        context.addApplicationListener((ApplicationListener<BeanPropertyChangedEvent>) event -> {
-            assertEquals(serverProperties, event.getSource());
-            String propertyName = event.getPropertyName();
-            if ("error.path".equals(propertyName)) {
-                assertEquals("/error", event.getOldValue());
-                assertEquals("/error-page", event.getNewValue());
-            } else if ("compression.enabled".equals(propertyName)) {
-                assertEquals(false, event.getOldValue());
-                assertEquals(true, event.getNewValue());
-            }
-        });
-
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
-            assertEquals(serverProperties, event.getSource());
             ConfigurationProperty configurationProperty = event.getConfigurationProperty();
             String propertyName = event.getPropertyName();
             if ("error.path".equals(propertyName)) {
+                assertEquals(serverProperties, event.getSource());
                 assertEquals("/error", event.getOldValue());
                 assertEquals("/error-page", event.getNewValue());
                 assertEquals("server.error.path", configurationProperty.getName().toString());
                 assertEquals(event.getNewValue(), configurationProperty.getValue());
             } else if ("compression.enabled".equals(propertyName)) {
+                assertEquals(serverProperties, event.getSource());
                 assertEquals(false, event.getOldValue());
                 assertEquals(true, event.getNewValue());
                 assertEquals("server.compression.enabled", configurationProperty.getName().toString());

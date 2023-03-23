@@ -16,7 +16,6 @@
  */
 package io.github.microsphere.spring.boot.context.properties.bind;
 
-import io.github.microsphere.spring.context.event.JavaBeansPropertyChangeListenerAdapter;
 import io.github.microsphere.spring.core.convert.support.ConversionServiceResolver;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
@@ -27,8 +26,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ClassUtils;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -57,7 +54,6 @@ class ConfigurationPropertiesBeanContext {
     private Map<String, String> bindingPropertyNames;
 
     private volatile Object bean;
-    private volatile PropertyChangeSupport propertyChangeSupport;
 
     public ConfigurationPropertiesBeanContext(Class<?> beanClass, ConfigurationProperties annotation, String prefix, ConfigurableApplicationContext context) {
         // TODO support @ConstructorBinding creating beans
@@ -83,7 +79,6 @@ class ConfigurationPropertiesBeanContext {
         this.bean = bean;
         setProperties(bean);
         initBinding(bean);
-        initPropertyChangeSupport(bean);
     }
 
     private void setProperties(Object bean) {
@@ -96,12 +91,6 @@ class ConfigurationPropertiesBeanContext {
         String prefix = getPrefix();
         initBinding(bean.getClass(), prefix, bindingPropertyNames, null);
         this.bindingPropertyNames = bindingPropertyNames;
-    }
-
-    private void initPropertyChangeSupport(Object bean) {
-        PropertyChangeSupport propertyChangeSupport = new PropertyChangeSupport(bean);
-        propertyChangeSupport.addPropertyChangeListener(new JavaBeansPropertyChangeListenerAdapter(context));
-        this.propertyChangeSupport = propertyChangeSupport;
     }
 
     private void initBinding(Class<?> beanClass, String prefix, Map<String, String> bindingPropertyNames, String nestedPath) {
@@ -147,12 +136,11 @@ class ConfigurationPropertiesBeanContext {
         Object oldValue = getPropertyValue(propertyName);
         if (!Objects.deepEquals(oldValue, newValue)) {
             initializedBeanWrapper.setPropertyValue(propertyName, newValue);
-            propertyChangeSupport.firePropertyChange(propertyName, oldValue, newValue);
-            publishConfigurationPropertiesBeanPropertyChangedEvent(property, propertyName, oldValue, newValue);
+            publishEvent(property, propertyName, oldValue, newValue);
         }
     }
 
-    private void publishConfigurationPropertiesBeanPropertyChangedEvent(ConfigurationProperty property, String propertyName, Object oldValue, Object newValue) {
+    private void publishEvent(ConfigurationProperty property, String propertyName, Object oldValue, Object newValue) {
         context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(bean, propertyName, oldValue, newValue, property));
     }
 
@@ -174,13 +162,5 @@ class ConfigurationPropertiesBeanContext {
 
     public Object getInitializedBean() {
         return this.initializedBeanWrapper.getWrappedInstance();
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.addPropertyChangeListener(listener);
-    }
-
-    public void removePropertyChangeListener(PropertyChangeListener listener) {
-        propertyChangeSupport.removePropertyChangeListener(listener);
     }
 }
