@@ -44,6 +44,14 @@ public abstract class BindUtils {
         return target.getAnnotation(ConfigurationProperties.class) != null && context.getDepth() == 0;
     }
 
+    public static boolean isConfigurationPropertiesBean(BindContext context) {
+        return context != null && context.getDepth() == 0;
+    }
+
+    public static boolean isBoundProperty(BindContext context) {
+        return context != null && context.getDepth() > 0;
+    }
+
     public static <T> T bind(ConfigurableEnvironment environment, String propertyNamePrefix, Class<T> targetType) {
         Binder binder = Binder.get(environment);
         return bind(binder, propertyNamePrefix, targetType);

@@ -17,6 +17,8 @@
 package io.github.microsphere.spring.boot.context.properties.bind;
 
 import io.github.microsphere.spring.context.event.BeanPropertyChangedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -34,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.github.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.github.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
 import static io.github.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.github.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
@@ -50,6 +54,8 @@ import static io.github.microsphere.spring.boot.context.properties.util.Configur
  */
 public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener implements BindListener, BeanFactoryPostProcessor, ApplicationContextAware, SmartInitializingSingleton {
 
+    private final static Logger logger = LoggerFactory.getLogger(ConfigurationPropertiesBeanPropertyChangedEventPublishingListener.class);
+
     private static final Class<ConfigurableApplicationContext> CONFIGURABLE_APPLICATION_CONTEXT_CLASS = ConfigurableApplicationContext.class;
 
     private Map<String, ConfigurationPropertiesBeanContext> beanContexts;
@@ -59,31 +65,22 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener i
     private boolean bound = false;
 
     @Override
-    public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
-        if (isBound()) {
-
-        } else {
-            initConfigurationPropertiesBeanContext(name, target, context);
-        }
-    }
-
-    @Override
     public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         if (isBound()) {
-            updateConfigurationPropertiesBeanContext(name, target, context, result);
+            setConfigurationPropertiesBeanProperty(name, target, context, result);
         } else {
-            initConfigurationPropertiesBeanContext(name, target, context);
+            initConfigurationPropertiesBeanContext(name, target, context, result);
         }
-
     }
 
-    private void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
-        if (isConfigurationPropertiesBean(target, context)) {
+    private void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+        if (isConfigurationPropertiesBean(context)) {
+            logger.debug("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), result);
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             Supplier<?> value = target.getValue();
             Object bean = value.get();
-            if (bean != null) {
-                configurationPropertiesBeanContext.initialize(bean, this.context);
+            if (bean != null && bean.equals(result)) {
+                configurationPropertiesBeanContext.initialize(bean);
             }
         }
     }
@@ -93,15 +90,16 @@ public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener i
         return beanContexts.computeIfAbsent(prefix, p -> {
             Class<?> beanClass = target.getType().getRawClass();
             ConfigurationProperties annotation = findConfigurationProperties(target);
-            return new ConfigurationPropertiesBeanContext(beanClass, annotation, p);
+            return new ConfigurationPropertiesBeanContext(beanClass, annotation, p, this.context);
         });
     }
 
-    private void updateConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-        ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
-        if (isConfigurationPropertiesBean(target, context)) {
-        } else {
-            configurationPropertiesBeanContext.setProperty(name, result);
+    private void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+        ConfigurationProperty property = context.getConfigurationProperty();
+        if (property != null && isBoundProperty(context)) {
+            ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
+            configurationPropertiesBeanContext.setProperty(property, result);
+            logger.debug("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
         }
     }
 
