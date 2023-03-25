@@ -44,6 +44,7 @@
         <module>microsphere-core-spring-boot-starter</module>
         <module>microsphere-logging-spring-boot-starter</module>
         <module>microsphere-security-spring-boot-starter</module>
+        <module>microsphere-resilience4j-spring-boot-starter</module>
     </modules>
 
     <properties>
