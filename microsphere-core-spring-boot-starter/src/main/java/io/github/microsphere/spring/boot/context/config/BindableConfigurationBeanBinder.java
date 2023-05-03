@@ -26,6 +26,7 @@ import org.springframework.boot.context.properties.bind.handler.IgnoreErrorsBind
 import org.springframework.boot.context.properties.bind.handler.NoUnboundElementsBindHandler;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.UnboundElementsSourceFilter;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 
@@ -43,6 +44,13 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
  */
 public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder {
 
+    private ConversionService conversionService;
+
+    @Override
+    public void setConversionService(ConversionService conversionService) {
+        this.conversionService = conversionService;
+    }
+
     @Override
     public void bind(Map<String, Object> configurationProperties, boolean ignoreUnknownFields,
                      boolean ignoreInvalidFields, Object configurationBean) {
@@ -55,7 +63,7 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
         // Wrap Bindable from configuration bean
         Bindable bindable = Bindable.ofInstance(configurationBean);
 
-        Binder binder = new Binder(configurationPropertySources, new PropertySourcesPlaceholdersResolver(propertySources));
+        Binder binder = new Binder(configurationPropertySources, new PropertySourcesPlaceholdersResolver(propertySources), conversionService);
 
         // Get BindHandler
         BindHandler bindHandler = getBindHandler(ignoreUnknownFields, ignoreInvalidFields);
