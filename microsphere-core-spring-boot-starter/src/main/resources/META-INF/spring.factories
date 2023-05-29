@@ -1,26 +1,26 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
-io.github.microsphere.spring.boot.report.ConditionEvaluationReportInitializer
+io.microsphere.spring.boot.report.ConditionEvaluationReportInitializer
 
 # SpringApplicationRunListener
 org.springframework.boot.SpringApplicationRunListener=\
-io.github.microsphere.spring.boot.classloading.ResolvingArtifactsCollisionClassLoadingListener,\
-io.github.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
+io.microsphere.spring.boot.classloading.ResolvingArtifactsCollisionClassLoadingListener,\
+io.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
 
 # Application Listeners
 org.springframework.context.ApplicationListener=\
-io.github.microsphere.spring.boot.diagnostics.ArtifactsCollisionDiagnosisListener,\
-io.github.microsphere.spring.boot.report.ConditionEvaluationReportListener,\
-io.github.microsphere.spring.boot.env.DefaultPropertiesApplicationListener
+io.microsphere.spring.boot.diagnostics.ArtifactsCollisionDiagnosisListener,\
+io.microsphere.spring.boot.report.ConditionEvaluationReportListener,\
+io.microsphere.spring.boot.env.DefaultPropertiesApplicationListener
 
 # SpringBootExceptionReporter
 org.springframework.boot.SpringBootExceptionReporter=\
-io.github.microsphere.spring.boot.report.ConditionEvaluationSpringBootExceptionReporter
+io.microsphere.spring.boot.report.ConditionEvaluationSpringBootExceptionReporter
 
 # Failure Analyzers
 org.springframework.boot.diagnostics.FailureAnalyzer=\
-io.github.microsphere.spring.boot.diagnostics.ArtifactsCollisionFailureAnalyzer
+io.microsphere.spring.boot.diagnostics.ArtifactsCollisionFailureAnalyzer
 
 # AutoConfigurationImportFilter
 org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\
-io.github.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter
+io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter
