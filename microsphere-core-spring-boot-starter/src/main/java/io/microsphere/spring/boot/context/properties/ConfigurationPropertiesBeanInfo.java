@@ -21,7 +21,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.beans.PropertyDescriptor;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 

@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.autoconfigure;
 
 import io.microsphere.spring.context.event.BeanTimeStatistics;
+import io.microsphere.spring.context.event.LoggingBeanFactoryListener;
 import io.microsphere.spring.context.event.LoggingBeanListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -30,6 +31,7 @@ import org.springframework.boot.test.context.SpringBootTest;
  */
 @SpringBootTest(classes = {ApplicationAutoConfigurationTest.class,
         LoggingBeanListener.class,
+        LoggingBeanFactoryListener.class,
         BeanTimeStatistics.class},
         properties = {
                 "server.port=12345",
