@@ -16,12 +16,20 @@
  */
 package io.microsphere.spring.boot.autoconfigure;
 
+import io.microsphere.spring.context.event.BeanListener;
 import io.microsphere.spring.context.event.BeanTimeStatistics;
 import io.microsphere.spring.context.event.LoggingBeanFactoryListener;
 import io.microsphere.spring.context.event.LoggingBeanListener;
+import io.microsphere.spring.context.event.ParallelBeanFactoryListener;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Application AutoConfiguration Test
@@ -29,14 +37,18 @@ import org.springframework.boot.test.context.SpringBootTest;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ApplicationAutoConfigurationTest.class,
+@SpringBootTest(classes = {
+        ApplicationAutoConfigurationTest.class,
+        ApplicationAutoConfigurationTest.TestConfig.class,
         LoggingBeanListener.class,
         LoggingBeanFactoryListener.class,
+        ParallelBeanFactoryListener.class,
         BeanTimeStatistics.class},
         properties = {
                 "server.port=12345",
                 "spring.mvc.dispatchTraceRequest=true",
-                "spring.mvc.format.date=dd/MM/yyyy"
+                "spring.mvc.format.date=dd/MM/yyyy",
+                "logging.level.io.microsphere.spring.context.event=DEBUG"
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
@@ -44,5 +56,37 @@ public class ApplicationAutoConfigurationTest {
 
     @Test
     public void test() {
+    }
+
+    static class TestConfig {
+
+        private final ObjectProvider<BeanListener[]> beanListeners;
+
+        private final ObjectProvider<List<BeanListener>> beanListenersList;
+
+        @Autowired
+        private ObjectProvider<BeanTimeStatistics> beanTimeStatisticsObjectProvider;
+
+        @Autowired
+        private ObjectProvider<LoggingBeanListener> loggingBeanListenerObjectProvider;
+
+        @Resource(name = "beanTimeStatistics")
+        private BeanTimeStatistics beanTimeStatistics;
+
+        @Resource(type = LoggingBeanListener.class)
+        private LoggingBeanListener loggingBeanListener;
+
+        @Resource
+        public void setLoggingBeanListener(LoggingBeanListener loggingBeanListener) {
+
+        }
+
+        public TestConfig(ObjectProvider<BeanListener[]> beanListeners,
+                          ObjectProvider<List<BeanListener>> beanListenersList,
+                          @Qualifier("loggingBeanListener") LoggingBeanListener loggingBeanListener) {
+            this.beanListeners = beanListeners;
+            this.beanListenersList = beanListenersList;
+        }
+
     }
 }
