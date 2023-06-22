@@ -1,3 +1,13 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
 io.microsphere.spring.context.event.BeanEventPublishingInitializer
+
+# BeanListener
+io.microsphere.spring.context.event.BeanListener=\
+io.microsphere.spring.context.event.LoggingBeanListener,\
+io.microsphere.spring.context.event.BeanTimeStatistics
+
+# BeanFactoryListener
+io.microsphere.spring.context.event.BeanFactoryListener=\
+io.microsphere.spring.context.event.LoggingBeanFactoryListener,\
+io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener

@@ -20,7 +20,7 @@ import io.microsphere.spring.context.event.BeanListener;
 import io.microsphere.spring.context.event.BeanTimeStatistics;
 import io.microsphere.spring.context.event.LoggingBeanFactoryListener;
 import io.microsphere.spring.context.event.LoggingBeanListener;
-import io.microsphere.spring.context.event.ParallelBeanFactoryListener;
+import io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +39,8 @@ import java.util.List;
  */
 @SpringBootTest(classes = {
         ApplicationAutoConfigurationTest.class,
-        ApplicationAutoConfigurationTest.TestConfig.class,
-        LoggingBeanListener.class,
-        LoggingBeanFactoryListener.class,
-        ParallelBeanFactoryListener.class,
-        BeanTimeStatistics.class},
+        ApplicationAutoConfigurationTest.TestConfig.class
+},
         properties = {
                 "server.port=12345",
                 "spring.mvc.dispatchTraceRequest=true",
