@@ -45,7 +45,7 @@ import java.util.List;
                 "server.port=12345",
                 "spring.mvc.dispatchTraceRequest=true",
                 "spring.mvc.format.date=dd/MM/yyyy",
-                "logging.level.io.microsphere.spring.context.event=DEBUG"
+                "logging.level.io.microsphere.spring=DEBUG"
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
