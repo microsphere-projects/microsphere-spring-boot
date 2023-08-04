@@ -52,9 +52,9 @@ import static io.microsphere.spring.boot.context.properties.util.ConfigurationPr
  * @see ConfigurationPropertiesBeanPropertyChangedEvent
  * @since 1.0.0
  */
-public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListener implements BindListener, BeanFactoryPostProcessor, ApplicationContextAware, SmartInitializingSingleton {
+public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener implements BindListener, BeanFactoryPostProcessor, ApplicationContextAware, SmartInitializingSingleton {
 
-    private final static Logger logger = LoggerFactory.getLogger(ConfigurationPropertiesBeanPropertyChangedEventPublishingListener.class);
+    private final static Logger logger = LoggerFactory.getLogger(EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
 
     private static final Class<ConfigurableApplicationContext> CONFIGURABLE_APPLICATION_CONTEXT_CLASS = ConfigurableApplicationContext.class;
 

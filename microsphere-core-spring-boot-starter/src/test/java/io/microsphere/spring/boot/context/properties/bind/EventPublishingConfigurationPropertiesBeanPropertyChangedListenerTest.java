@@ -38,16 +38,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- * {@link ConfigurationPropertiesBeanPropertyChangedEventPublishingListener} Test
+ * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class, ConfigurationPropertiesBeanPropertyChangedEventPublishingListener.class, ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTest.class})
+@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class, EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class ConfigurationPropertiesBeanPropertyChangedEventPublishingListenerTest {
+public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
