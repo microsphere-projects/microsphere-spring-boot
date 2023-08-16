@@ -1,6 +1,6 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
-io.microsphere.spring.context.event.BeanEventPublishingInitializer
+io.microsphere.spring.context.event.EventPublishingBeanInitializer
 
 # BeanListener
 io.microsphere.spring.context.event.BeanListener=\
