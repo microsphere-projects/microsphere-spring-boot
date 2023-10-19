@@ -14,7 +14,7 @@
     <artifactId>microsphere-core-spring-boot-starter</artifactId>
     <version>${revision}</version>
 
-    <name>Microsphere Projects :: Spring Boot :: Core Starter</name>
+    <name>Microsphere :: Spring Boot :: Core Starter</name>
     <description>Microsphere Spring Boot Core Starter</description>
 
     <dependencies>

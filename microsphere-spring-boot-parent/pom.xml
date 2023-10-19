@@ -15,11 +15,11 @@
     <version>${revision}</version>
     <packaging>pom</packaging>
 
-    <name>Microsphere Projects :: Spring Boot :: Parent</name>
+    <name>Microsphere :: Spring Boot :: Parent</name>
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <spring-boot.version>2.7.12</spring-boot.version>
+        <spring-boot.version>2.7.17</spring-boot.version>
         <microsphere-spring.version>${revision}</microsphere-spring.version>
     </properties>
 

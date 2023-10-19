@@ -14,7 +14,7 @@
     <artifactId>microsphere-resilience4j-spring-boot-starter</artifactId>
     <version>${revision}</version>
 
-    <name>Microsphere Projects :: Spring Boot :: Resilience4j Starter</name>
+    <name>Microsphere :: Spring Boot :: Resilience4j Starter</name>
     <description>Microsphere Spring Boot Resilience4j Starter</description>
 
     <dependencies>
