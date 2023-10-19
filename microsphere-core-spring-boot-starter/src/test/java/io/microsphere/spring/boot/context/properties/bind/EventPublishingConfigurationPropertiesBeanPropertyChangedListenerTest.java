@@ -43,7 +43,9 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class, EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
+@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
