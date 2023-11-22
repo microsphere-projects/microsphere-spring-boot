@@ -1,6 +1,6 @@
 package io.microsphere.spring.boot.classloading;
 
-import io.microsphere.classloading.ArtifactCollisionResourceDetector;
+import io.microsphere.classloading.BannedArtifactClassLoadingExecutor;
 import io.microsphere.spring.boot.listener.SpringApplicationRunListenerAdapter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -134,7 +134,7 @@ public class ResolvingArtifactsCollisionClassLoadingListener extends SpringAppli
 
         URLClassLoader currentClassLoader = (URLClassLoader) classLoader;
 
-        ArtifactCollisionResourceDetector discoverer = new ArtifactCollisionResourceDetector(currentClassLoader);
+        BannedArtifactClassLoadingExecutor discoverer = new BannedArtifactClassLoadingExecutor(currentClassLoader);
         Map<URL, String> artifactCollisionResources = discoverer.detect();
 
         if (artifactCollisionResources.isEmpty()) {
