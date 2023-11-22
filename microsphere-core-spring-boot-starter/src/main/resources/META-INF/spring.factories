@@ -4,7 +4,7 @@ io.microsphere.spring.boot.report.ConditionEvaluationReportInitializer
 
 # SpringApplicationRunListener
 org.springframework.boot.SpringApplicationRunListener=\
-io.microsphere.spring.boot.classloading.ResolvingArtifactsCollisionClassLoadingListener,\
+io.microsphere.spring.boot.classloading.BannedArtifactClassLoadingListener,\
 io.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
 
 # Application Listeners
