@@ -1,11 +1,12 @@
 package io.microsphere.spring.boot.diagnostics;
 
-import io.microsphere.classloading.ArtifactCollisionResourceDetector;
+import io.microsphere.classloading.BannedArtifactClassLoadingExecutor;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ResourceLoader;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -31,9 +32,10 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
     }
 
     protected void diagnose(ResourceLoader resourceLoader) throws ArtifactsCollisionException {
-        ArtifactCollisionResourceDetector detector = new ArtifactCollisionResourceDetector(resourceLoader.getClassLoader());
+        BannedArtifactClassLoadingExecutor detector = new BannedArtifactClassLoadingExecutor(resourceLoader.getClassLoader());
         //  Artifacts conflict set
-        Set<String> artifactsCollisionSet = new HashSet<>(detector.detect().values());
+        Set<String> artifactsCollisionSet = Collections.emptySet();
+        // FIXME new HashSet<>(detector.execute());
 
         if (!artifactsCollisionSet.isEmpty()) {
             throw new ArtifactsCollisionException("Artifacts conflict. The list is as follows:" + artifactsCollisionSet, artifactsCollisionSet);
