@@ -13,6 +13,7 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
@@ -26,6 +27,7 @@ import java.util.Set;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultPropertiesResources;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
 import static io.microsphere.spring.util.PropertySourcesUtils.getDefaultProperties;
+import static io.microsphere.spring.util.ResourceLoaderUtils.getResourcePatternResolver;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
 
 /**
@@ -105,16 +107,18 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                                        ResourceLoader resourceLoader,
                                        Map<String, Object> defaultProperties) {
         logger.debug("Start loading the 'defaultProperties' resource path list: {}", defaultPropertiesResources);
+        ResourcePatternResolver resourcePatternResolver = getResourcePatternResolver(resourceLoader);
         for (String defaultPropertiesResource : defaultPropertiesResources) {
-            Resource resource = resourceLoader.getResource(defaultPropertiesResource);
-            if (!resource.exists()) {
-                logger.warn("'defaultProperties' resource [location: {}] does not exist, please make sure the resource is correct!", defaultPropertiesResource);
-            }
-            if (!loadDefaultProperties(defaultPropertiesResource, resource, propertySourceLoaders, defaultProperties)) {
-                logger.warn("'defaultProperties' resource [location: {}] failed to load, please confirm the resource can be processed!", defaultPropertiesResource);
+            try {
+                for (Resource resource : resourcePatternResolver.getResources(defaultPropertiesResource)) {
+                    if (!loadDefaultProperties(defaultPropertiesResource, resource, propertySourceLoaders, defaultProperties)) {
+                        logger.warn("'defaultProperties' resource [location: {}] failed to load, please confirm the resource can be processed!", resource.getURL());
+                    }
+                }
+            } catch (IOException e) {
+                logger.warn("'defaultProperties' resource [location: {}] does not exist, please make sure the resource is correct!", defaultPropertiesResource, e);
             }
         }
-
     }
 
     private boolean loadDefaultProperties(String defaultPropertiesResource, Resource resource,
