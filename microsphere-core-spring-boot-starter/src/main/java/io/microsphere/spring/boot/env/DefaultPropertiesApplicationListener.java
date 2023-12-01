@@ -17,6 +17,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -123,7 +124,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     private boolean loadDefaultProperties(String defaultPropertiesResource, Resource resource,
                                           List<PropertySourceLoader> propertySourceLoaders,
-                                          Map<String, Object> defaultProperties) {
+                                          Map<String, Object> defaultProperties) throws IOException {
         boolean loaded = false;
         for (PropertySourceLoader propertySourceLoader : propertySourceLoaders) {
             if (loadDefaultProperties(defaultPropertiesResource, resource, propertySourceLoader, defaultProperties)) {
@@ -137,23 +138,26 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
     private boolean loadDefaultProperties(String defaultPropertiesResource, Resource resource,
                                           PropertySourceLoader propertySourceLoader,
                                           Map<String, Object> defaultProperties) {
-        String fileExtension = getExtension(defaultPropertiesResource);
-        String[] fileExtensions = propertySourceLoader.getFileExtensions();
         boolean loaded = false;
-        if (matches(fileExtension, fileExtensions)) {
-            try {
-                List<PropertySource<?>> propertySources = propertySourceLoader.load(defaultPropertiesResource, resource);
-                logger.debug("'defaultProperties' resource [location: {}] loads into {} PropertySource", defaultPropertiesResource, propertySources.size());
+        try {
+            URL url = resource.getURL();
+            String resourceLocation = url.getPath();
+            String fileExtension = getExtension(resourceLocation);
+            String[] fileExtensions = propertySourceLoader.getFileExtensions();
+            if (matches(fileExtension, fileExtensions)) {
+
+                List<PropertySource<?>> propertySources = propertySourceLoader.load(resourceLocation, resource);
+                logger.debug("'defaultProperties' resource [location: {}] loads into {} PropertySource", resourceLocation, propertySources.size());
                 for (PropertySource propertySource : propertySources) {
                     if (propertySource instanceof EnumerablePropertySource) {
                         merge((EnumerablePropertySource) propertySource, defaultProperties);
                         loaded = true;
                     }
                 }
-            } catch (IOException e) {
-                logger.error("'defaultProperties' resource [location: {}] failed to load due to: {}",
-                        defaultPropertiesResource, e.getMessage());
+
             }
+        } catch (IOException e) {
+            logger.error("'defaultProperties' resource [{}] failed to load", defaultPropertiesResource, e);
         }
         return loaded;
     }
