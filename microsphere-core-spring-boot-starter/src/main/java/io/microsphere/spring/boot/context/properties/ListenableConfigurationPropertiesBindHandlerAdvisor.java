@@ -39,7 +39,12 @@ public class ListenableConfigurationPropertiesBindHandlerAdvisor implements Conf
 
     @Override
     public BindHandler apply(BindHandler bindHandler) {
-        return new ListenableBindHandlerAdapter(bindHandler, bindListeners);
+        try {
+            return new ListenableBindHandlerAdapter(bindHandler, () -> bindListeners.orderedStream().iterator());
+        } catch (UnsupportedOperationException e) {
+            // Sorting operations are not supported
+            return new ListenableBindHandlerAdapter(bindHandler, bindListeners);
+        }
     }
 
     @Override
