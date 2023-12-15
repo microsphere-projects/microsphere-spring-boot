@@ -15,10 +15,11 @@ import org.springframework.core.Ordered;
 
 /**
  * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener}
- * 
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
- */
+ * @see io.microsphere.spring.context.event.OnceApplicationContextEventListener
+ * */
 public abstract class OnceApplicationPreparedEventListener implements ApplicationListener<ApplicationPreparedEvent>, Ordered {
 
     private static Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = new ConcurrentHashMap<>();
