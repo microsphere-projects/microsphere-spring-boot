@@ -7,7 +7,6 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.core.io.ResourceLoader;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;

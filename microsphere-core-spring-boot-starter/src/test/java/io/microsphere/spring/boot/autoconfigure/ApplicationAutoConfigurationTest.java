@@ -18,9 +18,7 @@ package io.microsphere.spring.boot.autoconfigure;
 
 import io.microsphere.spring.context.event.BeanListener;
 import io.microsphere.spring.context.event.BeanTimeStatistics;
-import io.microsphere.spring.context.event.LoggingBeanFactoryListener;
 import io.microsphere.spring.context.event.LoggingBeanListener;
-import io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;

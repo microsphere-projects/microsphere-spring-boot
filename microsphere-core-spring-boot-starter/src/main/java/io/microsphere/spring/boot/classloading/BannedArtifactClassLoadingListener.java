@@ -8,11 +8,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ClassUtils;
 
-import java.net.URLClassLoader;
 import java.util.Arrays;
 
 /**
