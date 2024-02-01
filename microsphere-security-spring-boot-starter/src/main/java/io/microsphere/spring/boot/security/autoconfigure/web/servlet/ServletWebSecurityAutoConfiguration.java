@@ -2,7 +2,7 @@ package io.microsphere.spring.boot.security.autoconfigure.web.servlet;
 
 import io.microsphere.spring.boot.security.annotation.WebSecurityFilter;
 import io.microsphere.spring.boot.security.autoconfigure.WebSecurityProperties;
-import io.microsphere.spring.boot.security.autoconfigure.web.condition.ConditionalOnEnabledWebSecurity;
+import io.microsphere.spring.boot.security.condition.ConditionalOnEnabledWebSecurity;
 import io.microsphere.spring.boot.security.constants.SecurityConstants;
 import io.microsphere.spring.boot.security.web.servlet.WebSecurityProcessor;
 import io.microsphere.spring.boot.security.web.servlet.WebSecurityProcessorFilter;

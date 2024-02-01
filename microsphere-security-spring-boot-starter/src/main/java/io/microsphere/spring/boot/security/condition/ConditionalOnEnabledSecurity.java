@@ -1,4 +1,4 @@
-package io.microsphere.spring.boot.security.autoconfigure.condition;
+package io.microsphere.spring.boot.security.condition;
 
 import io.microsphere.spring.boot.security.constants.SecurityConstants;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
