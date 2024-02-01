@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.microsphere.spring.boot.logging.autoconfigure.ApplicationLoggingAutoConfiguration,\
-io.microsphere.spring.boot.logging.autoconfigure.WebServerLoggingAutoConfiguration,\
-io.microsphere.spring.boot.logging.autoconfigure.WebMvcLoggingAutoConfiguration
