@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.boot.autoconfigure.condition;
+package io.microsphere.spring.boot.condition;
 
 import org.springframework.context.annotation.Conditional;
 
