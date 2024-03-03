@@ -19,6 +19,7 @@ import static io.microsphere.util.ArrayUtils.combine;
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
+import static org.springframework.util.StringUtils.commaDelimitedListToSet;
 
 /**
  * Configurable {@link AutoConfigurationImportFilter}
@@ -56,7 +57,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
             if (property instanceof String) {
                 String exclude = (String) property;
                 String resolvedExclude = environment.resolvePlaceholders(exclude);
-                Set<String> excludedClasses = StringUtils.commaDelimitedListToSet(resolvedExclude);
+                Set<String> excludedClasses = commaDelimitedListToSet(resolvedExclude);
                 allExcludedClasses.addAll(excludedClasses);
             }
         }
@@ -95,16 +96,16 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         propertySource.addClasses(classNames);
     }
 
-    static MutablePropertySources getPropertySources(Environment environment) {
+    private static MutablePropertySources getPropertySources(Environment environment) {
         return getConfigurableEnvironment(environment).getPropertySources();
     }
 
-    static ConfigurableEnvironment getConfigurableEnvironment(Environment environment) {
+    private static ConfigurableEnvironment getConfigurableEnvironment(Environment environment) {
         Assert.isInstanceOf(ConfigurableEnvironment.class, environment);
         return (ConfigurableEnvironment) environment;
     }
 
-    static class ExcludedAutoConfigurationClassPropertySource extends PropertySource<Set<String>> {
+    private static class ExcludedAutoConfigurationClassPropertySource extends PropertySource<Set<String>> {
 
         private static final String NAME = AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME;
 
