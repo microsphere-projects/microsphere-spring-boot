@@ -9,7 +9,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.Assert;
-import org.springframework.util.StringUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -116,13 +115,13 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         @Override
         public Object getProperty(String name) {
             if (AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME.equals(name)) {
-                return collectionToCommaDelimitedString(getSource());
+                return collectionToCommaDelimitedString(this.source);
             }
             return null;
         }
 
         public void addClasses(Iterable<String> classNames) {
-            Set<String> allClassNames = getSource();
+            Set<String> allClassNames = this.source;
             classNames.forEach(allClassNames::add);
         }
 
