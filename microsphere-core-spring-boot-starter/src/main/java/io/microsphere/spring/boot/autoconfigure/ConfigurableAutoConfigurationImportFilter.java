@@ -11,12 +11,12 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static io.microsphere.spring.util.ObjectUtils.of;
+import static io.microsphere.util.ArrayUtils.combine;
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 
@@ -63,14 +63,33 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         return unmodifiableSet(allExcludedClasses);
     }
 
+    /**
+     * Add a class name to exclude Spring Boot Auto-Configuration
+     *
+     * @param environment {@link Environment}
+     * @param className   the name of class
+     */
     public static void addExcludedAutoConfigurationClass(Environment environment, String className) {
-        addExcludedAutoConfigurationClasses(environment, of(className));
+        addExcludedAutoConfigurationClasses(environment, className);
     }
 
-    public static void addExcludedAutoConfigurationClasses(Environment environment, String... classNames) {
-        addExcludedAutoConfigurationClasses(environment, Arrays.asList(classNames));
+    /**
+     * Add one or more class names to exclude Spring Boot Auto-Configuration
+     *
+     * @param environment     {@link Environment}
+     * @param className       one class name
+     * @param otherClassNames more class names
+     */
+    public static void addExcludedAutoConfigurationClasses(Environment environment, String className, String... otherClassNames) {
+        addExcludedAutoConfigurationClasses(environment, asList(combine(className, otherClassNames)));
     }
 
+    /**
+     * Add the class names to exclude Spring Boot Auto-Configuration
+     *
+     * @param environment {@link Environment}
+     * @param classNames  the class names
+     */
     public static void addExcludedAutoConfigurationClasses(Environment environment, Iterable<String> classNames) {
         ExcludedAutoConfigurationClassPropertySource propertySource = ExcludedAutoConfigurationClassPropertySource.get(environment);
         propertySource.addClasses(classNames);
