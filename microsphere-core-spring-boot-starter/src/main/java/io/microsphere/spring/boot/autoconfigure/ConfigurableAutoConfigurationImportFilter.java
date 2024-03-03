@@ -9,6 +9,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.Assert;
+import org.springframework.util.StringUtils;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,9 +17,11 @@ import java.util.TreeSet;
 
 import static io.microsphere.util.ArrayUtils.combine;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 import static org.springframework.util.StringUtils.commaDelimitedListToSet;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * Configurable {@link AutoConfigurationImportFilter}
@@ -60,7 +63,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
                 allExcludedClasses.addAll(excludedClasses);
             }
         }
-        return unmodifiableSet(allExcludedClasses);
+        return allExcludedClasses.isEmpty() ? emptySet() : unmodifiableSet(allExcludedClasses);
     }
 
     /**
@@ -137,7 +140,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
     }
 
     private boolean isExcluded(String autoConfigurationClass) {
-        return excludedAutoConfigurationClasses.contains(autoConfigurationClass);
+        return hasText(autoConfigurationClass) && excludedAutoConfigurationClasses.contains(autoConfigurationClass);
     }
 
     @Override
