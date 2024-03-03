@@ -6,7 +6,6 @@ import org.springframework.context.EnvironmentAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
-import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.util.Assert;
@@ -29,7 +28,7 @@ import static org.springframework.util.StringUtils.collectionToCommaDelimitedStr
  */
 public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurationImportFilter, EnvironmentAware, Ordered {
 
-    public static final String PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE = "microsphere.autoconfigure.exclude";
+    public static final String AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME = "microsphere.autoconfigure.exclude";
 
     private Set<String> excludedAutoConfigurationClasses;
 
@@ -53,7 +52,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         MutablePropertySources propertySources = getPropertySources(environment);
         Set<String> allExcludedClasses = new TreeSet<>();
         for (PropertySource propertySource : propertySources) {
-            Object property = propertySource.getProperty(PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE);
+            Object property = propertySource.getProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
             if (property instanceof String) {
                 String exclude = (String) property;
                 String resolvedExclude = environment.resolvePlaceholders(exclude);
@@ -88,7 +87,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
 
     static class ExcludedAutoConfigurationClassPropertySource extends PropertySource<Set<String>> {
 
-        private static final String NAME = PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE;
+        private static final String NAME = AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME;
 
         private ExcludedAutoConfigurationClassPropertySource() {
             super(NAME, new LinkedHashSet<>());
@@ -96,7 +95,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
 
         @Override
         public Object getProperty(String name) {
-            if (PROPERTY_NAME_AUTOCONFIGURE_EXCLUDE.equals(name)) {
+            if (AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME.equals(name)) {
                 return collectionToCommaDelimitedString(getSource());
             }
             return null;
