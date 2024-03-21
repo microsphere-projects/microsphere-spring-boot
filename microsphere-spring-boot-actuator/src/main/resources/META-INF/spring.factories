@@ -1,2 +1,5 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 io.microsphere.spring.boot.actuate.autoconfigure.ActuatorEndpointAutoConfiguration
+
+io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
+io.microsphere.spring.boot.actuate.env.ActuatorDefaultPropertiesPostProcessor
