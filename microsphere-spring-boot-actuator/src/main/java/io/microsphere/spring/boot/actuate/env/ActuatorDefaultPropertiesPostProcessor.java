@@ -36,7 +36,7 @@ public class ActuatorDefaultPropertiesPostProcessor implements DefaultProperties
     /**
      * The resource pattern to load the properties resources.
      */
-    public static final String DEFAULT_PROPERTIES_RESOURCES_PATTERN = CLASSPATH_ALL_URL_PREFIX + "/META-INF/actuator/*-default.properties";
+    public static final String DEFAULT_PROPERTIES_RESOURCES_PATTERN = CLASSPATH_ALL_URL_PREFIX + "/META-INF/config/default/*.properties";
 
     @Override
     public void initializeResources(Set<String> defaultPropertiesResources) {
