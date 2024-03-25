@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -16,6 +16,7 @@
 
     <name>Microsphere :: Spring Boot</name>
     <description>Microsphere Spring Boot</description>
+    <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
 
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
@@ -47,7 +48,6 @@
         <module>microsphere-spring-boot-parent</module>
         <module>microsphere-spring-boot-dependencies</module>
         <module>microsphere-core-spring-boot-starter</module>
-        <module>microsphere-security-spring-boot-starter</module>
         <module>microsphere-spring-boot-actuator</module>
     </modules>
 
