@@ -38,7 +38,12 @@
             </roles>
         </developer>
     </developers>
-    
+
+    <organization>
+        <name>Microsphere</name>
+        <url>https://github.com/microsphere-projects</url>
+    </organization>
+
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
         <connection>scm:git:git://github.com/microsphere-projects/microsphere-spring-boot.git</connection>
