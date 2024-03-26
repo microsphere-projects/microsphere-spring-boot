@@ -18,12 +18,12 @@
     <description>Microsphere Spring Boot</description>
     <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
 
-    <scm>
-        <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere-spring-boot.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-spring-boot.git
-        </developerConnection>
-    </scm>
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -38,7 +38,13 @@
             </roles>
         </developer>
     </developers>
-
+    
+    <scm>
+        <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
+        <connection>scm:git:git://github.com/microsphere-projects/microsphere-spring-boot.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-spring-boot.git
+        </developerConnection>
+    </scm>
 
     <properties>
         <revision>0.0.1-SNAPSHOT</revision>
