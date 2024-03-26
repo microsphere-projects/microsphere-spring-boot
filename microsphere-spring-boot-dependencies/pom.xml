@@ -32,7 +32,7 @@
                 <artifactId>microsphere-spring-boot-actuator</artifactId>
                 <version>${revision}</version>
             </dependency>
-            
+
         </dependencies>
     </dependencyManagement>
 </project>
