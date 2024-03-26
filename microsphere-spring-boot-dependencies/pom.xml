@@ -20,6 +20,7 @@
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-core-spring-boot-starter</artifactId>
@@ -28,21 +29,10 @@
 
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-logging-spring-boot-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-security-spring-boot-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
                 <artifactId>microsphere-spring-boot-actuator</artifactId>
                 <version>${revision}</version>
             </dependency>
+            
         </dependencies>
     </dependencyManagement>
 </project>
