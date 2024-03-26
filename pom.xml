@@ -18,6 +18,11 @@
     <description>Microsphere Spring Boot</description>
     <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
 
+    <organization>
+        <name>Microsphere</name>
+        <url>https://github.com/microsphere-projects</url>
+    </organization>
+    
     <licenses>
         <license>
             <name>The Apache License, Version 2.0</name>
@@ -38,11 +43,6 @@
             </roles>
         </developer>
     </developers>
-
-    <organization>
-        <name>Microsphere</name>
-        <url>https://github.com/microsphere-projects</url>
-    </organization>
 
     <scm>
         <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
