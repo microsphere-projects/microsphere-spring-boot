@@ -24,3 +24,7 @@ io.microsphere.spring.boot.diagnostics.ArtifactsCollisionFailureAnalyzer
 # AutoConfigurationImportFilter
 org.springframework.boot.autoconfigure.AutoConfigurationImportFilter=\
 io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter
+
+# DefaultPropertiesPostProcessor
+io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
+io.microsphere.spring.boot.env.SpringApplicationDefaultPropertiesPostProcessor
