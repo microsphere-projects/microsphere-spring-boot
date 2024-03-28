@@ -65,7 +65,7 @@ public class ApplicationAutoConfigurationTest {
         @Autowired
         private ObjectProvider<LoggingBeanListener> loggingBeanListenerObjectProvider;
 
-        @Resource(name = "beanTimeStatistics")
+        @Resource(name = "io.microsphere.spring.context.event.BeanTimeStatistics#0")
         private BeanTimeStatistics beanTimeStatistics;
 
         @Resource(type = LoggingBeanListener.class)
@@ -78,7 +78,7 @@ public class ApplicationAutoConfigurationTest {
 
         public TestConfig(ObjectProvider<BeanListener[]> beanListeners,
                           ObjectProvider<List<BeanListener>> beanListenersList,
-                          @Qualifier("loggingBeanListener") LoggingBeanListener loggingBeanListener) {
+                          @Qualifier("io.microsphere.spring.context.event.LoggingBeanListener#0") LoggingBeanListener loggingBeanListener) {
             this.beanListeners = beanListeners;
             this.beanListenersList = beanListenersList;
         }
