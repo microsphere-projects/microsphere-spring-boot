@@ -34,7 +34,7 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnClass(name = {
         "org.springframework.boot.actuate.endpoint.annotation.Endpoint"
 })
-class ActuatorEndpointsConfiguration implements BeanClassLoaderAware {
+public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware {
 
     private ClassLoader classLoader;
 

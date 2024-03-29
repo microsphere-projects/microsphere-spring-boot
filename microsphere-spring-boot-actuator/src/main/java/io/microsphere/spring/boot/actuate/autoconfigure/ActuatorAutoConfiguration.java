@@ -21,7 +21,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
@@ -34,9 +33,6 @@ import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
  * @since 1.0.0
  */
 @AutoConfigureOrder(LOWEST_PRECEDENCE)
-@Import(value = {
-        ActuatorEndpointsConfiguration.class
-})
 public class ActuatorAutoConfiguration {
 
     /**
