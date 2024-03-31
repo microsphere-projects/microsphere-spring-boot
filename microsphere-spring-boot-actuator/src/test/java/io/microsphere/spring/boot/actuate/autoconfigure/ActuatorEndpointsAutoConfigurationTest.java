@@ -8,6 +8,7 @@ import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.Map;
 
@@ -25,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
         })
+@PropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
 @EnableAutoConfiguration
 class ActuatorEndpointsAutoConfigurationTest {
 
