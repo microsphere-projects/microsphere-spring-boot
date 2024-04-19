@@ -45,10 +45,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/microsphere-projects/microsphere-spring-boot</url>
-        <connection>scm:git:git://github.com/microsphere-projects/microsphere-spring-boot.git</connection>
-        <developerConnection>scm:git:ssh://git@github.com/microsphere-projects/microsphere-spring-boot.git
-        </developerConnection>
+        <url>git@github.com/microsphere-projects/microsphere-spring-boot.git</url>
+        <connection>scm:git:${project.scm.url}</connection>
+        <developerConnection>scm:git:ssh://${project.scm.url}</developerConnection>
     </scm>
 
     <properties>
