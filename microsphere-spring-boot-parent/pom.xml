@@ -19,8 +19,9 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <spring-boot.version>2.7.18</spring-boot.version>
-        <microsphere-spring.version>${revision}</microsphere-spring.version>
+        <spring-boot.version>3.3.1</spring-boot.version>
+
+        <microsphere-spring.version>0.0.3</microsphere-spring.version>
     </properties>
 
     <dependencyManagement>
@@ -47,23 +48,58 @@
 
     <profiles>
         <profile>
-            <id>spring-boot-2.6</id>
+            <id>spring-boot-2.4</id>
             <properties>
-                <spring-boot.version>2.6.16</spring-boot.version>
+                <spring-boot.version>2.4.13</spring-boot.version>
             </properties>
         </profile>
 
         <profile>
             <id>spring-boot-2.5</id>
             <properties>
-                <spring-boot.version>2.5.14</spring-boot.version>
+                <spring-boot.version>2.5.15</spring-boot.version>
             </properties>
         </profile>
 
         <profile>
-            <id>spring-boot-2.4</id>
+            <id>spring-boot-2.6</id>
             <properties>
-                <spring-boot.version>2.4.13</spring-boot.version>
+                <spring-boot.version>2.6.15</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.7</id>
+            <properties>
+                <spring-boot.version>2.7.18</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-3.0</id>
+            <properties>
+                <spring-boot.version>3.0.13</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-3.1</id>
+            <properties>
+                <spring-boot.version>3.1.12</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-3.2</id>
+            <properties>
+                <spring-boot.version>3.2.7</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-3.3</id>
+            <properties>
+                <spring-boot.version>3.3.1</spring-boot.version>
             </properties>
         </profile>
     </profiles>

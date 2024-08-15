@@ -35,23 +35,18 @@ public class SpringApplicationRunListenerAdapter implements SpringApplicationRun
     public void environmentPrepared(ConfigurableEnvironment environment) {
     }
 
-    @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
     }
 
-    @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
     }
 
-    @Override
     public void started(ConfigurableApplicationContext context) {
     }
 
-    @Override
     public void running(ConfigurableApplicationContext context) {
     }
 
-    @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
     }
 
