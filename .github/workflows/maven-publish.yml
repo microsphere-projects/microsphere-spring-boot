@@ -6,7 +6,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Maven Publish
+name: Maven Publish - Spring Boot 3+
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
     inputs:
       revision:
-        description: 'The version to publish'
+        description: 'The version to publish for Spring Boot 3+ and JDK 17+'
         required: true
         default: '2.0.0-SNAPSHOT'
 
@@ -29,7 +29,7 @@ jobs:
       - name: Setup Maven Central Repository
         uses: actions/setup-java@v4
         with:
-          java-version: '11'
+          java-version: '17'
           distribution: 'temurin'
           server-id: ossrh
           server-username: MAVEN_USERNAME
@@ -41,7 +41,6 @@ jobs:
           --batch-mode
           --update-snapshots
           --file pom.xml
-          -Drevision=0.0.1-SNAPSHOT
           -DargLine="--add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED"
           -Drevision=${{ inputs.revision }}
           -Dgpg.skip=true
