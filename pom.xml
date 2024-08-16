@@ -52,6 +52,7 @@
 
     <properties>
         <revision>2.0.0-SNAPSHOT</revision>
+        <java.version>17</java.version>
     </properties>
 
     <modules>
