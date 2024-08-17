@@ -20,7 +20,7 @@
 
     <properties>
         <spring-boot.version>2.7.18</spring-boot.version>
-        <microsphere-spring.version>${revision}</microsphere-spring.version>
+        <microsphere-spring.version>0.0.3</microsphere-spring.version>
     </properties>
 
     <dependencyManagement>
@@ -47,16 +47,30 @@
 
     <profiles>
         <profile>
-            <id>spring-boot-2.6</id>
+            <id>spring-boot-2.0</id>
             <properties>
-                <spring-boot.version>2.6.16</spring-boot.version>
+                <spring-boot.version>2.0.9.RELEASE</spring-boot.version>
             </properties>
         </profile>
 
         <profile>
-            <id>spring-boot-2.5</id>
+            <id>spring-boot-2.1</id>
             <properties>
-                <spring-boot.version>2.5.14</spring-boot.version>
+                <spring-boot.version>2.1.18.RELEASE</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.2</id>
+            <properties>
+                <spring-boot.version>2.2.13.RELEASE</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.3</id>
+            <properties>
+                <spring-boot.version>2.3.12.RELEASE</spring-boot.version>
             </properties>
         </profile>
 
@@ -66,5 +80,27 @@
                 <spring-boot.version>2.4.13</spring-boot.version>
             </properties>
         </profile>
+
+        <profile>
+            <id>spring-boot-2.5</id>
+            <properties>
+                <spring-boot.version>2.5.15</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.6</id>
+            <properties>
+                <spring-boot.version>2.6.15</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.7</id>
+            <properties>
+                <spring-boot.version>2.7.18</spring-boot.version>
+            </properties>
+        </profile>
+        
     </profiles>
 </project>
