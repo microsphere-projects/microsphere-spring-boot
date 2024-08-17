@@ -19,7 +19,6 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <spring-boot.version>2.7.18</spring-boot.version>
         <microsphere-spring.version>0.0.3</microsphere-spring.version>
     </properties>
 
