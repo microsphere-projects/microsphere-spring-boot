@@ -96,6 +96,9 @@
 
         <profile>
             <id>spring-boot-2.7</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <spring-boot.version>2.7.18</spring-boot.version>
             </properties>
