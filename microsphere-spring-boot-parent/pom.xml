@@ -19,7 +19,6 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <spring-boot.version>3.3.1</spring-boot.version>
         <microsphere-spring.version>2.0.0-SNAPSHOT</microsphere-spring.version>
     </properties>
 
@@ -97,6 +96,9 @@
 
         <profile>
             <id>spring-boot-3.3</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <spring-boot.version>3.3.1</spring-boot.version>
             </properties>
