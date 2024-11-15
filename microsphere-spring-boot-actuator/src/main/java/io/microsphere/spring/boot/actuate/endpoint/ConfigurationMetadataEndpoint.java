@@ -34,8 +34,8 @@ public class ConfigurationMetadataEndpoint {
 
     private final ConfigurationMetadataReader configurationMetadataReader;
 
-    public ConfigurationMetadataEndpoint(ClassLoader classLoader) {
-        this.configurationMetadataReader = new ConfigurationMetadataReader(classLoader);
+    public ConfigurationMetadataEndpoint(ConfigurationMetadataReader configurationMetadataReader) {
+        this.configurationMetadataReader = configurationMetadataReader;
     }
 
     @ReadOperation
