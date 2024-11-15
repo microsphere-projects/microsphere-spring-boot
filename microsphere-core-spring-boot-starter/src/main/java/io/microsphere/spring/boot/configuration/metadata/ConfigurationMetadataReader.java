@@ -47,15 +47,15 @@ public class ConfigurationMetadataReader {
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationMetadataReader.class);
 
-    private static final String METADATA_RESOURCE_NAME = "spring-configuration-metadata.json";
+    public static final String METADATA_RESOURCE_NAME = "spring-configuration-metadata.json";
 
-    private static final String ADDITIONAL_METADATA_RESOURCE_NAME = "additional-spring-configuration-metadata.json";
+    public static final String ADDITIONAL_METADATA_RESOURCE_NAME = "additional-spring-configuration-metadata.json";
 
     private static final String META_INFO_PATH = "/META-INF/";
 
-    private static final String METADATA_RESOURCE_PATH = META_INFO_PATH + METADATA_RESOURCE_NAME;
+    public static final String METADATA_RESOURCE_PATH = META_INFO_PATH + METADATA_RESOURCE_NAME;
 
-    private static final String ADDITIONAL_METADATA_RESOURCE_PATH = META_INFO_PATH + ADDITIONAL_METADATA_RESOURCE_NAME;
+    public static final String ADDITIONAL_METADATA_RESOURCE_PATH = META_INFO_PATH + ADDITIONAL_METADATA_RESOURCE_NAME;
 
     public static final String METADATA_RESOURCE_PATTERN_PATH = CLASSPATH_ALL_URL_PREFIX + METADATA_RESOURCE_PATH;
 
