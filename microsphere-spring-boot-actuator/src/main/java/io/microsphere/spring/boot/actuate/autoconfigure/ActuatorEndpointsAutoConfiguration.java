@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.microsphere.spring.boot.actuate.condition.ConditionalOnConfigurationProcessorPresent;
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
@@ -28,6 +29,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 /**
  * Actuator {@link Endpoint @Endpoint} Auto-Configuration class
@@ -39,6 +41,7 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnClass(name = {
         "org.springframework.boot.actuate.endpoint.annotation.Endpoint"
 })
+@Import(value = {ActuatorEndpointsAutoConfiguration.ConfigurationProcessorConfiguration.class})
 public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware {
 
     private ClassLoader classLoader;
@@ -58,12 +61,22 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         return new WebEndpoints(webEndpointsSupplier);
     }
 
-    @Bean
-    @ConditionalOnClass(name = "org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata")
-    @ConditionalOnMissingBean
-    @ConditionalOnAvailableEndpoint
-    public ConfigurationMetadataEndpoint configurationMetadataEndpoint() {
-        return new ConfigurationMetadataEndpoint(classLoader);
+    @ConditionalOnConfigurationProcessorPresent
+    static class ConfigurationProcessorConfiguration implements BeanClassLoaderAware {
+
+        private ClassLoader classLoader;
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnAvailableEndpoint
+        public ConfigurationMetadataEndpoint configurationMetadataEndpoint() {
+            return new ConfigurationMetadataEndpoint(classLoader);
+        }
+
+        @Override
+        public void setBeanClassLoader(ClassLoader classLoader) {
+            this.classLoader = classLoader;
+        }
     }
 
     @Override
