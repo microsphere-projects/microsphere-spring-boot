@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
+import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
@@ -55,6 +56,14 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     @ConditionalOnAvailableEndpoint
     public WebEndpoints webEndpoints(WebEndpointsSupplier webEndpointsSupplier) {
         return new WebEndpoints(webEndpointsSupplier);
+    }
+
+    @Bean
+    @ConditionalOnClass(name = "org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata")
+    @ConditionalOnMissingBean
+    @ConditionalOnAvailableEndpoint
+    public ConfigurationMetadataEndpoint configurationMetadataEndpoint() {
+        return new ConfigurationMetadataEndpoint(classLoader);
     }
 
     @Override
