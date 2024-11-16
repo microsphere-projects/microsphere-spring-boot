@@ -17,15 +17,20 @@
 package io.microsphere.spring.boot.actuate.endpoint;
 
 import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataReader;
+import org.springframework.boot.actuate.endpoint.OperationResponseBody;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+
+import java.util.List;
 
 /**
  * {@link Endpoint @Endpoint} to expose the configuration properties
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ConfigurationMetadata
+ * @see ConfigurationProperties
  * @since 1.0.0
  */
 @Endpoint(id = "configProperties")
@@ -38,7 +43,34 @@ public class ConfigurationPropertiesEndpoint {
     }
 
     @ReadOperation
-    public ConfigurationMetadata getConfigurationMetadata() {
-        return this.configurationMetadataReader.read();
+    public ConfigurationPropertiesDescriptor getConfigurationProperties() {
+        ConfigurationPropertiesDescriptor configurationProperties = new ConfigurationPropertiesDescriptor();
+        return configurationProperties;
+    }
+
+    public static class ConfigurationPropertiesDescriptor implements OperationResponseBody {
+
+        private List<ConfigurationPropertyDescriptor> configurationProperties;
+
+        public List<ConfigurationPropertyDescriptor> getConfigurationProperties() {
+            return configurationProperties;
+        }
+
+        public void setConfigurationProperties(List<ConfigurationPropertyDescriptor> configurationProperties) {
+            this.configurationProperties = configurationProperties;
+        }
+    }
+
+    public static class ConfigurationPropertyDescriptor {
+
+        private String name;
+
+        private String type;
+
+        private Object value;
+
+        private Object defaultValue;
+
+
     }
 }
