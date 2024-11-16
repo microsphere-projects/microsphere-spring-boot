@@ -21,6 +21,7 @@ import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
 import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataReader;
+import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataRepository;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -63,27 +64,21 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     }
 
     @ConditionalOnConfigurationProcessorPresent
-    static class ConfigurationProcessorConfiguration implements BeanClassLoaderAware {
-
-        private ClassLoader classLoader;
+    static class ConfigurationProcessorConfiguration {
 
         @Bean
         @ConditionalOnMissingBean
-        public ConfigurationMetadataReader configurationMetadataReader() {
-            return new ConfigurationMetadataReader(this.classLoader);
+        public ConfigurationMetadataRepository configurationMetadataRepository() {
+            return new ConfigurationMetadataRepository();
         }
 
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnAvailableEndpoint
-        public ConfigurationMetadataEndpoint configurationMetadataEndpoint(ConfigurationMetadataReader configurationMetadataReader) {
-            return new ConfigurationMetadataEndpoint(configurationMetadataReader);
+        public ConfigurationMetadataEndpoint configurationMetadataEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
+            return new ConfigurationMetadataEndpoint(configurationMetadataRepository);
         }
 
-        @Override
-        public void setBeanClassLoader(ClassLoader classLoader) {
-            this.classLoader = classLoader;
-        }
     }
 
     @Override
