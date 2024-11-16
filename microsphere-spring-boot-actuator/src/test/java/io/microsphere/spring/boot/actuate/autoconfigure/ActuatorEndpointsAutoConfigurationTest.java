@@ -54,8 +54,9 @@ public class ActuatorEndpointsAutoConfigurationTest {
 
     @Test
     public void testGetConfigurationMetadata() {
-        ConfigurationMetadata configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
-        assertFalse(configurationMetadata.getItems().isEmpty());
+        ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
+        assertFalse(configurationMetadata.getGroups().isEmpty());
+        assertFalse(configurationMetadata.getProperties().isEmpty());
     }
 
     public static void main(String[] args) {
