@@ -21,9 +21,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.configurationprocessor.metadata.ItemHint;
 import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,38 +47,50 @@ public class ConfigurationMetadataRepository implements BeanClassLoaderAware, Co
 
     private ConfigurationMetadataReader configurationMetadataReader;
 
-    private Map<String, ItemMetadata> namedGroupItems;
+    private Map<String, ItemMetadata> namedGroups;
 
-    private Map<String, ItemMetadata> namedPropertyItems;
+    private Map<String, ItemMetadata> namedProperties;
 
     private Map<String, List<ItemHint>> namedHints;
 
+    @NonNull
     public Set<String> getPropertyGroups() {
-        return this.namedGroupItems.keySet();
+        return this.namedGroups.keySet();
     }
 
+    @NonNull
     public Set<String> getPropertyNames() {
-        return this.namedPropertyItems.keySet();
+        return this.namedProperties.keySet();
     }
 
+    @NonNull
     public Collection<ItemMetadata> getGroups() {
-        return this.namedGroupItems.values();
+        return this.namedGroups.values();
     }
 
+    @NonNull
     public Collection<ItemMetadata> getProperties() {
-        return this.namedPropertyItems.values();
+        return this.namedProperties.values();
     }
 
+    @Nullable
     public ItemMetadata getGroup(String name) {
-        return this.namedGroupItems.get(name);
+        return this.namedGroups.get(name);
     }
 
+    @Nullable
     public ItemMetadata getProperty(String name) {
-        return this.namedPropertyItems.get(name);
+        return this.namedProperties.get(name);
     }
 
+    @NonNull
     public List<ItemHint> getHints(String name) {
         return this.namedHints.getOrDefault(name, emptyList());
+    }
+
+    @NonNull
+    public ConfigurationMetadataReader getConfigurationMetadataReader() {
+        return configurationMetadataReader;
     }
 
     @Override
@@ -100,11 +113,11 @@ public class ConfigurationMetadataRepository implements BeanClassLoaderAware, Co
     }
 
     private void initNamedGroupItems(List<ItemMetadata> items) {
-        this.namedGroupItems = createNamedItems(items, GROUP);
+        this.namedGroups = createNamedItems(items, GROUP);
     }
 
     private void initNamedPropertyItems(List<ItemMetadata> items) {
-        this.namedPropertyItems = createNamedItems(items, PROPERTY);
+        this.namedProperties = createNamedItems(items, PROPERTY);
     }
 
     private void initNamedHints(List<ItemHint> items) {
