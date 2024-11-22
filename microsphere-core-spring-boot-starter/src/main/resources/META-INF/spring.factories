@@ -28,3 +28,7 @@ io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilt
 # DefaultPropertiesPostProcessor
 io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
 io.microsphere.spring.boot.env.SpringApplicationDefaultPropertiesPostProcessor
+
+# ApplicationContextInitializer
+org.springframework.context.ApplicationContextInitializer=\
+io.microsphere.spring.core.env.ListenableConfigurableEnvironmentInitializer
