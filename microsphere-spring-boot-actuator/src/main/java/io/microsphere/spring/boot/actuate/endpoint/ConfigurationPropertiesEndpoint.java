@@ -16,17 +16,21 @@
  */
 package io.microsphere.spring.boot.actuate.endpoint;
 
-import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataReader;
+import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataRepository;
+import io.microsphere.spring.boot.configuration.metadata.ContextConfigurationPropertyDescriptor;
 import org.springframework.boot.actuate.endpoint.OperationResponseBody;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.EventListener;
 
 import java.util.List;
 
 /**
- * {@link Endpoint @Endpoint} to expose the configuration properties
+ * {@link Endpoint @Endpoint} to expose the configuration properties.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ConfigurationMetadata
@@ -36,10 +40,15 @@ import java.util.List;
 @Endpoint(id = "configProperties")
 public class ConfigurationPropertiesEndpoint {
 
-    private final ConfigurationMetadataReader configurationMetadataReader;
+    private final ConfigurationMetadataRepository configurationMetadataRepository;
 
-    public ConfigurationPropertiesEndpoint(ClassLoader classLoader) {
-        this.configurationMetadataReader = new ConfigurationMetadataReader(classLoader);
+    public ConfigurationPropertiesEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
+        this.configurationMetadataRepository = configurationMetadataRepository;
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    public void onApplicationReadyEvent(ApplicationReadyEvent event) {
+        ConfigurableApplicationContext context = event.getApplicationContext();
     }
 
     @ReadOperation
@@ -48,29 +57,19 @@ public class ConfigurationPropertiesEndpoint {
         return configurationProperties;
     }
 
+
     public static class ConfigurationPropertiesDescriptor implements OperationResponseBody {
 
-        private List<ConfigurationPropertyDescriptor> configurationProperties;
+        private List<ContextConfigurationPropertyDescriptor> configurationProperties;
 
-        public List<ConfigurationPropertyDescriptor> getConfigurationProperties() {
+        public List<ContextConfigurationPropertyDescriptor> getConfigurationProperties() {
             return configurationProperties;
         }
 
-        public void setConfigurationProperties(List<ConfigurationPropertyDescriptor> configurationProperties) {
+        public void setConfigurationProperties(List<ContextConfigurationPropertyDescriptor> configurationProperties) {
             this.configurationProperties = configurationProperties;
         }
     }
 
-    public static class ConfigurationPropertyDescriptor {
 
-        private String name;
-
-        private String type;
-
-        private Object value;
-
-        private Object defaultValue;
-
-
-    }
 }
