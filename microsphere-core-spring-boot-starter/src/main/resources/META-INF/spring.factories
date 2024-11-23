@@ -31,4 +31,5 @@ io.microsphere.spring.boot.env.SpringApplicationDefaultPropertiesPostProcessor
 
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
+io.microsphere.spring.beans.factory.support.ListenableAutowireCandidateResolverInitializer,\
 io.microsphere.spring.core.env.ListenableConfigurableEnvironmentInitializer
