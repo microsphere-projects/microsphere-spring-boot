@@ -20,6 +20,7 @@ import io.microsphere.spring.boot.actuate.condition.ConditionalOnConfigurationPr
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
+import io.microsphere.spring.boot.context.properties.metadata.ConfigurationMetadataReader;
 import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
@@ -66,8 +67,14 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
 
         @Bean
         @ConditionalOnMissingBean
-        public ConfigurationMetadataRepository configurationMetadataRepository() {
-            return new ConfigurationMetadataRepository();
+        public ConfigurationMetadataReader configurationMetadataReader() {
+            return new ConfigurationMetadataReader();
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public ConfigurationMetadataRepository configurationMetadataRepository(ConfigurationMetadataReader configurationMetadataReader) {
+            return new ConfigurationMetadataRepository(configurationMetadataReader);
         }
 
         @Bean
