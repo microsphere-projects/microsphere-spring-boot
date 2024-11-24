@@ -16,8 +16,8 @@
  */
 package io.microsphere.spring.boot.actuate.endpoint;
 
-import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataRepository;
-import io.microsphere.spring.boot.configuration.metadata.ContextConfigurationPropertyDescriptor;
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
+import io.microsphere.spring.config.ConfigurationProperty;
 import org.springframework.boot.actuate.endpoint.OperationResponseBody;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
@@ -60,13 +60,13 @@ public class ConfigurationPropertiesEndpoint {
 
     public static class ConfigurationPropertiesDescriptor implements OperationResponseBody {
 
-        private List<ContextConfigurationPropertyDescriptor> configurationProperties;
+        private List<ConfigurationProperty> configurationProperties;
 
-        public List<ContextConfigurationPropertyDescriptor> getConfigurationProperties() {
+        public List<ConfigurationProperty> getConfigurationProperties() {
             return configurationProperties;
         }
 
-        public void setConfigurationProperties(List<ContextConfigurationPropertyDescriptor> configurationProperties) {
+        public void setConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
             this.configurationProperties = configurationProperties;
         }
     }

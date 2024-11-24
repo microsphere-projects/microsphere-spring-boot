@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.configuration.metadata;
 
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 

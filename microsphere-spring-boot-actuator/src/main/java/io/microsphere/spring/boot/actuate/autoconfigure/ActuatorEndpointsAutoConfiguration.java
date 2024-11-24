@@ -20,12 +20,10 @@ import io.microsphere.spring.boot.actuate.condition.ConditionalOnConfigurationPr
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
-import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataReader;
-import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataRepository;
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
-import org.springframework.boot.actuate.endpoint.web.PathMappedEndpoints;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

@@ -16,7 +16,7 @@
  */
 package io.microsphere.spring.boot.actuate.endpoint;
 
-import io.microsphere.spring.boot.configuration.metadata.ConfigurationMetadataRepository;
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
 import org.springframework.boot.actuate.endpoint.OperationResponseBody;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;

@@ -8,9 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
@@ -27,8 +27,13 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
-        })
+        },
+        properties = {
+                "management.endpoint.loggers.enabled=false"
+        }
+)
 @PropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
+@TestPropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
 @EnableAutoConfiguration
 public class ActuatorEndpointsAutoConfigurationTest {
 

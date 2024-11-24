@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.configuration.metadata;
 
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
