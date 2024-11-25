@@ -16,8 +16,11 @@
  */
 package io.microsphere.spring.boot.env.config;
 
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
+import io.microsphere.spring.boot.env.PropertySourceLoaders;
+import io.microsphere.spring.context.event.BeanFactoryListenerAdapter;
 import io.microsphere.spring.context.event.BeanListenerAdapter;
-import io.microsphere.spring.util.BeanRegistrar;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -31,7 +34,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.support.ResourcePropertySource;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -44,40 +49,45 @@ import static io.microsphere.spring.util.BeanRegistrar.registerBean;
  * @see ConfigurableEnvironment
  * @since ApplicationContextInitializer
  */
-public class OriginTrackedConfigurationPropertyInitializer extends BeanListenerAdapter
-        implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+public class OriginTrackedConfigurationPropertyInitializer implements BeanFactoryListenerAdapter, ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     public static final String BEAN_NAME = "originTrackedConfigurationPropertyInitializer";
+
+    private static final Logger logger = LoggerFactory.getLogger(OriginTrackedConfigurationPropertyInitializer.class);
 
     private boolean initialized = false;
 
     private ConfigurableApplicationContext applicationContext;
 
+    private PropertySourceLoaders propertySourceLoaders;
+
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
+        this.propertySourceLoaders = new PropertySourceLoaders(applicationContext.getClassLoader());
         ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
         BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
         registerBean(registry, BEAN_NAME, this);
     }
 
     @Override
-    public void onBeforeBeanInstantiate(String beanName, RootBeanDefinition mergedBeanDefinition) {
-        if (initialized) {
-            return;
-        }
+    public void onBeanFactoryConfigurationFrozen(ConfigurableListableBeanFactory beanFactory) {
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
         MutablePropertySources propertySources = environment.getPropertySources();
         initializePropertySources(propertySources);
-        initialized = true;
     }
 
     private void initializePropertySources(MutablePropertySources propertySources) {
         for (PropertySource propertySource : propertySources) {
             if (isPropertySourceCandidate(propertySource)) {
                 String name = propertySource.getName();
-                PropertySource originTrackedPropertySource = createOriginTrackedPropertySource(propertySource);
-                propertySources.replace(name, originTrackedPropertySource);
+                try {
+                    PropertySource originTrackedPropertySource = createOriginTrackedPropertySource(propertySource);
+                    propertySources.replace(name, originTrackedPropertySource);
+                } catch (IOException e) {
+                    logger.error("Failed to create the origin tracked PropertySource[name : '{}', class : '{}']",
+                            name, propertySource.getClass().getName());
+                }
             }
         }
     }
@@ -87,7 +97,11 @@ public class OriginTrackedConfigurationPropertyInitializer extends BeanListenerA
                 !(propertySource instanceof OriginLookup);
     }
 
-    private PropertySource createOriginTrackedPropertySource(PropertySource propertySource) {
+    private PropertySource createOriginTrackedPropertySource(PropertySource propertySource) throws IOException {
+        if (propertySource instanceof ResourcePropertySource) {
+            return propertySourceLoaders.reloadAsOriginTracked(propertySource);
+        }
+
         EnumerablePropertySource enumerablePropertySource = (EnumerablePropertySource) propertySource;
         String[] propertyNames = enumerablePropertySource.getPropertyNames();
         int size = propertyNames.length;
@@ -95,6 +109,7 @@ public class OriginTrackedConfigurationPropertyInitializer extends BeanListenerA
         for (int i = 0; i < size; i++) {
             String propertyName = propertyNames[i];
             Object propertyValue = enumerablePropertySource.getProperty(propertyName);
+            // Skip if propertyValue is OriginTrackedValue
             if (propertyValue instanceof OriginTrackedValue) {
                 continue;
             }
@@ -107,7 +122,7 @@ public class OriginTrackedConfigurationPropertyInitializer extends BeanListenerA
     }
 
     private Origin resolveOrigin(PropertySource propertySource) {
-        // TODO
+        // TODO more Origin implementations
         return new NamedOrigin(propertySource.getName());
     }
 
