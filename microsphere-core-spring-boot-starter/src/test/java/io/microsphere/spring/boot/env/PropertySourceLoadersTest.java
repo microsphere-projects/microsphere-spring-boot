@@ -18,6 +18,7 @@ package io.microsphere.spring.boot.env;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
+import org.springframework.boot.origin.OriginLookup;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
@@ -29,6 +30,7 @@ import java.util.List;
 import static io.microsphere.util.ArrayUtils.of;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -42,9 +44,9 @@ public class PropertySourceLoadersTest {
 
     private static final PropertySourceLoaders propertySourceLoaders = new PropertySourceLoaders();
 
-    private static final String TEST_RESOURCE_LOCATION = "classpath:/config/default/core.properties";
-
     private static final String TEST_PROPERTY_NAME = "core";
+
+    private static final String TEST_RESOURCE_LOCATION = "classpath:/config/default/core.properties";
 
     @Test
     public void testGetFileExtensions() {
@@ -60,6 +62,23 @@ public class PropertySourceLoadersTest {
         assertEquals(1, propertySources.size());
 
         PropertySource propertySource = propertySources.get(0);
+        assertPropertySource(propertySource);
+    }
+
+    @Test
+    public void testLoadAsOriginTracked() throws IOException {
+        PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
+        assertTrue(propertySource instanceof OriginLookup);
+        assertPropertySource(propertySource);
+    }
+
+    @Test
+    public void testReloadAsOriginTracked() throws IOException {
+        PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
+        assertSame(propertySource, propertySourceLoaders.reloadAsOriginTracked(propertySource));
+    }
+
+    private void assertPropertySource(PropertySource<?> propertySource) {
         assertTrue(propertySource instanceof OriginTrackedMapPropertySource);
         assertEquals(TEST_PROPERTY_NAME, propertySource.getName());
         assertEquals("graceful", propertySource.getProperty("server.shutdown"));
