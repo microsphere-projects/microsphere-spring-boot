@@ -16,30 +16,39 @@
  */
 package io.microsphere.spring.boot.env;
 
-import io.microsphere.util.ClassLoaderUtils;
+import io.microsphere.logging.Logger;
+import io.microsphere.logging.LoggerFactory;
 import org.springframework.boot.env.PropertySourceLoader;
+import org.springframework.boot.origin.OriginLookup;
 import org.springframework.core.env.PropertySource;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
+import static io.microsphere.util.StringUtils.substringBetween;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
+import static org.springframework.util.StringUtils.hasText;
 
 
 /**
- * The composite {@link PropertySourceLoader}
+ * The composite class of {@link PropertySourceLoader} with utilities features
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see PropertySourceLoader
  * @since 1.0.0
  */
 public class PropertySourceLoaders implements PropertySourceLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(PropertySourceLoaders.class);
+
+    private final ResourceLoader resourceLoader;
 
     private final List<PropertySourceLoader> loaders;
 
@@ -48,12 +57,12 @@ public class PropertySourceLoaders implements PropertySourceLoader {
     }
 
     public PropertySourceLoaders(ClassLoader classLoader) {
-        this(loadFactories(PropertySourceLoader.class, classLoader));
+        this(new DefaultResourceLoader(classLoader));
     }
 
-    public PropertySourceLoaders(List<PropertySourceLoader> loader) {
-        this.loaders = new ArrayList<>(loader.size());
-        this.loaders.addAll(loader);
+    public PropertySourceLoaders(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+        this.loaders = loadFactories(PropertySourceLoader.class, resourceLoader.getClassLoader());
     }
 
     @Override
@@ -78,6 +87,47 @@ public class PropertySourceLoaders implements PropertySourceLoader {
         return propertySources;
     }
 
+    /**
+     * Reload the {@link PropertySource} as an instance of {@link PropertySource} with {@link OriginLookup}
+     *
+     * @param propertySource {@link PropertySource}
+     * @return an instance of {@link PropertySource} with {@link OriginLookup}
+     * @throws IOException
+     */
+    public PropertySource<?> reloadAsOriginTracked(PropertySource<?> propertySource) throws IOException {
+        if (propertySource instanceof OriginLookup<?>) {
+            debug("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
+                    propertySource.getName(), propertySource.getClass().getName());
+            return propertySource;
+        }
+        // the name is source from Resource#getDescription()
+        String name = propertySource.getName();
+        String location = substringBetween(name, "[", "]");
+        // the location or uri can be resolved from FileSystemResource, ClassPathResource  and UrlResource
+        if (hasText(location)) {
+            return loadAsOriginTracked(name, location);
+        }
+        return propertySource;
+    }
+
+    /**
+     * Load the {@link PropertySource} as an instance of {@link PropertySource} with {@link OriginLookup}
+     *
+     * @param name     the name of {@link PropertySource}
+     * @param location the location of {@link Resource} for {@link PropertySource}
+     * @return an instance of {@link PropertySource} with {@link OriginLookup}
+     * @throws IOException
+     */
+    public PropertySource<?> loadAsOriginTracked(String name, String location) throws IOException {
+        Resource resource = resourceLoader.getResource(location);
+        List<PropertySource<?>> propertySources = load(name, resource);
+        int size = propertySources.size();
+        if (size > 1) {
+            throw new IllegalStateException("The resource : " + resource + " can load more than one PropertySource");
+        }
+        return propertySources.get(0);
+    }
+
     private boolean supports(PropertySourceLoader loader, URL resourceURL) {
         String[] fileExtensions = loader.getFileExtensions();
         String path = resourceURL.getPath();
@@ -89,5 +139,11 @@ public class PropertySourceLoaders implements PropertySourceLoader {
             }
         }
         return supported;
+    }
+
+    private void debug(String messagePattern, Object... args) {
+        if (logger.isDebugEnabled()) {
+            logger.debug(messagePattern, args);
+        }
     }
 }
