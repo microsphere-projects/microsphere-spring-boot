@@ -52,9 +52,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     public static final String BEAN_NAME = "originTrackedConfigurationPropertyInitializer";
 
     private static final Logger logger = LoggerFactory.getLogger(OriginTrackedConfigurationPropertyInitializer.class);
-
-    private boolean initialized = false;
-
+    
     private ConfigurableApplicationContext applicationContext;
 
     private PropertySourceLoaders propertySourceLoaders;
