@@ -8,7 +8,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
-import org.springframework.util.Assert;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -18,6 +17,7 @@ import static io.microsphere.util.ArrayUtils.combine;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static org.springframework.util.Assert.isInstanceOf;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 import static org.springframework.util.StringUtils.commaDelimitedListToSet;
 import static org.springframework.util.StringUtils.hasText;
@@ -102,7 +102,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
     }
 
     private static ConfigurableEnvironment getConfigurableEnvironment(Environment environment) {
-        Assert.isInstanceOf(ConfigurableEnvironment.class, environment);
+        isInstanceOf(ConfigurableEnvironment.class, environment);
         return (ConfigurableEnvironment) environment;
     }
 

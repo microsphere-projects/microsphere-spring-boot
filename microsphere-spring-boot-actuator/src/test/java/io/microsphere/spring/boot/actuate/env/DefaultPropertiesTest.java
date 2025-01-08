@@ -57,7 +57,7 @@ public class DefaultPropertiesTest {
         assertProperty("management.endpoint.httptrace.enabled", "false");
         assertProperty("management.endpoint.info.enabled", "true");
         assertProperty("management.endpoint.integrationgraph.enabled", "false");
-        assertProperty("management.endpoint.loggers.enabled", "true");
+        assertProperty("management.endpoint.loggers.enabled", "false");
         assertProperty("management.endpoint.liquibase.enabled", "false");
         assertProperty("management.endpoint.metrics.enabled", "true");
         assertProperty("management.endpoint.mappings.enabled", "true");
@@ -74,6 +74,6 @@ public class DefaultPropertiesTest {
     }
 
     private void assertProperty(String propertyName, String expectedValue) {
-        assertEquals(environment.getRequiredProperty(propertyName), expectedValue);
+        assertEquals(expectedValue, environment.getRequiredProperty(propertyName));
     }
 }

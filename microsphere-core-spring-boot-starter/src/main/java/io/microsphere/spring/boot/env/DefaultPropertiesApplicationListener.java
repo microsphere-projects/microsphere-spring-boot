@@ -27,8 +27,8 @@ import java.util.Set;
 
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultPropertiesResources;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
-import static io.microsphere.spring.util.PropertySourcesUtils.getDefaultProperties;
-import static io.microsphere.spring.util.ResourceLoaderUtils.getResourcePatternResolver;
+import static io.microsphere.spring.core.env.PropertySourcesUtils.getDefaultProperties;
+import static io.microsphere.spring.core.io.ResourceLoaderUtils.getResourcePatternResolver;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
 
 /**

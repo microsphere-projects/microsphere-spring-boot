@@ -38,7 +38,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static io.microsphere.spring.util.BeanRegistrar.registerBean;
+import static io.microsphere.spring.beans.factory.support.BeanRegistrar.registerBean;
 
 /**
  * {@link ApplicationContextInitializer} class supports origin tracked configuration property.

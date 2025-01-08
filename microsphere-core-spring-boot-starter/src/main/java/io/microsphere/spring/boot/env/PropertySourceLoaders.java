@@ -17,7 +17,6 @@
 package io.microsphere.spring.boot.env;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import org.springframework.boot.env.PropertySourceLoader;
 import org.springframework.boot.origin.OriginLookup;
 import org.springframework.core.env.PropertySource;
@@ -31,6 +30,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.StringUtils.substringBetween;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
@@ -46,7 +46,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 public class PropertySourceLoaders implements PropertySourceLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(PropertySourceLoaders.class);
+    private static final Logger logger = getLogger(PropertySourceLoaders.class);
 
     private final ResourceLoader resourceLoader;
 

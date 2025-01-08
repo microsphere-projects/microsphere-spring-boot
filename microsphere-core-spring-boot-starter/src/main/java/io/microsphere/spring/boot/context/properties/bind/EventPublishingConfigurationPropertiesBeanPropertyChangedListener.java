@@ -30,7 +30,6 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.util.Assert;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +40,7 @@ import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.findConfigurationProperties;
+import static org.springframework.util.Assert.isInstanceOf;
 
 /**
  * A {@link BindListener} implementation of {@link ConfigurationProperties @ConfigurationProperties} Bean to publish
@@ -126,7 +126,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         Class<ConfigurableApplicationContext> expectedType = CONFIGURABLE_APPLICATION_CONTEXT_CLASS;
-        Assert.isInstanceOf(expectedType, context, "The 'context' argument is not an instance of " + expectedType.getName());
+        isInstanceOf(expectedType, context, "The 'context' argument is not an instance of " + expectedType.getName());
         this.context = expectedType.cast(context);
     }
 
