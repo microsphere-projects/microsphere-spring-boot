@@ -47,34 +47,6 @@
 
     <profiles>
         <profile>
-            <id>spring-boot-2.4</id>
-            <properties>
-                <spring-boot.version>2.4.13</spring-boot.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>spring-boot-2.5</id>
-            <properties>
-                <spring-boot.version>2.5.15</spring-boot.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>spring-boot-2.6</id>
-            <properties>
-                <spring-boot.version>2.6.15</spring-boot.version>
-            </properties>
-        </profile>
-
-        <profile>
-            <id>spring-boot-2.7</id>
-            <properties>
-                <spring-boot.version>2.7.18</spring-boot.version>
-            </properties>
-        </profile>
-
-        <profile>
             <id>spring-boot-3.0</id>
             <properties>
                 <spring-boot.version>3.0.13</spring-boot.version>
@@ -91,17 +63,24 @@
         <profile>
             <id>spring-boot-3.2</id>
             <properties>
-                <spring-boot.version>3.2.7</spring-boot.version>
+                <spring-boot.version>3.2.12</spring-boot.version>
             </properties>
         </profile>
 
         <profile>
             <id>spring-boot-3.3</id>
+            <properties>
+                <spring-boot.version>3.3.7</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-3.4</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <spring-boot.version>3.3.1</spring-boot.version>
+                <spring-boot.version>3.4.1</spring-boot.version>
             </properties>
         </profile>
     </profiles>
