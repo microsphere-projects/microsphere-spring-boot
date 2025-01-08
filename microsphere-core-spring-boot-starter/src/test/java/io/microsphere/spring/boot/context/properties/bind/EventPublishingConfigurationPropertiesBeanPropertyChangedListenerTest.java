@@ -52,7 +52,6 @@ import static org.junit.jupiter.api.Assertions.assertNull;
                 EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
                 EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class},
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
-@TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
 public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
