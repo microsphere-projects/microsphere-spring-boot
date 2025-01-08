@@ -1,7 +1,6 @@
 package io.microsphere.spring.boot.env;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
@@ -25,10 +24,11 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultPropertiesResources;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
-import static io.microsphere.spring.util.PropertySourcesUtils.getDefaultProperties;
-import static io.microsphere.spring.util.ResourceLoaderUtils.getResourcePatternResolver;
+import static io.microsphere.spring.core.env.PropertySourcesUtils.getDefaultProperties;
+import static io.microsphere.spring.core.io.ResourceLoaderUtils.getResourcePatternResolver;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
 
 /**
@@ -44,7 +44,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     public static final int DEFAULT_ORDER = LoggingApplicationListener.LOWEST_PRECEDENCE - 1;
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultPropertiesApplicationListener.class);
+    private static final Logger logger = getLogger(DefaultPropertiesApplicationListener.class);
 
     private int order = DEFAULT_ORDER;
 
