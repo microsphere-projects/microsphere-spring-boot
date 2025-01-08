@@ -1,9 +1,8 @@
 package io.microsphere.spring.boot.classloading;
 
 import io.microsphere.classloading.BannedArtifactClassLoadingExecutor;
+import io.microsphere.logging.Logger;
 import io.microsphere.spring.boot.listener.SpringApplicationRunListenerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
@@ -11,6 +10,8 @@ import org.springframework.core.Ordered;
 import org.springframework.util.ClassUtils;
 
 import java.util.Arrays;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * {@link ApplicationStartingEvent ApplicationStartingEvent} {@link ApplicationListener Listener} bans
@@ -21,7 +22,7 @@ import java.util.Arrays;
  */
 public class BannedArtifactClassLoadingListener extends SpringApplicationRunListenerAdapter implements Ordered {
 
-    private static final Logger logger = LoggerFactory.getLogger(BannedArtifactClassLoadingListener.class);
+    private static final Logger logger = getLogger(BannedArtifactClassLoadingListener.class);
 
     private static final boolean artifactsBanned = Boolean.getBoolean("microsphere.artifacts.banned");
 

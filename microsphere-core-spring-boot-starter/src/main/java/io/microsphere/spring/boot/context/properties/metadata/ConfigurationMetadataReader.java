@@ -16,8 +16,7 @@
  */
 package io.microsphere.spring.boot.context.properties.metadata;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.configurationprocessor.metadata.JsonMarshaller;
 import org.springframework.context.ResourceLoaderAware;
@@ -28,6 +27,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.IOException;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static org.springframework.core.io.support.ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
 
 /**
@@ -38,7 +38,7 @@ import static org.springframework.core.io.support.ResourcePatternResolver.CLASSP
  */
 public class ConfigurationMetadataReader implements ResourceLoaderAware {
 
-    private final static Logger logger = LoggerFactory.getLogger(ConfigurationMetadataReader.class);
+    private final static Logger logger = getLogger(ConfigurationMetadataReader.class);
 
     public static final String METADATA_PATH = CLASSPATH_ALL_URL_PREFIX + "/META-INF/spring-configuration-metadata.json";
 

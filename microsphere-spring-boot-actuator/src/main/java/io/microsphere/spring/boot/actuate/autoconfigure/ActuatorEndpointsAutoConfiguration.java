@@ -16,17 +16,21 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.microsphere.spring.boot.actuate.condition.ConditionalOnConfigurationProcessorPresent;
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
+import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
+import io.microsphere.spring.boot.context.properties.metadata.ConfigurationMetadataReader;
+import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
 import org.springframework.beans.factory.BeanClassLoaderAware;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
-import org.springframework.boot.actuate.endpoint.web.PathMappedEndpoints;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
 
 /**
  * Actuator {@link Endpoint @Endpoint} Auto-Configuration class
@@ -38,6 +42,7 @@ import org.springframework.context.annotation.Bean;
 @ConditionalOnClass(name = {
         "org.springframework.boot.actuate.endpoint.annotation.Endpoint"
 })
+@Import(value = {ActuatorEndpointsAutoConfiguration.ConfigurationProcessorConfiguration.class})
 public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware {
 
     private ClassLoader classLoader;
@@ -55,6 +60,30 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     @ConditionalOnAvailableEndpoint
     public WebEndpoints webEndpoints(WebEndpointsSupplier webEndpointsSupplier) {
         return new WebEndpoints(webEndpointsSupplier);
+    }
+
+    @ConditionalOnConfigurationProcessorPresent
+    static class ConfigurationProcessorConfiguration {
+
+        @Bean
+        @ConditionalOnMissingBean
+        public ConfigurationMetadataReader configurationMetadataReader() {
+            return new ConfigurationMetadataReader();
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        public ConfigurationMetadataRepository configurationMetadataRepository(ConfigurationMetadataReader configurationMetadataReader) {
+            return new ConfigurationMetadataRepository(configurationMetadataReader);
+        }
+
+        @Bean
+        @ConditionalOnMissingBean
+        @ConditionalOnAvailableEndpoint
+        public ConfigurationMetadataEndpoint configurationMetadataEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
+            return new ConfigurationMetadataEndpoint(configurationMetadataRepository);
+        }
+
     }
 
     @Override
