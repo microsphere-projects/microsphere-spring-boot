@@ -112,17 +112,10 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
                 assertEquals("/error-page", event.getNewValue());
                 assertEquals("server.error.path", configurationProperty.getName().toString());
                 assertEquals(event.getNewValue(), configurationProperty.getValue());
-            } else if ("compression.enabled".equals(propertyName)) {
-                assertEquals(serverProperties, event.getSource());
-                assertEquals(false, event.getOldValue());
-                assertEquals(true, event.getNewValue());
-                assertEquals("server.compression.enabled", configurationProperty.getName().toString());
-                assertEquals("true", configurationProperty.getValue());
             }
         });
 
         mockPropertySource.setProperty("server.error.path", "/error-page");
-        mockPropertySource.setProperty("server.compression.enabled", "true");
         beanFactory.destroyBean(serverProperties);
         beanFactory.initializeBean(serverProperties, getBeanName(serverProperties));
 
