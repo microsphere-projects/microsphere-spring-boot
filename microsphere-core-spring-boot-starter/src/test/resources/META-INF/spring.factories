@@ -9,5 +9,5 @@ io.microsphere.spring.context.event.BeanTimeStatistics
 
 # BeanFactoryListener
 io.microsphere.spring.context.event.BeanFactoryListener=\
-io.microsphere.spring.context.event.LoggingBeanFactoryListener,\
-io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener
+io.microsphere.spring.context.event.LoggingBeanFactoryListener
+# io.microsphere.spring.context.event.ParallelPreInstantiationSingletonsBeanFactoryListener
