@@ -30,11 +30,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
-import org.springframework.test.context.TestPropertySource;
 
 import javax.annotation.PostConstruct;
-
-import java.util.Locale;
 
 import static java.lang.Integer.valueOf;
 import static java.util.Locale.SIMPLIFIED_CHINESE;
