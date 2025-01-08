@@ -76,25 +76,6 @@
 
     <profiles>
         <profile>
-            <id>spring-boot-2.0</id>
-            <dependencies>
-                <dependency>
-                    <groupId>io.micrometer</groupId>
-                    <artifactId>micrometer-core</artifactId>
-                    <version>1.3.20</version>
-                    <optional>true</optional>
-                </dependency>
-
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                    <version>5.2.25.RELEASE</version>
-                    <optional>true</optional>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
             <id>spring-boot-2.1</id>
             <dependencies>
                 <dependency>

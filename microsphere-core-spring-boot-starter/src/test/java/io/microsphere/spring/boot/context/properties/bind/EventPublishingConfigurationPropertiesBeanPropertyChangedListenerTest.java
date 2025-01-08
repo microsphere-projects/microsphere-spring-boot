@@ -36,6 +36,7 @@ import javax.annotation.PostConstruct;
 
 import java.util.Locale;
 
+import static java.lang.Integer.valueOf;
 import static java.util.Locale.SIMPLIFIED_CHINESE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -103,19 +104,20 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     public void testServerProperties() {
         assertNull(serverProperties.getPort());
 
+        String newPortPropertyValue = "9527";
+
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
             ConfigurationProperty configurationProperty = event.getConfigurationProperty();
             String propertyName = event.getPropertyName();
-            if ("error.path".equals(propertyName)) {
+            if ("port".equals(propertyName)) {
                 assertEquals(serverProperties, event.getSource());
-                assertEquals("/error", event.getOldValue());
-                assertEquals("/error-page", event.getNewValue());
-                assertEquals("server.error.path", configurationProperty.getName().toString());
-                assertEquals(event.getNewValue(), configurationProperty.getValue());
+                assertNull(event.getOldValue());
+                assertEquals(valueOf(newPortPropertyValue), event.getNewValue());
+                assertEquals(valueOf((String) configurationProperty.getValue()), event.getNewValue());
             }
         });
 
-        mockPropertySource.setProperty("server.error.path", "/error-page");
+        mockPropertySource.setProperty("server.port", newPortPropertyValue);
         beanFactory.destroyBean(serverProperties);
         beanFactory.initializeBean(serverProperties, getBeanName(serverProperties));
 
