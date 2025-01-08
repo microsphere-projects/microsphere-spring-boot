@@ -62,4 +62,54 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>spring-boot-2.0</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.1</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.2</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.3</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>
