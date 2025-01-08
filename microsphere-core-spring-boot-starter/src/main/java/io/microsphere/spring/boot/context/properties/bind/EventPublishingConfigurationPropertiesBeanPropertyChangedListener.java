@@ -16,8 +16,7 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -35,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
@@ -54,7 +54,7 @@ import static org.springframework.util.Assert.isInstanceOf;
  */
 public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener implements BindListener, BeanFactoryPostProcessor, ApplicationContextAware, SmartInitializingSingleton {
 
-    private final static Logger logger = LoggerFactory.getLogger(EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
+    private final static Logger logger = getLogger(EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
 
     private static final Class<ConfigurableApplicationContext> CONFIGURABLE_APPLICATION_CONTEXT_CLASS = ConfigurableApplicationContext.class;
 

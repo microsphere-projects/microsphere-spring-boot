@@ -17,7 +17,6 @@
 package io.microsphere.spring.boot.env.config;
 
 import io.microsphere.logging.Logger;
-import io.microsphere.logging.LoggerFactory;
 import io.microsphere.spring.boot.env.PropertySourceLoaders;
 import io.microsphere.spring.context.event.BeanFactoryListenerAdapter;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -38,6 +37,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.beans.factory.support.BeanRegistrar.registerBean;
 
 /**
@@ -51,7 +51,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
 
     public static final String BEAN_NAME = "originTrackedConfigurationPropertyInitializer";
 
-    private static final Logger logger = LoggerFactory.getLogger(OriginTrackedConfigurationPropertyInitializer.class);
+    private static final Logger logger = getLogger(OriginTrackedConfigurationPropertyInitializer.class);
     
     private ConfigurableApplicationContext applicationContext;
 
