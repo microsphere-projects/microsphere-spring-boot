@@ -18,7 +18,6 @@ package io.microsphere.spring.boot.actuate;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.jvm.ExecutorServiceMetrics;
-import io.micrometer.core.instrument.internal.TimedScheduledExecutorService;
 import io.microsphere.concurrent.DelegatingScheduledExecutorService;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.SmartInitializingSingleton;
@@ -38,7 +37,7 @@ import static io.micrometer.core.instrument.binder.jvm.ExecutorServiceMetrics.mo
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see ThreadPoolTaskScheduler
  * @see ExecutorServiceMetrics
- * @see TimedScheduledExecutorService
+ * @see io.micrometer.core.instrument.internal.TimedScheduledExecutorService
  * @since 1.0.0
  */
 public class MonitoredThreadPoolTaskScheduler extends ThreadPoolTaskScheduler implements ApplicationContextAware, SmartInitializingSingleton {
