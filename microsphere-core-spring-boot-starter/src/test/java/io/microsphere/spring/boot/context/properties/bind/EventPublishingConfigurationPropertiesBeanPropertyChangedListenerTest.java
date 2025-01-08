@@ -34,6 +34,9 @@ import org.springframework.test.context.TestPropertySource;
 
 import javax.annotation.PostConstruct;
 
+import java.util.Locale;
+
+import static java.util.Locale.SIMPLIFIED_CHINESE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -43,9 +46,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
-        EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
-        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
+@SpringBootTest(classes =
+        {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+                EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
+                EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class},
+        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
@@ -74,24 +79,24 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
 
     @Test
     public void testJacksonProperties() {
-        assertNull(jacksonProperties.getDateFormat());
+        assertNull(jacksonProperties.getLocale());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
             ConfigurationProperty configurationProperty = event.getConfigurationProperty();
             String propertyName = event.getPropertyName();
-            if ("dateFormat".equals(propertyName)) {
+            if ("locale".equals(propertyName)) {
                 assertEquals(jacksonProperties, event.getSource());
                 assertNull(event.getOldValue());
-                assertEquals("yyyy-MM-dd HH:mm:ss", event.getNewValue());
-                assertEquals("spring.jackson.date-format", configurationProperty.getName().toString());
-                assertEquals(event.getNewValue(), configurationProperty.getValue());
+                assertEquals(SIMPLIFIED_CHINESE, event.getNewValue());
+                assertEquals("spring.jackson.locale", configurationProperty.getName().toString());
+                assertEquals(event.getNewValue().toString(), configurationProperty.getValue());
             }
         });
 
-        mockPropertySource.setProperty("spring.jackson.dateFormat", "yyyy-MM-dd HH:mm:ss");
+        mockPropertySource.setProperty("spring.jackson.locale", "zh_CN");
         beanFactory.destroyBean(jacksonProperties);
-        beanFactory.initializeBean(jacksonProperties, "spring.jackson-jacksonProperties");
-        assertEquals("yyyy-MM-dd HH:mm:ss", jacksonProperties.getDateFormat());
+        beanFactory.initializeBean(jacksonProperties, getBeanName(jacksonProperties));
+        assertEquals(SIMPLIFIED_CHINESE, jacksonProperties.getLocale());
     }
 
     @Test
@@ -119,7 +124,13 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
         mockPropertySource.setProperty("server.error.path", "/error-page");
         mockPropertySource.setProperty("server.compression.enabled", "true");
         beanFactory.destroyBean(serverProperties);
-        beanFactory.initializeBean(serverProperties, "server-serverProperties");
+        beanFactory.initializeBean(serverProperties, getBeanName(serverProperties));
 
+    }
+
+    private String getBeanName(Object configurationPropertiesBean) {
+        Class<?> beanClass = configurationPropertiesBean.getClass();
+        String[] beanNames = this.context.getBeanNamesForType(beanClass);
+        return beanNames[0];
     }
 }
