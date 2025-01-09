@@ -1,6 +1,5 @@
 package io.microsphere.spring.boot.report;
 
-import io.microsphere.text.FormatUtils;
 import org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -10,6 +9,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static io.microsphere.text.FormatUtils.format;
 
 /**
  * Spring Boot Conditions Report builder
@@ -106,6 +107,6 @@ public class ConditionsReportMessageBuilder {
     }
 
     private void appendLine(StringBuilder stringBuilder, String text, Object... args) {
-        stringBuilder.append(FormatUtils.format(text, args)).append(System.lineSeparator());
+        stringBuilder.append(format(text, args)).append(System.lineSeparator());
     }
 }

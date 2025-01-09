@@ -6,11 +6,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.Environment;
-import org.springframework.util.ClassUtils;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.springframework.util.ClassUtils.isPresent;
 
 
 /**
@@ -25,7 +25,7 @@ public abstract class OnceMainApplicationPreparedEventListener extends OnceAppli
 
     private static final String BOOTSTRAP_APPLICATION_LISTENER_ENABLED_PROPERTY_NAME = "spring.cloud.bootstrap.enabled";
 
-    private static final boolean BOOTSTRAP_APPLICATION_LISTENER_PRESENT = ClassUtils.isPresent(BOOTSTRAP_APPLICATION_LISTENER_CLASS_NAME, null);
+    private static final boolean BOOTSTRAP_APPLICATION_LISTENER_PRESENT = isPresent(BOOTSTRAP_APPLICATION_LISTENER_CLASS_NAME, null);
 
     private static final String BOOTSTRAP_CONTEXT_ID = "bootstrap";
 

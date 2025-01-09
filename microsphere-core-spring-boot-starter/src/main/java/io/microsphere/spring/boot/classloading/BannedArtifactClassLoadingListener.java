@@ -1,16 +1,17 @@
 package io.microsphere.spring.boot.classloading;
 
 import io.microsphere.classloading.BannedArtifactClassLoadingExecutor;
+import io.microsphere.logging.Logger;
 import io.microsphere.spring.boot.listener.SpringApplicationRunListenerAdapter;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
-import org.springframework.util.ClassUtils;
 
 import java.util.Arrays;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static org.springframework.util.ClassUtils.isPresent;
 
 /**
  * {@link ApplicationStartingEvent ApplicationStartingEvent} {@link ApplicationListener Listener} bans
@@ -21,15 +22,13 @@ import java.util.Arrays;
  */
 public class BannedArtifactClassLoadingListener extends SpringApplicationRunListenerAdapter implements Ordered {
 
-    private static final Logger logger = LoggerFactory.getLogger(BannedArtifactClassLoadingListener.class);
+    private static final Logger logger = getLogger(BannedArtifactClassLoadingListener.class);
 
     private static final boolean artifactsBanned = Boolean.getBoolean("microsphere.artifacts.banned");
 
     private static final String SPRING_BOOT_LAUNCHER_CLASS_NAME = "org.springframework.boot.loader.Launcher";
 
-    private static final ClassLoader defaultClassLoader = ClassUtils.getDefaultClassLoader();
-
-    static final boolean SPRING_BOOT_LAUNCHER_CLASS_PRESENT = ClassUtils.isPresent(SPRING_BOOT_LAUNCHER_CLASS_NAME, defaultClassLoader);
+    static final boolean SPRING_BOOT_LAUNCHER_CLASS_PRESENT = isPresent(SPRING_BOOT_LAUNCHER_CLASS_NAME, null);
 
     private static boolean banned = false;
 

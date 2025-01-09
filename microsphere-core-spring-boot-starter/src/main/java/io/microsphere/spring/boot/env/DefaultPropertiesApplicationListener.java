@@ -1,7 +1,6 @@
 package io.microsphere.spring.boot.env;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationEnvironmentPreparedEvent;
 import org.springframework.boot.context.logging.LoggingApplicationListener;
@@ -14,7 +13,6 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,11 +23,13 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultPropertiesResources;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
-import static io.microsphere.spring.util.PropertySourcesUtils.getDefaultProperties;
-import static io.microsphere.spring.util.ResourceLoaderUtils.getResourcePatternResolver;
+import static io.microsphere.spring.core.env.PropertySourcesUtils.getDefaultProperties;
+import static io.microsphere.spring.core.io.ResourceLoaderUtils.getResourcePatternResolver;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
+import static org.springframework.util.ObjectUtils.containsElement;
 
 /**
  * Listable {@link ApplicationEnvironmentPreparedEvent} {@link ApplicationListener} Class
@@ -44,7 +44,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     public static final int DEFAULT_ORDER = LoggingApplicationListener.LOWEST_PRECEDENCE - 1;
 
-    private static final Logger logger = LoggerFactory.getLogger(DefaultPropertiesApplicationListener.class);
+    private static final Logger logger = getLogger(DefaultPropertiesApplicationListener.class);
 
     private int order = DEFAULT_ORDER;
 
@@ -81,7 +81,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                                                 ResourceLoader resourceLoader,
                                                 Map<String, Object> defaultProperties) {
         Set<String> defaultPropertiesResources = getDefaultPropertiesResources();
-        logger.debug("Start loading from SpringApplicationUtils. GetDefaultPropertiesResources () 'defaultProperties resources: {}", defaultPropertiesResources);
+        logger.debug("Start loading from SpringApplicationUtils.loadDefaultPropertiesResources() 'defaultProperties resources: {}", defaultPropertiesResources);
         loadDefaultProperties(defaultPropertiesResources, propertySourceLoaders, resourceLoader, defaultProperties);
     }
 
@@ -178,7 +178,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
     }
 
     private boolean matches(String fileExtension, String[] fileExtensions) {
-        return ObjectUtils.containsElement(fileExtensions, fileExtension);
+        return containsElement(fileExtensions, fileExtension);
     }
 
     private String getExtension(String resourceLocation) {

@@ -44,6 +44,12 @@
 
         <!-- Testing Dependencies -->
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
@@ -62,4 +68,42 @@
         </dependency>
 
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>spring-boot-2.1</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.2</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>spring-boot-2.3</id>
+            <dependencies>
+                <!-- Compatible -->
+                <dependency>
+                    <groupId>io.github.microsphere-projects</groupId>
+                    <artifactId>microsphere-spring-boot-compatible</artifactId>
+                    <version>${revision}</version>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
 </project>

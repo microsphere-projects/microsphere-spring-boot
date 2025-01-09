@@ -28,7 +28,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Map;
 
-import static io.microsphere.spring.util.PropertySourcesUtils.getSubProperties;
+import static io.microsphere.spring.core.env.PropertySourcesUtils.getSubProperties;
+import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -59,6 +60,6 @@ public class BindableConfigurationBeanBinderTest {
         Map<String, Object> properties = getSubProperties(environment.getPropertySources(), "user");
         beanBinder.bind(properties, true, true, user);
         assertEquals("mercyblitz", user.getName());
-        assertEquals(37, user.getAge());
+        assertEquals(valueOf(37), user.getAge());
     }
 }
