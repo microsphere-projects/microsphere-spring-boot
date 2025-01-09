@@ -16,16 +16,15 @@
 
 package org.springframework.boot.actuate.endpoint;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.core.env.Environment;
+import org.springframework.util.Assert;
+
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import org.springframework.core.env.Environment;
-import org.springframework.util.Assert;
 
 /**
  * An identifier for an actuator endpoint. Endpoint IDs may contain only letters and

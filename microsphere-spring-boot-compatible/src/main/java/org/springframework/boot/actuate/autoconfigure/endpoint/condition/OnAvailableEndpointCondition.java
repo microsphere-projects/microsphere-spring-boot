@@ -16,10 +16,6 @@
 
 package org.springframework.boot.actuate.autoconfigure.endpoint.condition;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.boot.actuate.autoconfigure.endpoint.expose.IncludeExcludeEndpointFilter;
 import org.springframework.boot.actuate.autoconfigure.endpoint.expose.IncludeExcludeEndpointFilter.DefaultIncludes;
 import org.springframework.boot.actuate.endpoint.EndpointId;
@@ -31,6 +27,10 @@ import org.springframework.context.annotation.ConditionContext;
 import org.springframework.core.env.Environment;
 import org.springframework.core.type.AnnotatedTypeMetadata;
 import org.springframework.util.ConcurrentReferenceHashMap;
+
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A condition that checks if an endpoint is available (i.e. enabled and exposed).
