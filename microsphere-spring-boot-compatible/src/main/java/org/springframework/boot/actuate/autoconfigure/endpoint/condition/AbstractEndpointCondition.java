@@ -16,10 +16,6 @@
 
 package org.springframework.boot.actuate.autoconfigure.endpoint.condition;
 
-import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.Optional;
-
 import org.springframework.boot.actuate.endpoint.EndpointId;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.EndpointExtension;
@@ -38,6 +34,10 @@ import org.springframework.core.type.MethodMetadata;
 import org.springframework.util.Assert;
 import org.springframework.util.ClassUtils;
 import org.springframework.util.ConcurrentReferenceHashMap;
+
+import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Base class for {@link Endpoint @Endpoint} related {@link SpringBootCondition}
