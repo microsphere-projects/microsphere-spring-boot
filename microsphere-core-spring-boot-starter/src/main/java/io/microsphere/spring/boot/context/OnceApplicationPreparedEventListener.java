@@ -1,7 +1,6 @@
 package io.microsphere.spring.boot.context;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
@@ -12,6 +11,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener}
@@ -24,7 +25,7 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
     private static Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = new ConcurrentHashMap<>();
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger logger = getLogger(getClass());
 
     private final Set<String> processedContextIds;
 
