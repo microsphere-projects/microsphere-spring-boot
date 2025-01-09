@@ -13,7 +13,6 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 import java.net.URL;
@@ -30,6 +29,7 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResource
 import static io.microsphere.spring.core.env.PropertySourcesUtils.getDefaultProperties;
 import static io.microsphere.spring.core.io.ResourceLoaderUtils.getResourcePatternResolver;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
+import static org.springframework.util.ObjectUtils.containsElement;
 
 /**
  * Listable {@link ApplicationEnvironmentPreparedEvent} {@link ApplicationListener} Class
@@ -81,7 +81,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                                                 ResourceLoader resourceLoader,
                                                 Map<String, Object> defaultProperties) {
         Set<String> defaultPropertiesResources = getDefaultPropertiesResources();
-        logger.debug("Start loading from SpringApplicationUtils. GetDefaultPropertiesResources () 'defaultProperties resources: {}", defaultPropertiesResources);
+        logger.debug("Start loading from SpringApplicationUtils.loadDefaultPropertiesResources() 'defaultProperties resources: {}", defaultPropertiesResources);
         loadDefaultProperties(defaultPropertiesResources, propertySourceLoaders, resourceLoader, defaultProperties);
     }
 
@@ -178,7 +178,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
     }
 
     private boolean matches(String fileExtension, String[] fileExtensions) {
-        return ObjectUtils.containsElement(fileExtensions, fileExtension);
+        return containsElement(fileExtensions, fileExtension);
     }
 
     private String getExtension(String resourceLocation) {
