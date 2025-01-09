@@ -16,10 +16,9 @@
  */
 package io.microsphere.spring.boot.context.properties;
 
+import io.microsphere.logging.Logger;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
@@ -28,6 +27,8 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * {@link ListenableConfigurationPropertiesBindHandlerAdvisor} Test
@@ -50,7 +51,7 @@ import org.springframework.core.annotation.Order;
 @EnableConfigurationProperties
 public class ListenableConfigurationPropertiesBindHandlerAdvisorTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ListenableConfigurationPropertiesBindHandlerAdvisorTest.class);
+    private static final Logger logger = getLogger(ListenableConfigurationPropertiesBindHandlerAdvisorTest.class);
 
     @Test
     public void test() {

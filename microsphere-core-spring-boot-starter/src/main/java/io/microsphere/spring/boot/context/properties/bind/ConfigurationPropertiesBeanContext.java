@@ -17,14 +17,12 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.util.ClassUtils;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
@@ -34,6 +32,8 @@ import java.util.Objects;
 
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
+import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 
 /**
  * The context for the bean annotated {@link ConfigurationProperties @ConfigurationProperties}
@@ -95,7 +95,7 @@ class ConfigurationPropertiesBeanContext {
 
     private void initBinding(Class<?> beanClass, String prefix, Map<String, String> bindingPropertyNames, String nestedPath) {
         if (isCandidateClass(beanClass)) {
-            PropertyDescriptor[] descriptors = BeanUtils.getPropertyDescriptors(beanClass);
+            PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
             int descriptorSize = descriptors.length;
             for (int i = 0; i < descriptorSize; i++) {
                 PropertyDescriptor descriptor = descriptors[i];
@@ -117,7 +117,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private boolean isCandidateClass(Class<?> beanClass) {
-        if (ClassUtils.isPrimitiveOrWrapper(beanClass)) {
+        if (isPrimitiveOrWrapper(beanClass)) {
             return false;
         }
         if (beanClass.isInterface() || beanClass.isEnum() || beanClass.isAnnotation() || beanClass.isArray() || beanClass.isSynthetic()) {

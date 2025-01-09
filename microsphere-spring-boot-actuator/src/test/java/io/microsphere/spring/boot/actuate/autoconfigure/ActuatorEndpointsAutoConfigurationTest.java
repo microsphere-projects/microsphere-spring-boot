@@ -1,6 +1,7 @@
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
+import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
@@ -25,16 +27,24 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
-        })
+        },
+        properties = {
+                "management.endpoint.loggers.enabled=false"
+        }
+)
 @PropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
+@TestPropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
 @EnableAutoConfiguration
-class ActuatorEndpointsAutoConfigurationTest {
+public class ActuatorEndpointsAutoConfigurationTest {
 
     @Autowired
     private ArtifactsEndpoint artifactsEndpoint;
 
     @Autowired
     private WebEndpoints webEndpoints;
+
+    @Autowired
+    private ConfigurationMetadataEndpoint configurationMetadataEndpoint;
 
     @Test
     void testArtifactsEndpoint() {
@@ -45,6 +55,13 @@ class ActuatorEndpointsAutoConfigurationTest {
     public void testInvokeReadOperations() {
         Map<String, Object> aggregatedResults = webEndpoints.invokeReadOperations();
         assertFalse(aggregatedResults.isEmpty());
+    }
+
+    @Test
+    public void testGetConfigurationMetadata() {
+        ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
+        assertFalse(configurationMetadata.getGroups().isEmpty());
+        assertFalse(configurationMetadata.getProperties().isEmpty());
     }
 
     public static void main(String[] args) {

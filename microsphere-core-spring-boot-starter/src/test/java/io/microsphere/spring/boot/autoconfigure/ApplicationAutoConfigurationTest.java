@@ -22,7 +22,6 @@ import io.microsphere.spring.context.event.LoggingBeanListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -65,7 +64,7 @@ public class ApplicationAutoConfigurationTest {
         @Autowired
         private ObjectProvider<LoggingBeanListener> loggingBeanListenerObjectProvider;
 
-        @Resource(name = "io.microsphere.spring.context.event.BeanTimeStatistics#0")
+        @Resource
         private BeanTimeStatistics beanTimeStatistics;
 
         @Resource(type = LoggingBeanListener.class)
@@ -77,8 +76,7 @@ public class ApplicationAutoConfigurationTest {
         }
 
         public TestConfig(ObjectProvider<BeanListener[]> beanListeners,
-                          ObjectProvider<List<BeanListener>> beanListenersList,
-                          @Qualifier("io.microsphere.spring.context.event.LoggingBeanListener#0") LoggingBeanListener loggingBeanListener) {
+                          ObjectProvider<List<BeanListener>> beanListenersList) {
             this.beanListeners = beanListeners;
             this.beanListenersList = beanListenersList;
         }
