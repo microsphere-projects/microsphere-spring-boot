@@ -3,11 +3,12 @@ package io.microsphere.spring.boot.util;
 import org.springframework.boot.SpringApplication;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * {@link SpringApplication} Utilities class
@@ -29,7 +30,7 @@ public abstract class SpringApplicationUtils {
      * @param resourceLocation "defaultProperties" resource path
      */
     public static void addDefaultPropertiesResource(String resourceLocation) {
-        if (StringUtils.hasText(resourceLocation)) {
+        if (hasText(resourceLocation)) {
             defaultPropertiesResources.add(resourceLocation);
         }
     }
