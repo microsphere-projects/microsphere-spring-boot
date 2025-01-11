@@ -58,7 +58,7 @@
         <module>microsphere-spring-boot-parent</module>
         <module>microsphere-spring-boot-dependencies</module>
         <module>microsphere-spring-boot-compatible</module>
-        <module>microsphere-core-spring-boot-starter</module>
+        <module>microsphere-spring-boot-core</module>
         <module>microsphere-spring-boot-actuator</module>
     </modules>
 
