@@ -11,11 +11,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.microsphere-projects</groupId>
-    <artifactId>microsphere-core-spring-boot-starter</artifactId>
+    <artifactId>microsphere-spring-boot-core</artifactId>
     <version>${revision}</version>
 
-    <name>Microsphere :: Spring Boot :: Core Starter</name>
-    <description>Microsphere Spring Boot Core Starter</description>
+    <name>Microsphere :: Spring Boot :: Core</name>
+    <description>Microsphere Spring Boot Core</description>
 
     <dependencies>
         <!-- Microsphere Dependencies -->
