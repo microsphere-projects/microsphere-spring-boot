@@ -23,7 +23,7 @@
         <!-- Microsphere Dependencies -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-core-spring-boot-starter</artifactId>
+            <artifactId>microsphere-spring-boot-core</artifactId>
             <version>${revision}</version>
         </dependency>
 
