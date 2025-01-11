@@ -17,14 +17,14 @@ import java.util.Set;
 public interface DefaultPropertiesPostProcessor extends Ordered {
 
     /**
-     * Initialize {@ link SpringApplicationsetDefaultProperties (Properties) "defaultProperties}" resources
+     * Initialize {@link SpringApplicationsetDefaultProperties (Properties) "defaultProperties}" resources
      *
      * @param defaultPropertiesResources {@link SpringApplication#setDefaultProperties(Properties) "defaultProperties"} Resource path
      */
     void initializeResources(Set<String> defaultPropertiesResources);
 
     /**
-     * Post handle {@ link SpringApplication#setDefaultProperties (Properties) "defaultProperties"},
+     * Post handle {@link SpringApplication#setDefaultProperties (Properties) "defaultProperties"},
      * after {@link #initializeResources(Set)}
      *
      * @param defaultProperties {@link SpringApplication#setDefaultProperties(Properties) "defaultProperties"}

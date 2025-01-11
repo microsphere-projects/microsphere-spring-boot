@@ -51,14 +51,14 @@
     </scm>
 
     <properties>
-        <revision>0.1.0-SNAPSHOT</revision>
+        <revision>0.1.1-SNAPSHOT</revision>
     </properties>
 
     <modules>
         <module>microsphere-spring-boot-parent</module>
         <module>microsphere-spring-boot-dependencies</module>
         <module>microsphere-spring-boot-compatible</module>
-        <module>microsphere-core-spring-boot-starter</module>
+        <module>microsphere-spring-boot-core</module>
         <module>microsphere-spring-boot-actuator</module>
     </modules>
 
