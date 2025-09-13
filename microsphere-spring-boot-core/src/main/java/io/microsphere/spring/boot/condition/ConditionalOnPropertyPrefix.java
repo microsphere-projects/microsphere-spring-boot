@@ -28,7 +28,7 @@ import java.lang.annotation.Target;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see OnPropertyPrefixCondition
- * @since 2017.03.29
+ * @since 1.0.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD})
