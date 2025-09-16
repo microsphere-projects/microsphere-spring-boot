@@ -41,7 +41,7 @@ public class DefaultPropertiesTest {
     private Environment environment;
 
     @Test
-    public void testEndpointsDefaultProperties() {
+    void testEndpointsDefaultProperties() {
         assertProperty("management.endpoints.enabled-by-default", "false");
         assertProperty("management.endpoints.web.exposure.include", "*");
         assertProperty("management.endpoints.jmx.exposure.exclude", "*");
