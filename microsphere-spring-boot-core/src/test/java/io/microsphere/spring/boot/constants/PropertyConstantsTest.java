@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class PropertyConstantsTest {
 
     @Test
-    public void test() {
+    void test() {
         assertEquals("microsphere.spring.boot.", MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX);
     }
 }
