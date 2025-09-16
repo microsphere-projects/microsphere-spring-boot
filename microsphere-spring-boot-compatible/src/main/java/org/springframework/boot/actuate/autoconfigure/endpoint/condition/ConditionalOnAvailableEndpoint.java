@@ -22,10 +22,12 @@ import org.springframework.context.annotation.Conditional;
 import org.springframework.core.env.Environment;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * {@link Conditional @Conditional} that checks whether an endpoint is available. An
@@ -98,8 +100,8 @@ import java.lang.annotation.Target;
  * @since 2.2.0
  * @see Endpoint
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD, ElementType.TYPE })
+@Retention(RUNTIME)
+@Target({ METHOD, TYPE })
 @Documented
 @Conditional(OnAvailableEndpointCondition.class)
 public @interface ConditionalOnAvailableEndpoint {
