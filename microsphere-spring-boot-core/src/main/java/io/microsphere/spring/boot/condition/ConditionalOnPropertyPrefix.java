@@ -18,20 +18,22 @@ package io.microsphere.spring.boot.condition;
 
 import org.springframework.context.annotation.Conditional;
 
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * {@link Conditional} that checks if the prefix of properties are found in environment..
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see OnPropertyPrefixCondition
- * @since 2017.03.29
+ * @since 1.0.0
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RUNTIME)
+@Target({TYPE, METHOD})
 @Conditional(OnPropertyPrefixCondition.class)
 public @interface ConditionalOnPropertyPrefix {
 
