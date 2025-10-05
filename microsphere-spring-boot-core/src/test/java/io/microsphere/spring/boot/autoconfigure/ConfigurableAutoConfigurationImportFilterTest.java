@@ -49,7 +49,7 @@ public class ConfigurableAutoConfigurationImportFilterTest {
     private MockEnvironment environment;
 
     @BeforeEach
-    public void before() {
+    void before() {
         environment = new MockEnvironment();
     }
 

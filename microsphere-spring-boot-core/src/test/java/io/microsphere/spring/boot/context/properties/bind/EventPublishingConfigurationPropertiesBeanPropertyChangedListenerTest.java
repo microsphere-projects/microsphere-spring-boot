@@ -68,7 +68,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     private MockPropertySource mockPropertySource;
 
     @PostConstruct
-    public void init() {
+    public void setUp() {
         MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
         mockPropertySource = new MockPropertySource();
         propertySources.addFirst(mockPropertySource);
