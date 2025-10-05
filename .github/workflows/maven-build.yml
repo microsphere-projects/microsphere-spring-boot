@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '8', '11' , '17' , '21' ]
+        java: [ '8', '11' , '17' , '21' , '25' ]
         maven-profile-spring-boot: [ 'spring-boot-2.1' , 'spring-boot-2.2' , 'spring-boot-2.3',
                                      'spring-boot-2.4' ,'spring-boot-2.5' , 'spring-boot-2.6' ,
                                      'spring-boot-2.7' ]
