@@ -49,7 +49,7 @@ import java.util.List;
 public class ApplicationAutoConfigurationTest {
 
     @Test
-    public void test() {
+    void test() {
     }
 
     static class TestConfig {

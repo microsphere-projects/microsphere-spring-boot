@@ -35,7 +35,7 @@ import java.util.Arrays;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see SpringBootCondition
  * @see ConditionalOnPropertyPrefix
- * @since 2017.03.29
+ * @since 1.0.0
  */
 public class OnPropertyPrefixCondition extends SpringBootCondition {
 

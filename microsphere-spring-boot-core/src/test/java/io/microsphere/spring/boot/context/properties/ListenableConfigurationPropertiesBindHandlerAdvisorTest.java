@@ -54,7 +54,7 @@ public class ListenableConfigurationPropertiesBindHandlerAdvisorTest {
     private static final Logger logger = getLogger(ListenableConfigurationPropertiesBindHandlerAdvisorTest.class);
 
     @Test
-    public void test() {
+    void test() {
 
     }
 

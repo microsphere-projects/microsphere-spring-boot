@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ConfigurationMetadataReaderTest {
 
     @Test
-    public void test() {
+    void test() {
         ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
         ConfigurationMetadata metadata = reader.read();
         assertTrue(metadata.getItems().size() > 1);

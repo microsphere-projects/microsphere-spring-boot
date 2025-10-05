@@ -49,13 +49,13 @@ public class PropertySourceLoadersTest {
     private static final String TEST_RESOURCE_LOCATION = "classpath:/config/default/core.properties";
 
     @Test
-    public void testGetFileExtensions() {
+    void testGetFileExtensions() {
         String[] fileExtensions = propertySourceLoaders.getFileExtensions();
         assertArrayEquals(of("properties", "xml", "yml", "yaml"), fileExtensions);
     }
 
     @Test
-    public void testLoad() throws IOException {
+    void testLoad() throws IOException {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource(TEST_RESOURCE_LOCATION);
         List<PropertySource<?>> propertySources = propertySourceLoaders.load(TEST_PROPERTY_NAME, resource);
@@ -66,14 +66,14 @@ public class PropertySourceLoadersTest {
     }
 
     @Test
-    public void testLoadAsOriginTracked() throws IOException {
+    void testLoadAsOriginTracked() throws IOException {
         PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
         assertTrue(propertySource instanceof OriginLookup);
         assertPropertySource(propertySource);
     }
 
     @Test
-    public void testReloadAsOriginTracked() throws IOException {
+    void testReloadAsOriginTracked() throws IOException {
         PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
         assertSame(propertySource, propertySourceLoaders.reloadAsOriginTracked(propertySource));
     }

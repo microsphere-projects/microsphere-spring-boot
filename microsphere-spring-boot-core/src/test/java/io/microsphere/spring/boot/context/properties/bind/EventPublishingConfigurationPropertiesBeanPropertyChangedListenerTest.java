@@ -73,7 +73,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     }
 
     @Test
-    public void testJacksonProperties() {
+    void testJacksonProperties() {
         assertNull(jacksonProperties.getDateFormat());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
@@ -95,7 +95,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     }
 
     @Test
-    public void testServerProperties() {
+    void testServerProperties() {
         assertNull(serverProperties.getPort());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {

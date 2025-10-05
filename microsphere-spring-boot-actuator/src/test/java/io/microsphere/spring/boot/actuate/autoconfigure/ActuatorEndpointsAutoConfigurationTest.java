@@ -52,13 +52,13 @@ public class ActuatorEndpointsAutoConfigurationTest {
     }
 
     @Test
-    public void testInvokeReadOperations() {
+    void testInvokeReadOperations() {
         Map<String, Object> aggregatedResults = webEndpoints.invokeReadOperations();
         assertFalse(aggregatedResults.isEmpty());
     }
 
     @Test
-    public void testGetConfigurationMetadata() {
+    void testGetConfigurationMetadata() {
         ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
         assertFalse(configurationMetadata.getGroups().isEmpty());
         assertFalse(configurationMetadata.getProperties().isEmpty());

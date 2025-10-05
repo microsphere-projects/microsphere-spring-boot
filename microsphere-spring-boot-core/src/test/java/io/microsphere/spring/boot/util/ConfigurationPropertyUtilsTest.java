@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ConfigurationPropertyUtilsTest {
 
     @Test
-    public void testToDashedForm() {
+    void testToDashedForm() {
         assertEquals("my-name", toDashedForm("my-name"));
         assertEquals("my-name", toDashedForm("myName"));
         assertEquals("my-name", toDashedForm("MyName"));
