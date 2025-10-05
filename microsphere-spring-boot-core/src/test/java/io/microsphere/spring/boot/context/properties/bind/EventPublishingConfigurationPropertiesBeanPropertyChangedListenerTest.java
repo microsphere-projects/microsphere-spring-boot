@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -31,8 +32,6 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
 import org.springframework.test.context.TestPropertySource;
-
-import javax.annotation.PostConstruct;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -65,8 +64,8 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
 
     private MockPropertySource mockPropertySource;
 
-    @PostConstruct
-    public void init() {
+    @BeforeEach
+    void init() {
         MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
         mockPropertySource = new MockPropertySource();
         propertySources.addFirst(mockPropertySource);
