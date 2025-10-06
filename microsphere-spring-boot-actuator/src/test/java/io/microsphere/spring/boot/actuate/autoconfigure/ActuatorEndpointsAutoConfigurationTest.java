@@ -5,7 +5,6 @@ import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +14,8 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.springframework.boot.WebApplicationType.SERVLET;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * {@link ActuatorEndpointsAutoConfiguration} Test
@@ -24,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @since 1.0.0
  */
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        webEnvironment = RANDOM_PORT,
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
         },
@@ -66,7 +67,7 @@ public class ActuatorEndpointsAutoConfigurationTest {
 
     public static void main(String[] args) {
         new SpringApplicationBuilder(ActuatorEndpointsAutoConfigurationTest.class)
-                .web(WebApplicationType.SERVLET)
+                .web(SERVLET)
                 .run(args);
     }
 
