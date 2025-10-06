@@ -8,11 +8,16 @@
         </encoder>
     </appender>
 
-    <logger name="io.microsphere" appender-ref="STDOUT" level="DEBUG">
-    </logger>
-
-    <root level="INFO">
+    <root level="TRACE">
         <appender-ref ref="STDOUT"/>
     </root>
+
+    <logger name="org.springframework" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
+
+    <logger name="org.junit" level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </logger>
 
 </configuration>
