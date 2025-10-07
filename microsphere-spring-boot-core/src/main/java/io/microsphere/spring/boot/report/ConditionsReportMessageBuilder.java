@@ -25,7 +25,7 @@ import static java.util.Collections.singleton;
  */
 public class ConditionsReportMessageBuilder {
 
-    private static final String DEFAULT_BASE_PACKAGE = "io.github.microsphere";
+    private static final String DEFAULT_BASE_PACKAGE = "io.microsphere";
 
     /**
      * The base packages for Spring Boot Conditions Report : "microsphere.spring.boot.conditions.report.base-packages"
