@@ -16,6 +16,9 @@
  */
 package io.microsphere.spring.boot.constants;
 
+import io.microsphere.annotation.ConfigurationProperty;
+
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.spring.constants.PropertyConstants.MICROSPHERE_SPRING_PROPERTY_NAME_PREFIX;
 
 /**
@@ -30,4 +33,18 @@ public interface PropertyConstants {
      * The property name prefix of Microsphere Spring Boot
      */
     String MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_PROPERTY_NAME_PREFIX + "boot.";
+
+    /**
+     * The default value of Microsphere Spring Boot logging level
+     */
+    String DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL = "off";
+
+    /**
+     * The property name of Microsphere Spring Boot logging level
+     */
+    @ConfigurationProperty(
+            defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL,
+            source = APPLICATION_SOURCE
+    )
+    String MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "logging.level";
 }
