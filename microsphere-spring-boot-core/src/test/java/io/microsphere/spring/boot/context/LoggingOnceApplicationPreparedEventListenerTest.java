@@ -20,13 +20,9 @@ package io.microsphere.spring.boot.context;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
-import static java.lang.System.nanoTime;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * {@link LoggingOnceApplicationPreparedEventListener} Test
@@ -35,7 +31,7 @@ import static org.springframework.boot.WebApplicationType.NONE;
  * @see LoggingOnceApplicationPreparedEventListener
  * @since 1.0.0
  */
-class LoggingOnceApplicationPreparedEventListenerTest {
+class LoggingOnceApplicationPreparedEventListenerTest extends AbstractApplicationPreparedEventTest {
 
     private LoggingOnceApplicationPreparedEventListener listener;
 
@@ -81,14 +77,5 @@ class LoggingOnceApplicationPreparedEventListenerTest {
         String arg = "--" + name + "=" + level;
         ApplicationPreparedEvent event = createEvent(arg);
         this.listener.onApplicationEvent(event);
-    }
-
-    ApplicationPreparedEvent createEvent(String... args) {
-        SpringApplication springApplication = new SpringApplication(getClass());
-        springApplication.setWebApplicationType(NONE);
-        springApplication.setMainApplicationClass(getClass());
-        ConfigurableApplicationContext context = springApplication.run(args);
-        context.setId("test-context-" + nanoTime());
-        return new ApplicationPreparedEvent(springApplication, args, context);
     }
 }
