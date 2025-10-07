@@ -63,7 +63,6 @@ class OnPropertyPrefixConditionTest {
         this.condition = new OnPropertyPrefixCondition();
     }
 
-
     @Test
     void testGetMatchOutcomeOnMatch() {
         String propertyName = propertyNamePrefix + "key";
