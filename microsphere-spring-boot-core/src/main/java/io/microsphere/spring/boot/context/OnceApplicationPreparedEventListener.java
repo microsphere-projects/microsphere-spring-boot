@@ -71,10 +71,7 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
         logger.debug("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
     }
 
-    protected boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
-        // Sub-Class implements current method
-        return false;
-    }
+    protected abstract boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
     protected abstract void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
