@@ -35,9 +35,9 @@ public interface PropertyConstants {
     String MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_PROPERTY_NAME_PREFIX + "boot.";
 
     /**
-     * The default value of Microsphere Spring Boot logging level
+     * The default value of Microsphere Spring Boot logging level : "OFF"
      */
-    String DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL = "off";
+    String DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL = "OFF";
 
     /**
      * The property name of Microsphere Spring Boot logging level

@@ -35,7 +35,7 @@ public class PropertyConstantsTest {
     @Test
     void test() {
         assertEquals("microsphere.spring.boot.", MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX);
-        assertEquals("off", DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL);
+        assertEquals("OFF", DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL);
         assertEquals("microsphere.spring.boot.logging.level", MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME);
     }
 }
