@@ -49,17 +49,17 @@ public class ConfigurableAutoConfigurationImportFilterTest {
     private MockEnvironment environment;
 
     @BeforeEach
-    void before() {
+    void setUp() {
         environment = new MockEnvironment();
     }
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals("microsphere.autoconfigure.exclude", AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
     }
 
     @Test
-    public void testGetExcludedAutoConfigurationClasses() {
+    void testGetExcludedAutoConfigurationClasses() {
         Set<String> classNames = getExcludedAutoConfigurationClasses(environment);
         assertTrue(classNames.isEmpty());
 
@@ -94,7 +94,7 @@ public class ConfigurableAutoConfigurationImportFilterTest {
     }
 
     @Test
-    public void testAddExcludedAutoConfigurationClass() {
+    void testAddExcludedAutoConfigurationClass() {
         Set<String> classNames = getExcludedAutoConfigurationClasses(environment);
         assertTrue(classNames.isEmpty());
 
