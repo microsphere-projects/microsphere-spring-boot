@@ -11,6 +11,7 @@ import java.util.Set;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
 import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getReportsMap;
 import static io.microsphere.text.FormatUtils.format;
 import static java.lang.System.lineSeparator;
@@ -27,14 +28,14 @@ public class ConditionsReportMessageBuilder {
     private static final String DEFAULT_BASE_PACKAGE = "io.github.microsphere";
 
     /**
-     * The base packages for Spring Boot Conditions Report
+     * The base packages for Spring Boot Conditions Report : "microsphere.spring.boot.conditions.report.base-packages"
      */
     @ConfigurationProperty(
             type = String[].class,
             defaultValue = DEFAULT_BASE_PACKAGE,
             source = APPLICATION_SOURCE
     )
-    public static final String BASE_PACKAGES_PROPERTY_NAME = "microsphere.conditions.report.base-packages";
+    public static final String BASE_PACKAGES_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "conditions.report.base-packages";
 
     private static final Set<String> DEFAULT_BASE_PACKAGES = singleton(DEFAULT_BASE_PACKAGE);
 
