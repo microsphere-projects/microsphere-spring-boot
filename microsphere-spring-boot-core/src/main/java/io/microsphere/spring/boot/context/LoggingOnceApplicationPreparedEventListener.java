@@ -30,7 +30,7 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Locale.ENGLISH;
 
 /**
- * {@link OnceApplicationPreparedEventListener} class for logging with debug level.
+ * {@link OnceApplicationPreparedEventListener} class for logging with specified level.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see OnceApplicationPreparedEventListener
