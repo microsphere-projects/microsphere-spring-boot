@@ -17,7 +17,7 @@ import java.util.Set;
 public interface DefaultPropertiesPostProcessor extends Ordered {
 
     /**
-     * Initialize {@link SpringApplicationsetDefaultProperties (Properties) "defaultProperties}" resources
+     * Initialize {@link SpringApplication#setDefaultProperties(Properties) "defaultProperties}" resources
      *
      * @param defaultPropertiesResources {@link SpringApplication#setDefaultProperties(Properties) "defaultProperties"} Resource path
      */
