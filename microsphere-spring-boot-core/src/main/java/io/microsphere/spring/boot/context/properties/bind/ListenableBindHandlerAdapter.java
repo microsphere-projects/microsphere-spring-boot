@@ -32,6 +32,10 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     private final BindListeners bindHandlers;
 
+    public ListenableBindHandlerAdapter(Iterable<BindListener> bindListeners) {
+        this(DEFAULT, bindListeners);
+    }
+
     public ListenableBindHandlerAdapter(BindHandler parent, Iterable<BindListener> bindListeners) {
         super(parent);
         this.bindHandlers = new BindListeners(bindListeners);
