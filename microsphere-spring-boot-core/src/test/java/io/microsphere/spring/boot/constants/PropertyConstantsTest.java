@@ -18,6 +18,8 @@ package io.microsphere.spring.boot.constants;
 
 import org.junit.jupiter.api.Test;
 
+import static io.microsphere.spring.boot.constants.PropertyConstants.DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL;
+import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -33,5 +35,7 @@ public class PropertyConstantsTest {
     @Test
     void test() {
         assertEquals("microsphere.spring.boot.", MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX);
+        assertEquals("off", DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL);
+        assertEquals("microsphere.spring.boot.logging.level", MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME);
     }
 }
