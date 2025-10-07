@@ -1,6 +1,7 @@
 package io.microsphere.spring.boot.util;
 
 import io.microsphere.logging.Logger;
+import io.microsphere.util.Utils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.PropertyResolver;
@@ -8,7 +9,6 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,6 +17,7 @@ import static io.microsphere.spring.boot.constants.PropertyConstants.DEFAULT_MIC
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.util.Collections.unmodifiableSet;
 import static java.util.Locale.ENGLISH;
 import static org.springframework.util.StringUtils.hasText;
 
@@ -26,15 +27,11 @@ import static org.springframework.util.StringUtils.hasText;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public abstract class SpringApplicationUtils {
+public abstract class SpringApplicationUtils implements Utils {
 
     private static final Logger logger = getLogger(SpringApplicationUtils.class);
 
     private static final Set<String> defaultPropertiesResources = new LinkedHashSet<>();
-
-    private SpringApplicationUtils() throws InstantiationException {
-        throw new InstantiationException();
-    }
 
     /**
      * Add "defaultProperties" resource path
@@ -53,11 +50,10 @@ public abstract class SpringApplicationUtils {
      * @param resourceLocations one or more "defaultProperties" resource paths
      */
     public static void addDefaultPropertiesResources(String... resourceLocations) {
-        if (resourceLocations == null) {
-            return;
-        }
-        for (String resource : resourceLocations) {
-            addDefaultPropertiesResource(resource);
+        if (resourceLocations != null) {
+            for (String resource : resourceLocations) {
+                addDefaultPropertiesResource(resource);
+            }
         }
     }
 
@@ -65,7 +61,7 @@ public abstract class SpringApplicationUtils {
      * @return read-only {@link #defaultPropertiesResources}
      */
     public static Set<String> getDefaultPropertiesResources() {
-        return Collections.unmodifiableSet(defaultPropertiesResources);
+        return unmodifiableSet(defaultPropertiesResources);
     }
 
     public static ResourceLoader getResourceLoader(SpringApplication springApplication) {
