@@ -4,13 +4,15 @@ import org.springframework.boot.autoconfigure.condition.ConditionEvaluationRepor
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getReportsMap;
 import static io.microsphere.text.FormatUtils.format;
+import static java.lang.System.lineSeparator;
+import static java.util.Collections.singleton;
 
 /**
  * Spring Boot Conditions Report builder
@@ -20,9 +22,11 @@ import static io.microsphere.text.FormatUtils.format;
  */
 public class ConditionsReportMessageBuilder {
 
+    private static final String DEFAULT_BASE_PACKAGE = "io.github.microsphere";
+
     public static final String BASE_PACKAGES_PROPERTY_NAME = "microsphere.conditions.report.base-packages";
 
-    private static final Set<String> DEFAULT_BASE_PACKAGES = Collections.singleton("io.github.microsphere");
+    private static final Set<String> DEFAULT_BASE_PACKAGES = singleton(DEFAULT_BASE_PACKAGE);
 
     private final ConfigurableApplicationContext context;
 
@@ -31,16 +35,14 @@ public class ConditionsReportMessageBuilder {
     }
 
     List<String> build() {
-        Map<String, ConditionEvaluationReport> reportsMap = ConditionEvaluationReportBuilder.getReportsMap();
-        List<String> reportMessages = new LinkedList<>();
-        reportsMap.forEach((id, report) -> {
-            reportMessages.add(buildSingle(id, report));
-        });
+        Map<String, ConditionEvaluationReport> reportsMap = getReportsMap();
+        List<String> reportMessages = newArrayList(reportsMap.size());
+        reportsMap.forEach((id, report) -> reportMessages.add(buildSingle(id, report)));
         return reportMessages;
     }
 
     String buildSingle(String id, ConditionEvaluationReport report) {
-        StringBuilder reportMessage = new StringBuilder(System.lineSeparator());
+        StringBuilder reportMessage = new StringBuilder(lineSeparator());
         appendTitle(id, reportMessage);
         appendExclusions(report, reportMessage);
         appendUnconditionalClasses(report, reportMessage);
@@ -107,6 +109,6 @@ public class ConditionsReportMessageBuilder {
     }
 
     private void appendLine(StringBuilder stringBuilder, String text, Object... args) {
-        stringBuilder.append(format(text, args)).append(System.lineSeparator());
+        stringBuilder.append(format(text, args)).append(lineSeparator());
     }
 }
