@@ -10,3 +10,7 @@ io.microsphere.spring.context.event.BeanTimeStatistics
 # BeanFactoryListener
 io.microsphere.spring.context.event.BeanFactoryListener=\
 io.microsphere.spring.context.event.LoggingBeanFactoryListener
+
+# ApplicationListener
+org.springframework.context.ApplicationListener=\
+io.microsphere.spring.boot.context.LoggingOnceApplicationPreparedEventListener
