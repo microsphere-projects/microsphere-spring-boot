@@ -135,4 +135,7 @@ public abstract class SpringApplicationUtils implements Utils {
             default -> logger.trace("The logger is off");
         }
     }
+
+    private SpringApplicationUtils() {
+    }
 }
