@@ -71,6 +71,7 @@ class BindUtilsTest {
                     assertFalse(isBoundProperty(context));
                 } else {
                     assertFalse(isConfigurationPropertiesBean(target, context));
+                    assertFalse(isConfigurationPropertiesBean(bindable, context));
                     assertTrue(isBoundProperty(context));
                 }
             }
