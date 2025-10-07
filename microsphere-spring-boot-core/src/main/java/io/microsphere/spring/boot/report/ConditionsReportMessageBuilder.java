@@ -1,5 +1,6 @@
 package io.microsphere.spring.boot.report;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getReportsMap;
 import static io.microsphere.text.FormatUtils.format;
@@ -24,6 +26,14 @@ public class ConditionsReportMessageBuilder {
 
     private static final String DEFAULT_BASE_PACKAGE = "io.github.microsphere";
 
+    /**
+     * The base packages for Spring Boot Conditions Report
+     */
+    @ConfigurationProperty(
+            type = String[].class,
+            defaultValue = DEFAULT_BASE_PACKAGE,
+            source = APPLICATION_SOURCE
+    )
     public static final String BASE_PACKAGES_PROPERTY_NAME = "microsphere.conditions.report.base-packages";
 
     private static final Set<String> DEFAULT_BASE_PACKAGES = singleton(DEFAULT_BASE_PACKAGE);
