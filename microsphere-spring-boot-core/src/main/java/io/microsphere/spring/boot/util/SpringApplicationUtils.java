@@ -152,4 +152,7 @@ public abstract class SpringApplicationUtils implements Utils {
             }
         }
     }
+
+    private SpringApplicationUtils() {
+    }
 }
