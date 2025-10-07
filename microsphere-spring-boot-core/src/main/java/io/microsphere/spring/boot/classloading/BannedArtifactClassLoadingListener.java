@@ -11,6 +11,7 @@ import org.springframework.core.Ordered;
 import java.util.Arrays;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static org.springframework.util.ClassUtils.getDefaultClassLoader;
 import static org.springframework.util.ClassUtils.isPresent;
 
 /**
@@ -28,7 +29,9 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
 
     private static final String SPRING_BOOT_LAUNCHER_CLASS_NAME = "org.springframework.boot.loader.Launcher";
 
-    static final boolean SPRING_BOOT_LAUNCHER_CLASS_PRESENT = isPresent(SPRING_BOOT_LAUNCHER_CLASS_NAME, null);
+    private static final ClassLoader defaultClassLoader = getDefaultClassLoader();
+
+    static final boolean SPRING_BOOT_LAUNCHER_CLASS_PRESENT = isPresent(SPRING_BOOT_LAUNCHER_CLASS_NAME, defaultClassLoader);
 
     private static boolean banned = false;
 
