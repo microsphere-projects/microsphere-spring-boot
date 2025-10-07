@@ -72,6 +72,13 @@ class OnPropertyPrefixConditionTest {
 
     @Test
     void testGetMatchOutcomeOnNoMatch() {
+        String propertyName = "key";
+        this.environment.setProperty(propertyName, "value");
+        testGetMatchOutcome(false);
+    }
+
+    @Test
+    void testGetMatchOutcomeWithoutProperty() {
         testGetMatchOutcome(false);
     }
 
