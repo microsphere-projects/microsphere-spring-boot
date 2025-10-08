@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * {@link ConfigurationPropertiesBeanInfo} Test
@@ -56,8 +57,8 @@ class ConfigurationPropertiesBeanInfoTest {
     @Test
     void testGetAnnotation() {
         ConfigurationProperties configurationProperties = this.info.getAnnotation();
-        assertEquals("server", configurationProperties.value());
-    }
+        assertEquals("server", hasText(configurationProperties.prefix()) ?
+                configurationProperties.prefix() : configurationProperties.value());    }
 
     @Test
     void testGetPrefix() {
