@@ -44,6 +44,6 @@ class ArtifactsCollisionFailureAnalyzerTest implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        throw new ArtifactsCollisionException("For testing", ofSet(args));
+        throw new ArtifactsCollisionException("For testing", ofSet("test-groupId:test-artifactId"));
     }
 }
