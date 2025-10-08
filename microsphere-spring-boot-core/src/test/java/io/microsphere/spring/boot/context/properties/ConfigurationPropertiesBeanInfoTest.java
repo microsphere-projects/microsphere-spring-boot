@@ -58,7 +58,8 @@ class ConfigurationPropertiesBeanInfoTest {
     void testGetAnnotation() {
         ConfigurationProperties configurationProperties = this.info.getAnnotation();
         assertEquals("server", hasText(configurationProperties.prefix()) ?
-                configurationProperties.prefix() : configurationProperties.value());    }
+                configurationProperties.prefix() : configurationProperties.value());
+    }
 
     @Test
     void testGetPrefix() {
