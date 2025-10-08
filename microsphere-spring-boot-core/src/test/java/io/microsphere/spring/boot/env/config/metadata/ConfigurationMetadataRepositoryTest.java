@@ -30,8 +30,9 @@ import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.AssertionsKt.assertNotNull;
+
 
 /**
  * {@link ConfigurationMetadataRepository} Test
