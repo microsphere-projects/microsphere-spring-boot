@@ -28,7 +28,7 @@ public class ConditionEvaluationSpringBootExceptionReporter implements SpringBoo
     public boolean reportException(Throwable failure) {
         logger.error("Spring Boot fails to start!", failure);
         reportConditions(context);
-        return true;
+        return false;
     }
 
     protected void reportConditions(ConfigurableApplicationContext context) {
