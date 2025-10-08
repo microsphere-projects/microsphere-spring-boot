@@ -1,10 +1,11 @@
 package io.microsphere.spring.boot.report;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.SpringBootExceptionReporter;
 import org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * Spring Boot Conditions {@link SpringBootExceptionReporter}
@@ -15,7 +16,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class ConditionEvaluationSpringBootExceptionReporter implements SpringBootExceptionReporter {
 
-    private static final Log logger = LogFactory.getLog(ConditionEvaluationSpringBootExceptionReporter.class);
+    private static final Logger logger = getLogger(ConditionEvaluationSpringBootExceptionReporter.class);
 
     private final ConfigurableApplicationContext context;
 
