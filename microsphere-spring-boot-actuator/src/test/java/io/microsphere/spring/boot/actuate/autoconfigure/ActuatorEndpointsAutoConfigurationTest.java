@@ -2,6 +2,8 @@ package io.microsphere.spring.boot.actuate.autoconfigure;
 
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
+import io.microsphere.spring.boot.actuate.endpoint.ConfigurationPropertiesEndpoint;
+import io.microsphere.spring.boot.actuate.endpoint.ConfigurationPropertiesEndpoint.ConfigurationPropertiesDescriptor;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,8 @@ import org.springframework.test.context.TestPropertySource;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.WebApplicationType.SERVLET;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * {@link ActuatorEndpointsAutoConfiguration} Test
@@ -25,7 +27,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @since 1.0.0
  */
 @SpringBootTest(
-        webEnvironment = RANDOM_PORT,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
         },
@@ -47,6 +49,9 @@ public class ActuatorEndpointsAutoConfigurationTest {
     @Autowired
     private ConfigurationMetadataEndpoint configurationMetadataEndpoint;
 
+    @Autowired
+    private ConfigurationPropertiesEndpoint configurationPropertiesEndpoint;
+
     @Test
     void testArtifactsEndpoint() {
         assertFalse(artifactsEndpoint.getArtifactMetaInfoList().isEmpty());
@@ -63,6 +68,13 @@ public class ActuatorEndpointsAutoConfigurationTest {
         ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
         assertFalse(configurationMetadata.getGroups().isEmpty());
         assertFalse(configurationMetadata.getProperties().isEmpty());
+    }
+
+    @Test
+    void testGetConfigurationProperties() {
+        ConfigurationPropertiesDescriptor descriptor = configurationPropertiesEndpoint.getConfigurationProperties();
+        assertNotNull(descriptor);
+        assertFalse(descriptor.getConfigurationProperties().isEmpty());
     }
 
     public static void main(String[] args) {
