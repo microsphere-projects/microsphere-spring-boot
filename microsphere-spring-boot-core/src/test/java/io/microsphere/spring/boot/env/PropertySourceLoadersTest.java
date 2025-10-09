@@ -98,6 +98,13 @@ public class PropertySourceLoadersTest {
         assertTrue(propertySource instanceof OriginTrackedMapPropertySource);
     }
 
+    @Test
+    void testReloadAsOriginTrackedOnNull() throws IOException {
+        MockPropertySource mockPropertySource = new MockPropertySource(TEST_PROPERTY_NAME);
+        PropertySource propertySource = propertySourceLoaders.reloadAsOriginTracked(mockPropertySource);
+        assertSame(mockPropertySource, propertySource);
+    }
+
     private void assertPropertySource(PropertySource<?> propertySource) {
         assertTrue(propertySource instanceof OriginTrackedMapPropertySource);
         assertEquals(TEST_PROPERTY_NAME, propertySource.getName());
