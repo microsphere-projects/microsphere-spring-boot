@@ -23,12 +23,12 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.mock.env.MockPropertySource;
 
 import java.io.IOException;
 import java.util.List;
 
-import static io.microsphere.util.ArrayUtils.of;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static io.microsphere.collection.Sets.ofSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -51,7 +51,7 @@ public class PropertySourceLoadersTest {
     @Test
     void testGetFileExtensions() {
         String[] fileExtensions = propertySourceLoaders.getFileExtensions();
-        assertArrayEquals(of("properties", "xml", "yml", "yaml"), fileExtensions);
+        assertEquals(ofSet("properties", "xml", "yml", "yaml"), ofSet(fileExtensions));
     }
 
     @Test
@@ -59,9 +59,9 @@ public class PropertySourceLoadersTest {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         Resource resource = resourceLoader.getResource(TEST_RESOURCE_LOCATION);
         List<PropertySource<?>> propertySources = propertySourceLoaders.load(TEST_PROPERTY_NAME, resource);
-        assertEquals(1, propertySources.size());
+        assertEquals(2, propertySources.size());
 
-        PropertySource propertySource = propertySources.get(0);
+        PropertySource propertySource = propertySources.get(1);
         assertPropertySource(propertySource);
     }
 
@@ -76,6 +76,13 @@ public class PropertySourceLoadersTest {
     void testReloadAsOriginTracked() throws IOException {
         PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
         assertSame(propertySource, propertySourceLoaders.reloadAsOriginTracked(propertySource));
+    }
+
+    @Test
+    void testReloadAsOriginTrackedOnClassPathResource() throws IOException {
+        MockPropertySource mockPropertySource = new MockPropertySource("[" + TEST_RESOURCE_LOCATION + "]");
+        PropertySource propertySource = propertySourceLoaders.reloadAsOriginTracked(mockPropertySource);
+        assertTrue(propertySource instanceof OriginTrackedMapPropertySource);
     }
 
     private void assertPropertySource(PropertySource<?> propertySource) {
