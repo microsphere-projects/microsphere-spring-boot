@@ -31,6 +31,7 @@ import java.util.Map;
 
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
 import static java.util.Arrays.asList;
+import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertySources.from;
 
 /**
@@ -59,7 +60,7 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
         Iterable<ConfigurationPropertySource> configurationPropertySources = from(propertySources);
 
         // Wrap Bindable from configuration bean
-        Bindable bindable = Bindable.ofInstance(configurationBean);
+        Bindable bindable = ofInstance(configurationBean);
 
         Binder binder = new Binder(configurationPropertySources, new PropertySourcesPlaceholdersResolver(propertySources), conversionService);
 
