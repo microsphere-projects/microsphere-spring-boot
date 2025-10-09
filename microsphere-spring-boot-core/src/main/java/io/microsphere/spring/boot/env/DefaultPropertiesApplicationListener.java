@@ -111,9 +111,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
         for (String defaultPropertiesResource : defaultPropertiesResources) {
             try {
                 for (Resource resource : resourcePatternResolver.getResources(defaultPropertiesResource)) {
-                    if (!loadDefaultProperties(resource, propertySourceLoaders, defaultProperties)) {
-                        logger.warn("'defaultProperties' resource [location: {}] failed to load, please confirm the resource can be processed!", resource.getURL());
-                    }
+                    loadDefaultProperties(resource, propertySourceLoaders, defaultProperties);
                 }
             } catch (IOException e) {
                 logger.warn("'defaultProperties' resource [location: {}] does not exist, please make sure the resource is correct!", defaultPropertiesResource, e);
@@ -121,20 +119,20 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
         }
     }
 
-    private boolean loadDefaultProperties(Resource resource, PropertySourceLoaders propertySourceLoaders,
-                                          Map<String, Object> defaultProperties) throws IOException {
+    private void loadDefaultProperties(Resource resource, PropertySourceLoaders propertySourceLoaders,
+                                       Map<String, Object> defaultProperties) throws IOException {
         boolean loaded = false;
         URL url = resource.getURL();
         String resourceLocation = url.getPath();
         List<PropertySource<?>> propertySources = propertySourceLoaders.load(resourceLocation, resource);
-        logger.trace("'defaultProperties' resource [location: {}] loads into {} PropertySource", resourceLocation, propertySources.size());
         for (PropertySource propertySource : propertySources) {
             if (propertySource instanceof EnumerablePropertySource) {
                 merge((EnumerablePropertySource) propertySource, defaultProperties);
                 loaded = true;
             }
         }
-        return loaded;
+        logger.trace("'defaultProperties' resource [location: {}] loads into {} PropertySources , loaded : {}",
+                resourceLocation, propertySources.size(), loaded);
     }
 
     private void merge(EnumerablePropertySource<?> propertySource, Map<String, Object> defaultProperties) {
