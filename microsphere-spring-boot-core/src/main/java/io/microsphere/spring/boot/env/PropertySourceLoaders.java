@@ -95,7 +95,7 @@ public class PropertySourceLoaders implements PropertySourceLoader {
      * @throws IOException
      */
     public PropertySource<?> reloadAsOriginTracked(PropertySource<?> propertySource) throws IOException {
-        if (propertySource instanceof OriginLookup<?>) {
+        if (propertySource instanceof OriginLookup) {
             logger.trace("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
                     propertySource.getName(), propertySource.getClass().getName());
             return propertySource;
