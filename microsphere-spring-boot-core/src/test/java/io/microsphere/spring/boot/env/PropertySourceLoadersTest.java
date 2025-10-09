@@ -23,6 +23,7 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import org.springframework.mock.env.MockPropertySource;
 
 import java.io.IOException;
 import java.util.List;
@@ -75,6 +76,13 @@ public class PropertySourceLoadersTest {
     void testReloadAsOriginTracked() throws IOException {
         PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
         assertSame(propertySource, propertySourceLoaders.reloadAsOriginTracked(propertySource));
+    }
+
+    @Test
+    void testReloadAsOriginTrackedOnClassPathResource() throws IOException {
+        MockPropertySource mockPropertySource = new MockPropertySource("[" + TEST_RESOURCE_LOCATION + "]");
+        PropertySource propertySource = propertySourceLoaders.reloadAsOriginTracked(mockPropertySource);
+        assertTrue(propertySource instanceof OriginTrackedMapPropertySource);
     }
 
     private void assertPropertySource(PropertySource<?> propertySource) {
