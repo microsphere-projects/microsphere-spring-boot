@@ -59,4 +59,16 @@ public class ConfigurationPropertyUtilsTest {
         assertEquals("my-name", toDashedForm("MyName"));
         assertEquals("my-name", toDashedForm("my_name"));
     }
+
+    @Test
+    void testToDashedFormWithStart() {
+        assertToDashedForm("my-name");
+        assertToDashedForm("myName");
+        assertToDashedForm("MyName");
+        assertToDashedForm("my_name");
+    }
+
+    void assertToDashedForm(String name) {
+        assertEquals(toDashedForm(name), toDashedForm(name, 0));
+    }
 }
