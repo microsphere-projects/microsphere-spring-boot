@@ -14,11 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.boot.util;
+package io.microsphere.spring.boot.context.properties.source.util;
 
-import io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils;
+import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.context.properties.bind.BindContext;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
+import java.util.Map;
+
+import static io.microsphere.collection.Maps.ofMap;
+import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,6 +38,19 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * @since 1.0.0
  */
 public class ConfigurationPropertyUtilsTest {
+
+    @Test
+    void testGetPrefix() {
+        String prefix = "server";
+        Map<String, String> properties = ofMap(prefix + ".port", "12345");
+        ServerProperties serverProperties = bind(properties, prefix, ServerProperties.class, new BindListener() {
+            @Override
+            public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+                assertEquals(prefix, getPrefix(name, context));
+            }
+        });
+        assertEquals(12345, serverProperties.getPort());
+    }
 
     @Test
     void testToDashedForm() {
