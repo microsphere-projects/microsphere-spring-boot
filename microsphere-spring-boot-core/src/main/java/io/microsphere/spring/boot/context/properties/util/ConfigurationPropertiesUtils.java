@@ -18,8 +18,9 @@ package io.microsphere.spring.boot.context.properties.util;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.core.ResolvableType;
 
-import java.lang.annotation.Annotation;
+import static io.microsphere.util.AnnotationUtils.findAnnotation;
 
 /**
  * The utilities class of {@link ConfigurationProperties}
@@ -30,6 +31,9 @@ import java.lang.annotation.Annotation;
  */
 public abstract class ConfigurationPropertiesUtils {
 
+    /**
+     * The {@link Class} of {@link ConfigurationProperties}
+     */
     public static final Class<ConfigurationProperties> CONFIGURATION_PROPERTIES_CLASS = ConfigurationProperties.class;
 
     /**
@@ -39,13 +43,13 @@ public abstract class ConfigurationPropertiesUtils {
      * @return an annotation of {@link ConfigurationProperties} if present
      */
     public static ConfigurationProperties findConfigurationProperties(Bindable bindable) {
-        ConfigurationProperties configurationProperties = null;
-        Annotation[] annotations = bindable.getAnnotations();
-        for (Annotation annotation : annotations) {
-            if (CONFIGURATION_PROPERTIES_CLASS.equals(annotation.annotationType())) {
-                configurationProperties = CONFIGURATION_PROPERTIES_CLASS.cast(annotation);
-                break;
-            }
+        // Find an annotation of @ConfigurationProperties from annotations
+        ConfigurationProperties configurationProperties = (ConfigurationProperties) bindable.getAnnotation(CONFIGURATION_PROPERTIES_CLASS);
+        if (configurationProperties == null) {
+            // If not found, try to find an annotation of @ConfigurationProperties from the bindable's type
+            ResolvableType type = bindable.getType();
+            Class<?> bindableType = type.resolve();
+            configurationProperties = findAnnotation(bindableType, CONFIGURATION_PROPERTIES_CLASS);
         }
         return configurationProperties;
     }
