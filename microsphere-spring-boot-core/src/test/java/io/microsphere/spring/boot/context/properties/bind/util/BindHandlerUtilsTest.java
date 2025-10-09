@@ -23,7 +23,8 @@ import org.springframework.boot.context.properties.bind.handler.IgnoreErrorsBind
 import org.springframework.boot.context.properties.bind.handler.NoUnboundElementsBindHandler;
 
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.bind.BindHandler.DEFAULT;
 
 /**
@@ -37,9 +38,9 @@ class BindHandlerUtilsTest {
 
     @Test
     void testCreateBindHandler() {
-        assertInstanceOf(NoUnboundElementsBindHandler.class, createBindHandler(false, false));
-        assertInstanceOf(DEFAULT.getClass(), createBindHandler(true, false));
-        assertInstanceOf(IgnoreErrorsBindHandler.class, createBindHandler(true, true));
-        assertInstanceOf(NoUnboundElementsBindHandler.class, createBindHandler(false, true));
+        assertTrue(createBindHandler(false, false) instanceof NoUnboundElementsBindHandler);
+        assertSame(DEFAULT, createBindHandler(true, false));
+        assertTrue(createBindHandler(true, true) instanceof IgnoreErrorsBindHandler);
+        assertTrue(createBindHandler(false, true) instanceof NoUnboundElementsBindHandler);
     }
 }
