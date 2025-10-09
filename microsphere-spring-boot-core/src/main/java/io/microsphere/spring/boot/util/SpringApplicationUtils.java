@@ -112,7 +112,6 @@ public abstract class SpringApplicationUtils implements Utils {
                         "    web type : '{}' ," +
                         "    sources : {} ," +
                         "    all sources : {} ," +
-                        "    additional profiles : {} ," +
                         "    initializers : {} ," +
                         "    listeners : {}," +
                         "    args : {}," +
@@ -122,7 +121,6 @@ public abstract class SpringApplicationUtils implements Utils {
                 springApplication.getWebApplicationType(),
                 springApplication.getSources(),
                 springApplication.getAllSources(),
-                springApplication.getAdditionalProfiles(),
                 springApplication.getInitializers(),
                 springApplication.getListeners(),
                 arrayToString(args),
