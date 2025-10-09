@@ -31,7 +31,7 @@ import static org.springframework.boot.WebApplicationType.NONE;
  * @see ApplicationPreparedEvent
  * @since 1.0.0
  */
-public class AbstractApplicationPreparedEventTest {
+class AbstractApplicationPreparedEventTest {
 
     protected ApplicationPreparedEvent createEvent(String... args) {
         SpringApplication springApplication = new SpringApplication(getClass());

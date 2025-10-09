@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
+class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;

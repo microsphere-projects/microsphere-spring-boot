@@ -38,7 +38,7 @@ import static org.springframework.boot.WebApplicationType.SERVLET;
 @PropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
 @TestPropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
 @EnableAutoConfiguration
-public class ActuatorEndpointsAutoConfigurationTest {
+class ActuatorEndpointsAutoConfigurationTest {
 
     @Autowired
     private ArtifactsEndpoint artifactsEndpoint;

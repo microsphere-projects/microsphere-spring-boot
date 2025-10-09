@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(
         classes = BindableConfigurationBeanBinder.class
 )
-public class BindableConfigurationBeanBinderTest {
+class BindableConfigurationBeanBinderTest {
 
     @Autowired
     private ConfigurationBeanBinder beanBinder;

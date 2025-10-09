@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConfigurableAutoConfigurationImportFilter
  * @since 1.0.0
  */
-public class ConfigurableAutoConfigurationImportFilterTest {
+class ConfigurableAutoConfigurationImportFilterTest {
 
     private static final String TEST_CLASS_NAME_1 = "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration";
 
