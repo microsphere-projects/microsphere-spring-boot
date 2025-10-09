@@ -2,6 +2,10 @@
 org.springframework.context.ApplicationContextInitializer=\
 io.microsphere.spring.context.event.EventPublishingBeanInitializer
 
+# PropertySourceLoader
+org.springframework.boot.env.PropertySourceLoader=\
+io.microsphere.spring.boot.env.PropertiesEmptyPropertySourceLoader
+
 # BeanListener
 io.microsphere.spring.context.event.BeanListener=\
 io.microsphere.spring.context.event.LoggingBeanListener,\

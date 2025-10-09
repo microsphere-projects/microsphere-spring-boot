@@ -96,7 +96,7 @@ public class PropertySourceLoaders implements PropertySourceLoader {
      */
     public PropertySource<?> reloadAsOriginTracked(PropertySource<?> propertySource) throws IOException {
         if (propertySource instanceof OriginLookup<?>) {
-            debug("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
+            logger.trace("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
                     propertySource.getName(), propertySource.getClass().getName());
             return propertySource;
         }
@@ -139,11 +139,5 @@ public class PropertySourceLoaders implements PropertySourceLoader {
             }
         }
         return supported;
-    }
-
-    private void debug(String messagePattern, Object... args) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(messagePattern, args);
-        }
     }
 }
