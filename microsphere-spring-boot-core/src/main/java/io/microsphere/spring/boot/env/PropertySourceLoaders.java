@@ -96,7 +96,7 @@ public class PropertySourceLoaders implements PropertySourceLoader {
      */
     public PropertySource<?> reloadAsOriginTracked(PropertySource<?> propertySource) throws IOException {
         if (propertySource instanceof OriginLookup<?>) {
-            debug("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
+            logger.trace("The PropertySource[name : '{}', class : '{}'] is already an instance of OriginLookup",
                     propertySource.getName(), propertySource.getClass().getName());
             return propertySource;
         }
@@ -121,11 +121,12 @@ public class PropertySourceLoaders implements PropertySourceLoader {
     public PropertySource<?> loadAsOriginTracked(String name, String location) throws IOException {
         Resource resource = resourceLoader.getResource(location);
         List<PropertySource<?>> propertySources = load(name, resource);
-        int size = propertySources.size();
-        if (size > 1) {
-            throw new IllegalStateException("The resource : " + resource + " can load more than one PropertySource");
+        for (PropertySource<?> propertySource : propertySources) {
+            if (propertySource instanceof OriginLookup) {
+                return propertySource;
+            }
         }
-        return propertySources.get(0);
+        return null;
     }
 
     private boolean supports(PropertySourceLoader loader, URL resourceURL) {
@@ -139,11 +140,5 @@ public class PropertySourceLoaders implements PropertySourceLoader {
             }
         }
         return supported;
-    }
-
-    private void debug(String messagePattern, Object... args) {
-        if (logger.isDebugEnabled()) {
-            logger.debug(messagePattern, args);
-        }
     }
 }
