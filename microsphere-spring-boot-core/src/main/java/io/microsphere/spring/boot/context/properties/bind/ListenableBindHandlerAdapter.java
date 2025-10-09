@@ -61,7 +61,6 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
-    @Override
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = super.onCreate(name, target, context, result);
         bindHandlers.onCreate(name, target, context, result);
@@ -70,9 +69,12 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
-        Object result = super.onFailure(name, target, context, error);
-        bindHandlers.onFailure(name, target, context, error);
-        return result;
+        try {
+            return super.onFailure(name, target, context, error);
+        } catch (Exception e) {
+            bindHandlers.onFailure(name, target, context, error);
+            throw e;
+        }
     }
 
     @Override
