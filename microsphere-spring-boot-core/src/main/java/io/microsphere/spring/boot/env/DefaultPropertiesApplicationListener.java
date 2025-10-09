@@ -61,10 +61,8 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     private void processDefaultProperties(ConfigurableEnvironment environment, SpringApplication springApplication) {
         Map<String, Object> defaultProperties = getDefaultProperties(environment);
-        if (defaultProperties != null) {
-            postProcessDefaultProperties(springApplication, defaultProperties);
-            logDefaultProperties(springApplication, defaultProperties);
-        }
+        postProcessDefaultProperties(springApplication, defaultProperties);
+        logDefaultProperties(springApplication, defaultProperties);
     }
 
     private void postProcessDefaultProperties(SpringApplication springApplication, Map<String, Object> defaultProperties) {
