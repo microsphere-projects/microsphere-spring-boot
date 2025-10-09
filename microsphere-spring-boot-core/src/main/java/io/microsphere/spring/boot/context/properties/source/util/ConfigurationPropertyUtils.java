@@ -22,7 +22,7 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
-import static io.microsphere.util.StringUtils.substringBefore;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 
 /**
  * The utilities class of {@link ConfigurationProperty}
@@ -44,7 +44,7 @@ public abstract class ConfigurationPropertyUtils {
         String propertyName = name.toString();
         String prefix = propertyName;
         for (int i = 0; i < depth; i++) {
-            prefix = substringBefore(prefix, DOT);
+            prefix = substringBeforeLast(prefix, DOT);
         }
         return prefix;
     }
