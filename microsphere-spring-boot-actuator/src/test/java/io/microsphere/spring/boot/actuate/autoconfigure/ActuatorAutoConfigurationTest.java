@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 })
 @EnableAutoConfiguration
-public class ActuatorAutoConfigurationTest {
+class ActuatorAutoConfigurationTest {
 
     @Autowired
     @SuppressWarnings("unchecked")

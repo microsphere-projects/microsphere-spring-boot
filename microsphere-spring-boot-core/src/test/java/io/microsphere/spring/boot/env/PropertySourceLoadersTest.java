@@ -42,7 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see PropertySourceLoaders
  * @since 1.0.0
  */
-public class PropertySourceLoadersTest {
+class PropertySourceLoadersTest {
 
     private static final PropertySourceLoaders propertySourceLoaders = new PropertySourceLoaders();
 
