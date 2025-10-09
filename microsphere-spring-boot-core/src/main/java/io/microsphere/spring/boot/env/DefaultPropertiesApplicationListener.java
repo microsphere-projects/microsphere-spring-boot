@@ -46,7 +46,11 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     private static final Logger logger = getLogger(DefaultPropertiesApplicationListener.class);
 
-    private int order = DEFAULT_ORDER;
+    private int order;
+
+    public DefaultPropertiesApplicationListener() {
+        this.setOrder(DEFAULT_ORDER);
+    }
 
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
