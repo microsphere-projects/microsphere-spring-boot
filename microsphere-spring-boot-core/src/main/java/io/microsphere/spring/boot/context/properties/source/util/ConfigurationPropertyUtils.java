@@ -20,8 +20,10 @@ import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
+import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.util.StringUtils.substringBefore;
 
 /**
  * The utilities class of {@link ConfigurationProperty}
@@ -34,32 +36,25 @@ public abstract class ConfigurationPropertyUtils {
     private static final ClassLoader classLoader = ConfigurationPropertyUtils.class.getClassLoader();
 
     /**
-     * The class name before Spring Boot 2.2.3
-     */
-    private static final String BEAN_PROPERTY_NAME_CLASS_NAME = "org.springframework.boot.context.properties.bind.BeanPropertyName";
-
-    /**
      * The class name as a constant since Spring Boot 2.2.3
      */
     private static final String DATA_OBJECT_PROPERTY_NAME_CLASS_NAME = "org.springframework.boot.context.properties.bind.DataObjectPropertyName";
 
-    private static final Class<?> BEAN_PROPERTY_NAME_CLASS = resolveClass(BEAN_PROPERTY_NAME_CLASS_NAME, classLoader);
-
     private static final Class<?> DATA_OBJECT_PROPERTY_NAME_CLASS = resolveClass(DATA_OBJECT_PROPERTY_NAME_CLASS_NAME, classLoader);
 
-    private ConfigurationPropertyUtils() throws InstantiationException {
-        throw new InstantiationException();
-    }
-
+    /**
+     * Get the prefix of the specified {@link ConfigurationPropertyName}
+     *
+     * @param name    the {@link ConfigurationPropertyName}
+     * @param context the {@link BindContext}
+     * @return the prefix of the specified {@link ConfigurationPropertyName}
+     */
     public static final String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
         String propertyName = name.toString();
         String prefix = propertyName;
         for (int i = 0; i < depth; i++) {
-            int lastIndex = prefix.lastIndexOf('.');
-            if (lastIndex > -1) {
-                prefix = prefix.substring(0, lastIndex);
-            }
+            prefix = substringBefore(prefix, DOT);
         }
         return prefix;
     }
@@ -81,11 +76,12 @@ public abstract class ConfigurationPropertyUtils {
 
     /**
      * Return the specified Java Bean property name in dashed form.
-     * (Source from org.springframework.boot.context.properties.bind.BeanPropertyName)
+     * (Source from org.springframework.boot.context.properties.bind.BeanPropertyName before Spring Boot 2.2.3)
      *
      * @param name  the source name
      * @param start the starting char
      * @return the dashed from
+     * @see org.springframework.boot.context.properties.bind.BeanPropertyName
      */
     protected static String toDashedForm(String name, int start) {
         StringBuilder result = new StringBuilder();
@@ -100,5 +96,6 @@ public abstract class ConfigurationPropertyUtils {
         return result.toString();
     }
 
-
+    private ConfigurationPropertyUtils() {
+    }
 }
