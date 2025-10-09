@@ -30,7 +30,9 @@ import java.util.List;
 
 import static io.microsphere.collection.Sets.ofSet;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -70,6 +72,17 @@ public class PropertySourceLoadersTest {
         PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION);
         assertTrue(propertySource instanceof OriginLookup);
         assertPropertySource(propertySource);
+    }
+
+    @Test
+    void testLoadAsOriginTrackedOnNull() throws IOException {
+        PropertySource propertySource = propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, "classpath:/META-INF/spring.factories");
+        assertNull(propertySource);
+    }
+
+    @Test
+    void testLoadAsOriginTrackedOnIOException() throws IOException {
+        assertThrows(IOException.class, () -> propertySourceLoaders.loadAsOriginTracked(TEST_PROPERTY_NAME, TEST_RESOURCE_LOCATION + ".test"));
     }
 
     @Test
