@@ -16,16 +16,22 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
+import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.AbstractBindHandler;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 /**
  * Listable {@link BindHandler} Adapter
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ListenableConfigurationPropertiesBindHandlerAdvisor
+ * @see BindHandler
+ * @see Binder
+ * @see Bindable
  * @since 1.0.0
  */
 public class ListenableBindHandlerAdapter extends AbstractBindHandler {
@@ -55,13 +61,9 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since Spring Boot 2.2.2
-     */
+    @Override
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-        Object returnValue = result;
+        Object returnValue = super.onCreate(name, target, context, result);
         bindHandlers.onCreate(name, target, context, result);
         return returnValue;
     }

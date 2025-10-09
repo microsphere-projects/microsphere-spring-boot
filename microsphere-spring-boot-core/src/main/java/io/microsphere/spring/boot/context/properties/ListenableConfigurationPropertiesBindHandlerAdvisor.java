@@ -23,6 +23,8 @@ import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.BindHandler;
+import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 
 import java.util.List;
 
@@ -32,8 +34,10 @@ import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
  * {@link ConfigurationPropertiesBindHandlerAdvisor} supports the chaining of the {@link BindListener BindListeners' beans}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see BindHandler
  * @see ConfigurationPropertiesBindHandlerAdvisor
+ * @see BindHandler
+ * @see Binder
+ * @see Bindable
  * @since 1.0.0
  */
 public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
