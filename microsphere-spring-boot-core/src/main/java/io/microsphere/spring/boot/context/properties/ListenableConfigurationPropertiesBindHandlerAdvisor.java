@@ -21,9 +21,12 @@ import io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerA
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.context.properties.ConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.BindHandler;
+
+import java.util.List;
+
+import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
 
 /**
  * {@link ConfigurationPropertiesBindHandlerAdvisor} supports the chaining of the {@link BindListener BindListeners' beans}
@@ -35,20 +38,16 @@ import org.springframework.boot.context.properties.bind.BindHandler;
  */
 public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
 
-    private ObjectProvider<BindListener> bindListeners;
+    private BeanFactory beanFactory;
 
     @Override
     public BindHandler apply(BindHandler bindHandler) {
-        try {
-            return new ListenableBindHandlerAdapter(bindHandler, () -> bindListeners.orderedStream().iterator());
-        } catch (UnsupportedOperationException e) {
-            // Sorting operations are not supported
-            return new ListenableBindHandlerAdapter(bindHandler, bindListeners);
-        }
+        List<BindListener> bindListeners = getSortedBeans(this.beanFactory, BindListener.class);
+        return new ListenableBindHandlerAdapter(bindHandler, bindListeners);
     }
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-        this.bindListeners = beanFactory.getBeanProvider(BindListener.class);
+        this.beanFactory = beanFactory;
     }
 }
