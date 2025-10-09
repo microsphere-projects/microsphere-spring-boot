@@ -26,6 +26,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import java.beans.PropertyDescriptor;
 import java.util.List;
 
+import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -86,7 +87,7 @@ class ConfigurationPropertiesBeanInfoTest {
         assertNotEquals(this.info, this);
         assertNotEquals(this.info, new ConfigurationPropertiesBeanInfo(ConfigurationPropertiesBeanInfoTest.class));
         assertNotEquals(this.info, new ConfigurationPropertiesBeanInfo(ServerProperties.class,
-                ServerProperties.class.getAnnotation(ConfigurationProperties.class), "server-1"));
+                ServerProperties.class.getAnnotation(CONFIGURATION_PROPERTIES_CLASS), "server-1"));
     }
 
     @Test
