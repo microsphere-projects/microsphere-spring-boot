@@ -32,10 +32,6 @@ public abstract class ConfigurationPropertiesUtils {
 
     public static final Class<ConfigurationProperties> CONFIGURATION_PROPERTIES_CLASS = ConfigurationProperties.class;
 
-    private ConfigurationPropertiesUtils() throws InstantiationException {
-        throw new InstantiationException();
-    }
-
     /**
      * Find an annotation of {@link ConfigurationProperties} from the specified {@link Bindable}
      *
@@ -52,5 +48,8 @@ public abstract class ConfigurationPropertiesUtils {
             }
         }
         return configurationProperties;
+    }
+
+    private ConfigurationPropertiesUtils() {
     }
 }

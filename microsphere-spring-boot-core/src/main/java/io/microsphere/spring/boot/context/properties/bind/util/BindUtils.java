@@ -31,6 +31,7 @@ import org.springframework.core.env.Environment;
 import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.bind.Binder.get;
 
@@ -44,7 +45,7 @@ import static org.springframework.boot.context.properties.bind.Binder.get;
 public abstract class BindUtils implements Utils {
 
     public static boolean isConfigurationPropertiesBean(Bindable<?> target, BindContext context) {
-        return target != null && target.getAnnotation(ConfigurationProperties.class) != null && isConfigurationPropertiesBean(context);
+        return target != null && target.getAnnotation(CONFIGURATION_PROPERTIES_CLASS) != null && isConfigurationPropertiesBean(context);
     }
 
     public static boolean isConfigurationPropertiesBean(BindContext context) {
