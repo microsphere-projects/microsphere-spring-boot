@@ -17,6 +17,7 @@ import static io.microsphere.spring.boot.constants.PropertyConstants.DEFAULT_MIC
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
 import static io.microsphere.util.ArrayUtils.arrayToString;
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static io.microsphere.util.ShutdownHookUtils.addShutdownHookCallback;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Locale.ENGLISH;
 import static org.springframework.util.StringUtils.hasText;
@@ -32,6 +33,10 @@ public abstract class SpringApplicationUtils implements Utils {
     private static final Logger logger = getLogger(SpringApplicationUtils.class);
 
     private static final Set<String> defaultPropertiesResources = new LinkedHashSet<>();
+
+    static {
+        addShutdownHookCallback(defaultPropertiesResources::clear);
+    }
 
     /**
      * Add "defaultProperties" resource path
