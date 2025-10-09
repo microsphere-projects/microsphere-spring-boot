@@ -18,6 +18,7 @@ package io.microsphere.spring.boot.context.config;
 
 import io.microsphere.spring.boot.domain.User;
 import io.microsphere.spring.context.config.ConfigurationBeanBinder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,11 @@ class BindableConfigurationBeanBinderTest {
 
     @Autowired
     private ConfigurableEnvironment environment;
+
+    @BeforeEach
+    void setUp() {
+        this.beanBinder.setConversionService(this.environment.getConversionService());
+    }
 
     @Test
     void testBind() {
