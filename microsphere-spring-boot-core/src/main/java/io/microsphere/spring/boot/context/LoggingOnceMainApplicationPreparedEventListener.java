@@ -37,6 +37,6 @@ public class LoggingOnceMainApplicationPreparedEventListener extends OnceMainApp
 
     @Override
     protected void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
-        log(springApplication, context, args);
+        log(springApplication, args, context, "onApplicationPreparedEvent");
     }
 }
