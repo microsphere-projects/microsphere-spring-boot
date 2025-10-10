@@ -19,6 +19,7 @@ package io.microsphere.spring.boot.context.properties.metadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
+import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
@@ -39,7 +40,7 @@ class ConfigurationMetadataReaderTest {
     @BeforeEach
     void setUp() {
         this.reader = new ConfigurationMetadataReader();
-        this.reader.setResourceLoader(null);
+        this.reader.setResourceLoader(new DefaultResourceLoader());
     }
 
     @Test
