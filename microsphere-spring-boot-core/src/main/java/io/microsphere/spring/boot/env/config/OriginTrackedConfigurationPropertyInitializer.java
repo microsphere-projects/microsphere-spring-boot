@@ -106,11 +106,8 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
         for (int i = 0; i < size; i++) {
             String propertyName = propertyNames[i];
             Object propertyValue = enumerablePropertySource.getProperty(propertyName);
-            if (propertyValue == null) {
-                continue;
-            }
-            // Skip if propertyValue is OriginTrackedValue
-            if (!(propertyValue instanceof OriginTrackedValue)) {
+            if (propertyValue != null && !(propertyValue instanceof OriginTrackedValue)) {
+                // Skip if propertyValue is OriginTrackedValue
                 Origin origin = resolveOrigin(propertySource);
                 // propertyValue with origin
                 propertyValue = of(propertyValue, origin);
