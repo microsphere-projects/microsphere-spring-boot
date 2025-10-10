@@ -31,7 +31,7 @@ import org.springframework.mock.env.MockEnvironment;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.spring.boot.util.AbstractTest.assertServerPropertiesPort;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -65,7 +65,7 @@ class ListenableBindHandlerAdapterTest {
     void test() {
         BindResult<ServerProperties> serverProperties = this.binder.bind("server", this.bindable, createBinder());
         assertTrue(serverProperties.isBound());
-        assertServerProperties(serverProperties.get());
+        assertServerPropertiesPort(this.environment, serverProperties.get());
     }
 
     @Test
@@ -90,9 +90,5 @@ class ListenableBindHandlerAdapterTest {
 
     BindHandler createBinder(BindHandler parent, BindListener... bindListeners) {
         return new ListenableBindHandlerAdapter(parent, ofList(bindListeners));
-    }
-
-    void assertServerProperties(ServerProperties serverProperties) {
-        assertEquals(12345, serverProperties.getPort());
     }
 }
