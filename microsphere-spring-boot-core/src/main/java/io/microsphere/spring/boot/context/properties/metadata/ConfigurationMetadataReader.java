@@ -82,7 +82,7 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
         }
     }
 
-    private ResourcePatternResolver getResourcePatternResolver() {
+    public ResourcePatternResolver getResourcePatternResolver() {
         ResourcePatternResolver resourcePatternResolver = this.resourcePatternResolver;
         if (resourcePatternResolver == null) {
             resourcePatternResolver = new PathMatchingResourcePatternResolver();

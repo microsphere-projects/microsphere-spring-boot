@@ -25,6 +25,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -40,7 +41,6 @@ class ConfigurationMetadataReaderTest {
     @BeforeEach
     void setUp() {
         this.reader = new ConfigurationMetadataReader();
-        this.reader.setResourceLoader(new DefaultResourceLoader());
     }
 
     @Test
@@ -71,5 +71,13 @@ class ConfigurationMetadataReaderTest {
         ConfigurationMetadata metadata = this.reader.read();
         assertTrue(metadata.getItems().isEmpty());
 
+    }
+
+    @Test
+    void testGetResourcePatternResolver() {
+        assertNotNull(this.reader.getResourcePatternResolver());
+
+        this.reader.setResourceLoader(new DefaultResourceLoader());
+        assertNotNull(this.reader.getResourcePatternResolver());
     }
 }
