@@ -16,21 +16,56 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
+import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.AbstractBindHandler;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
+
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.TRUSTED;
+import static io.microsphere.invoke.MethodHandleUtils.lookup;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static java.lang.invoke.MethodType.methodType;
 
 /**
  * Listable {@link BindHandler} Adapter
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ListenableConfigurationPropertiesBindHandlerAdvisor
+ * @see BindHandler
+ * @see Binder
+ * @see Bindable
  * @since 1.0.0
  */
 public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
+    /**
+     * The method {@link BindHandler#onCreate(ConfigurationPropertyName, Bindable, BindContext, Object)} was introduced
+     * in Spring Boot 2.2.2
+     */
+    static final MethodHandle onCreateMethodHandle;
+
+    static {
+        Lookup lookup = lookup(AbstractBindHandler.class, TRUSTED);
+        MethodType methodType = methodType(Object.class, ConfigurationPropertyName.class, Bindable.class, BindContext.class, Object.class);
+        onCreateMethodHandle = execute(
+                () -> lookup.findSpecial(AbstractBindHandler.class, "onCreate", methodType, ListenableBindHandlerAdapter.class),
+                e -> null
+        );
+    }
+
     private final BindListeners bindHandlers;
+
+    public ListenableBindHandlerAdapter(Iterable<BindListener> bindListeners) {
+        this(DEFAULT, bindListeners);
+    }
 
     public ListenableBindHandlerAdapter(BindHandler parent, Iterable<BindListener> bindListeners) {
         super(parent);
@@ -51,22 +86,23 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
-    /**
-     * {@inheritDoc}
-     *
-     * @since Spring Boot 2.2.2
-     */
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = result;
+        if (onCreateMethodHandle != NOT_FOUND_METHOD_HANDLE) {
+            returnValue = execute(() -> onCreateMethodHandle.invoke(this, name, target, context, result));
+        }
         bindHandlers.onCreate(name, target, context, result);
         return returnValue;
     }
 
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
-        Object result = super.onFailure(name, target, context, error);
-        bindHandlers.onFailure(name, target, context, error);
-        return result;
+        try {
+            return super.onFailure(name, target, context, error);
+        } catch (Exception e) {
+            bindHandlers.onFailure(name, target, context, error);
+            throw e;
+        }
     }
 
     @Override

@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -31,12 +32,11 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
 
-import javax.annotation.PostConstruct;
-
 import static java.lang.Integer.valueOf;
 import static java.util.Locale.SIMPLIFIED_CHINESE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -44,11 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes =
-        {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
-                EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
-                EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class},
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
+@SpringBootTest(classes = {
+        ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
+}, webEnvironment = DEFINED_PORT)
 @EnableAutoConfiguration
 @EnableConfigurationProperties
 public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
@@ -67,8 +67,8 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
 
     private MockPropertySource mockPropertySource;
 
-    @PostConstruct
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
         mockPropertySource = new MockPropertySource();
         propertySources.addFirst(mockPropertySource);

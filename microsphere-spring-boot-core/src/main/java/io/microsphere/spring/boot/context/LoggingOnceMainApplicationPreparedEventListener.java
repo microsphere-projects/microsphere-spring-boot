@@ -14,27 +14,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.boot.util;
 
-import io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils;
-import org.junit.jupiter.api.Test;
+package io.microsphere.spring.boot.context;
 
-import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
 
 /**
- * {@link ConfigurationPropertyUtils} Test
+ * {@link OnceMainApplicationPreparedEventListener} for Logging with specified level
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see OnceMainApplicationPreparedEventListener
  * @since 1.0.0
  */
-public class ConfigurationPropertyUtilsTest {
+public class LoggingOnceMainApplicationPreparedEventListener extends OnceMainApplicationPreparedEventListener {
 
-    @Test
-    public void testToDashedForm() {
-        assertEquals("my-name", toDashedForm("my-name"));
-        assertEquals("my-name", toDashedForm("myName"));
-        assertEquals("my-name", toDashedForm("MyName"));
-        assertEquals("my-name", toDashedForm("my_name"));
+    public LoggingOnceMainApplicationPreparedEventListener() {
+        super.setOrder(LOWEST_PRECEDENCE);
+    }
+
+    @Override
+    protected void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
+        log(springApplication, context, args);
     }
 }

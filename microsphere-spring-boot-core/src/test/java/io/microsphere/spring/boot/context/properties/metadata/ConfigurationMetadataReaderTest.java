@@ -27,10 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ConfigurationMetadataReaderTest {
+class ConfigurationMetadataReaderTest {
 
     @Test
-    public void test() {
+    void test() {
         ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
         ConfigurationMetadata metadata = reader.read();
         assertTrue(metadata.getItems().size() > 1);

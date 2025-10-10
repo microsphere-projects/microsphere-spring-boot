@@ -16,15 +16,20 @@
  */
 package io.microsphere.spring.boot.context.properties;
 
+import io.microsphere.annotation.Nonnull;
 import org.springframework.beans.BeanUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.beans.PropertyDescriptor;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
+import static io.microsphere.util.ArrayUtils.arrayToString;
+import static io.microsphere.util.Assert.assertNotNull;
+import static java.util.Objects.hash;
+import static org.springframework.util.StringUtils.hasText;
 
 /**
  * The information class for introspecting the bean annotated {@link ConfigurationProperties @ConfigurationProperties}
@@ -35,12 +40,16 @@ import static io.microsphere.spring.boot.context.properties.util.ConfigurationPr
  */
 public class ConfigurationPropertiesBeanInfo {
 
+    @Nonnull
     private final Class<?> beanClass;
 
+    @Nonnull
     private final ConfigurationProperties annotation;
 
+    @Nonnull
     private final String prefix;
 
+    @Nonnull
     private final PropertyDescriptor[] propertyDescriptors;
 
     public ConfigurationPropertiesBeanInfo(Class<?> beanClass) {
@@ -48,10 +57,19 @@ public class ConfigurationPropertiesBeanInfo {
     }
 
     public ConfigurationPropertiesBeanInfo(Class<?> beanClass, ConfigurationProperties annotation) {
-        this(beanClass, annotation, annotation.prefix());
+        this(beanClass, annotation, hasText(annotation.prefix()) ? annotation.prefix() : annotation.value());
     }
 
-    public ConfigurationPropertiesBeanInfo(Class<?> beanClass, ConfigurationProperties annotation, String prefix) {
+    /**
+     * @param beanClass  the bean class
+     * @param annotation the annotation
+     * @param prefix     the prefix of property name
+     * @throws IllegalArgumentException if any argument is <code>null</code>
+     */
+    public ConfigurationPropertiesBeanInfo(Class<?> beanClass, ConfigurationProperties annotation, String prefix) throws IllegalArgumentException {
+        assertNotNull(beanClass, () -> "The 'beanClass' must not be null !");
+        assertNotNull(annotation, () -> "The 'annotation' must not be null !");
+        assertNotNull(prefix, () -> "The 'prefix' must not be null !");
         this.beanClass = beanClass;
         this.annotation = annotation;
         this.prefix = prefix;
@@ -71,7 +89,7 @@ public class ConfigurationPropertiesBeanInfo {
     }
 
     public List<PropertyDescriptor> getPropertyDescriptors() {
-        return Arrays.asList(propertyDescriptors);
+        return ofList(propertyDescriptors);
     }
 
     public PropertyDescriptor getPropertyDescriptor(String name) {
@@ -80,20 +98,24 @@ public class ConfigurationPropertiesBeanInfo {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof ConfigurationPropertiesBeanInfo)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof ConfigurationPropertiesBeanInfo)) {
+            return false;
+        }
 
         ConfigurationPropertiesBeanInfo that = (ConfigurationPropertiesBeanInfo) o;
 
-        if (!Objects.equals(beanClass, that.beanClass)) return false;
+        if (!Objects.equals(beanClass, that.beanClass)) {
+            return false;
+        }
         return Objects.equals(prefix, that.prefix);
     }
 
     @Override
     public int hashCode() {
-        int result = beanClass != null ? beanClass.hashCode() : 0;
-        result = 31 * result + (prefix != null ? prefix.hashCode() : 0);
-        return result;
+        return hash(beanClass, prefix);
     }
 
     @Override
@@ -102,9 +124,8 @@ public class ConfigurationPropertiesBeanInfo {
         sb.append("beanClass=").append(beanClass);
         sb.append(", annotation=").append(annotation);
         sb.append(", prefix='").append(prefix).append('\'');
-        sb.append(", propertyDescriptors=").append(propertyDescriptors);
+        sb.append(", propertyDescriptors=").append(arrayToString(propertyDescriptors));
         sb.append('}');
         return sb.toString();
     }
-
 }

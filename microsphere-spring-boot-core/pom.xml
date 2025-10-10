@@ -18,10 +18,16 @@
     <description>Microsphere Spring Boot Core</description>
 
     <dependencies>
-        <!-- Microsphere Dependencies -->
+        <!-- Microsphere Java -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-java-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-annotation-processor</artifactId>
+            <optional>true</optional>
         </dependency>
 
         <dependency>
@@ -52,6 +58,12 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-test</artifactId>
             <scope>test</scope>
         </dependency>
 

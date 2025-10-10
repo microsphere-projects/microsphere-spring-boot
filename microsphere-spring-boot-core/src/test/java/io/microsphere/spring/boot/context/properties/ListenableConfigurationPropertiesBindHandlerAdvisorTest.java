@@ -49,12 +49,12 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 )
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class ListenableConfigurationPropertiesBindHandlerAdvisorTest {
+class ListenableConfigurationPropertiesBindHandlerAdvisorTest {
 
     private static final Logger logger = getLogger(ListenableConfigurationPropertiesBindHandlerAdvisorTest.class);
 
     @Test
-    public void test() {
+    void test() {
 
     }
 

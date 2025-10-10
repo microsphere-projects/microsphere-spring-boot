@@ -1,5 +1,6 @@
 package io.microsphere.spring.boot.autoconfigure;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import org.springframework.boot.autoconfigure.AutoConfigurationImportFilter;
 import org.springframework.boot.autoconfigure.AutoConfigurationMetadata;
 import org.springframework.context.EnvironmentAware;
@@ -13,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.util.ArrayUtils.combine;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
@@ -30,6 +32,11 @@ import static org.springframework.util.StringUtils.hasText;
  */
 public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurationImportFilter, EnvironmentAware, Ordered {
 
+    @ConfigurationProperty(
+            type = String[].class,
+            description = "The property to exclude the classes of Spring Boot Auto-Configuration",
+            source = APPLICATION_SOURCE
+    )
     public static final String AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME = "microsphere.autoconfigure.exclude";
 
     private Set<String> excludedAutoConfigurationClasses;
