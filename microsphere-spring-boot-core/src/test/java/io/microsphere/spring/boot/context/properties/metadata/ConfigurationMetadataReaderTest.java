@@ -39,6 +39,7 @@ class ConfigurationMetadataReaderTest {
     @BeforeEach
     void setUp() {
         this.reader = new ConfigurationMetadataReader();
+        this.reader.setResourceLoader(null);
     }
 
     @Test
