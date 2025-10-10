@@ -31,7 +31,7 @@ import org.springframework.mock.env.MockEnvironment;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
-import static io.microsphere.spring.boot.util.AbstractTest.assertServerPropertiesPort;
+import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;

@@ -17,20 +17,41 @@
 
 package io.microsphere.spring.boot.util;
 
+import io.microsphere.annotation.Nullable;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
 import static java.lang.String.valueOf;
+import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
- * Abstract Test
+ * The utilities class for testing
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see SpringApplication
  * @see ServerProperties
  * @since 1.0.0
  */
-public abstract class AbstractTest {
+public abstract class TestUtils {
+
+    public static SpringApplication application() {
+        return application(currentThread().getContextClassLoader());
+    }
+
+    public static SpringApplication application(@Nullable ClassLoader classLoader) {
+        SpringApplication springApplication = new SpringApplication();
+        springApplication.setWebApplicationType(NONE);
+        if (classLoader != null) {
+            ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver(classLoader);
+            springApplication.setResourceLoader(resourceLoader);
+        }
+        return springApplication;
+    }
 
     public static void assertServerPropertiesPort(Environment environment, ServerProperties serverProperties) {
         assertEquals(environment.getProperty("server.port"), valueOf(serverProperties.getPort()));
