@@ -39,6 +39,7 @@ import java.util.Map;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.beans.factory.support.BeanRegistrar.registerBean;
+import static org.springframework.boot.origin.OriginTrackedValue.of;
 
 /**
  * {@link ApplicationContextInitializer} class supports origin tracked configuration property.
@@ -52,7 +53,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     public static final String BEAN_NAME = "originTrackedConfigurationPropertyInitializer";
 
     private static final Logger logger = getLogger(OriginTrackedConfigurationPropertyInitializer.class);
-    
+
     private ConfigurableApplicationContext applicationContext;
 
     private PropertySourceLoaders propertySourceLoaders;
@@ -73,7 +74,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
         initializePropertySources(propertySources);
     }
 
-    private void initializePropertySources(MutablePropertySources propertySources) {
+    void initializePropertySources(MutablePropertySources propertySources) {
         for (PropertySource propertySource : propertySources) {
             if (isPropertySourceCandidate(propertySource)) {
                 String name = propertySource.getName();
@@ -93,7 +94,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
                 !(propertySource instanceof OriginLookup);
     }
 
-    private PropertySource createOriginTrackedPropertySource(PropertySource propertySource) throws IOException {
+    PropertySource createOriginTrackedPropertySource(PropertySource propertySource) throws IOException {
         if (propertySource instanceof ResourcePropertySource) {
             return propertySourceLoaders.reloadAsOriginTracked(propertySource);
         }
@@ -105,13 +106,15 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
         for (int i = 0; i < size; i++) {
             String propertyName = propertyNames[i];
             Object propertyValue = enumerablePropertySource.getProperty(propertyName);
-            // Skip if propertyValue is OriginTrackedValue
-            if (propertyValue instanceof OriginTrackedValue) {
+            if (propertyValue == null) {
                 continue;
             }
-            Origin origin = resolveOrigin(propertySource);
-            // propertyValue with origin
-            propertyValue = OriginTrackedValue.of(propertyValue, origin);
+            // Skip if propertyValue is OriginTrackedValue
+            if (!(propertyValue instanceof OriginTrackedValue)) {
+                Origin origin = resolveOrigin(propertySource);
+                // propertyValue with origin
+                propertyValue = of(propertyValue, origin);
+            }
             source.put(propertyName, propertyValue);
         }
         return new OriginTrackedMapPropertySource(propertySource.getName(), source);
