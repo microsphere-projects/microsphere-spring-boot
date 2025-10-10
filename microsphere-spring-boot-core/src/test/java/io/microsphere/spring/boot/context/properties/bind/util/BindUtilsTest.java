@@ -32,8 +32,8 @@ import java.util.Map;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
+import static io.microsphere.spring.boot.util.AbstractTest.assertServerPropertiesPort;
 import static io.microsphere.spring.core.env.EnvironmentUtils.getProperties;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
@@ -76,7 +76,7 @@ class BindUtilsTest {
                 }
             }
         });
-        assertEquals(12345, serverProperties.getPort());
+        assertServerPropertiesPort(this.environment, serverProperties);
     }
 
     @Test
@@ -99,6 +99,6 @@ class BindUtilsTest {
     void testBindWithMap() {
         Map<String, String> properties = getProperties(this.environment, "server.port");
         ServerProperties serverProperties = bind(properties, "server", ServerProperties.class);
-        assertEquals(12345, serverProperties.getPort());
+        assertServerPropertiesPort(this.environment, serverProperties);
     }
 }

@@ -20,6 +20,7 @@ package io.microsphere.spring.boot.context;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -63,8 +64,7 @@ class LoggingOnceMainApplicationPreparedEventListenerTest extends AbstractApplic
 
     @Test
     void testIsIgnoredOnBootstrapApplicationListenerClassNotFound() {
-        ConfigurableApplicationContext context = new GenericApplicationContext();
-        context.setClassLoader(new URLClassLoader(ofArray(), null));
+        GenericApplicationContext context = createContextWithEmptyClassLoader();
         assertFalse(listener.isIgnored(context));
     }
 
@@ -92,9 +92,19 @@ class LoggingOnceMainApplicationPreparedEventListenerTest extends AbstractApplic
 
     @Test
     void testIsMainApplicationContextOnBootstrapApplicationListenerClassNotFound() {
-        ConfigurableApplicationContext context = new GenericApplicationContext();
-        context.setClassLoader(new URLClassLoader(ofArray(), null));
+        GenericApplicationContext context = createContextWithEmptyClassLoader();
         assertTrue(listener.isMainApplicationContext(context));
+    }
+
+    private URLClassLoader createEmptyClassLoader() {
+        return new URLClassLoader(ofArray(), null);
+    }
+
+    private GenericApplicationContext createContextWithEmptyClassLoader() {
+        GenericApplicationContext context = new GenericApplicationContext();
+        DefaultListableBeanFactory beanFactory = context.getDefaultListableBeanFactory();
+        beanFactory.setBeanClassLoader(createEmptyClassLoader());
+        return context;
     }
 
     void testOnApplicationEventWithBootstrapContextAsPresent(String contextId, String... args) {

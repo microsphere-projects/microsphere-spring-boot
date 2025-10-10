@@ -32,10 +32,12 @@ import org.springframework.mock.env.MockEnvironment;
 import java.lang.reflect.Method;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
 import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter.onCreateMethodHandle;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.spring.boot.util.AbstractTest.assertServerPropertiesPort;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -69,7 +71,7 @@ class ListenableBindHandlerAdapterTest {
     void test() {
         BindResult<ServerProperties> serverProperties = this.binder.bind("server", this.bindable, createBinder());
         assertTrue(serverProperties.isBound());
-        assertServerProperties(serverProperties.get());
+        assertServerPropertiesPort(this.environment, serverProperties.get());
     }
 
     @Test
@@ -81,10 +83,11 @@ class ListenableBindHandlerAdapterTest {
             }
         });
 
-        Method method = findMethod(Binder.class, "bindOrCreate", String.class, Bindable.class, BindHandler.class);
-        if (method == null) { // before Spring Boot 2.2.0
+        if (onCreateMethodHandle == NOT_FOUND_METHOD_HANDLE) {
+            // before Spring Boot 2.2.0
             assertNull(adapter.onCreate(ConfigurationPropertyName.EMPTY, this.bindable, null, null));
         } else {
+            Method method = findMethod(Binder.class, "bindOrCreate", String.class, Bindable.class, BindHandler.class);
             ServerProperties serverProperties = invokeMethod(this.binder, method, "server", this.bindable, adapter);
             assertNull(serverProperties.getPort());
         }
@@ -101,9 +104,5 @@ class ListenableBindHandlerAdapterTest {
 
     ListenableBindHandlerAdapter createBinder(BindHandler parent, BindListener... bindListeners) {
         return new ListenableBindHandlerAdapter(parent, ofList(bindListeners));
-    }
-
-    void assertServerProperties(ServerProperties serverProperties) {
-        assertEquals(12345, serverProperties.getPort());
     }
 }

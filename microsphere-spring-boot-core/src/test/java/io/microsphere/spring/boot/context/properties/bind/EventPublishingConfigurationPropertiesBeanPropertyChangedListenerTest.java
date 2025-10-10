@@ -31,12 +31,12 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
-import org.springframework.test.context.TestPropertySource;
 
 import static java.lang.Integer.valueOf;
 import static java.util.Locale.SIMPLIFIED_CHINESE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -44,13 +44,14 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+@SpringBootTest(classes = {
+        ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
-        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
-@TestPropertySource(properties = {"server.error.path=/error.jsp"})
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
+}, webEnvironment = DEFINED_PORT)
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
+public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
@@ -74,7 +75,7 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     }
 
     @Test
-    void testJacksonProperties() {
+    public void testJacksonProperties() {
         assertNull(jacksonProperties.getLocale());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
@@ -96,7 +97,7 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     }
 
     @Test
-    void testServerProperties() {
+    public void testServerProperties() {
         assertNull(serverProperties.getPort());
 
         String newPortPropertyValue = "9527";

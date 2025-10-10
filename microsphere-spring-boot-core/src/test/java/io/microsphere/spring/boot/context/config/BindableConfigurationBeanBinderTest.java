@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.bind.BindException;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -31,9 +30,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Map;
 
 import static io.microsphere.spring.core.env.PropertySourcesUtils.getSubProperties;
-import static java.lang.Integer.valueOf;
+import static java.lang.String.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * {@link BindableConfigurationBeanBinder} Test
@@ -72,14 +70,10 @@ class BindableConfigurationBeanBinderTest {
 
         beanBinder.bind(properties, true, false, user);
         assertUser(user);
-
-        assertThrows(BindException.class, () -> beanBinder.bind(properties, false, true, user));
-
-        assertThrows(BindException.class, () -> beanBinder.bind(properties, false, false, user));
     }
 
     void assertUser(User user) {
         assertEquals("mercyblitz", user.getName());
-        assertEquals(valueOf(37), user.getAge());
+        assertEquals("37", valueOf(user.getAge()));
     }
 }

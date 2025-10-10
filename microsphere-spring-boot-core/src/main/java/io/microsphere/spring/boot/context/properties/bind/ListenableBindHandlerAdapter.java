@@ -24,6 +24,16 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles.Lookup;
+import java.lang.invoke.MethodType;
+
+import static io.microsphere.invoke.MethodHandleUtils.LookupMode.TRUSTED;
+import static io.microsphere.invoke.MethodHandleUtils.lookup;
+import static io.microsphere.invoke.MethodHandlesLookupUtils.NOT_FOUND_METHOD_HANDLE;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static java.lang.invoke.MethodType.methodType;
+
 /**
  * Listable {@link BindHandler} Adapter
  *
@@ -35,6 +45,21 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
  * @since 1.0.0
  */
 public class ListenableBindHandlerAdapter extends AbstractBindHandler {
+
+    /**
+     * The method {@link BindHandler#onCreate(ConfigurationPropertyName, Bindable, BindContext, Object)} was introduced
+     * in Spring Boot 2.2.2
+     */
+    static final MethodHandle onCreateMethodHandle;
+
+    static {
+        Lookup lookup = lookup(AbstractBindHandler.class, TRUSTED);
+        MethodType methodType = methodType(Object.class, ConfigurationPropertyName.class, Bindable.class, BindContext.class, Object.class);
+        onCreateMethodHandle = execute(
+                () -> lookup.findSpecial(AbstractBindHandler.class, "onCreate", methodType, ListenableBindHandlerAdapter.class),
+                e -> null
+        );
+    }
 
     private final BindListeners bindHandlers;
 
@@ -62,7 +87,10 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
     }
 
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-        Object returnValue = super.onCreate(name, target, context, result);
+        Object returnValue = result;
+        if (onCreateMethodHandle != NOT_FOUND_METHOD_HANDLE) {
+            returnValue = execute(() -> onCreateMethodHandle.invoke(this, name, target, context, result));
+        }
         bindHandlers.onCreate(name, target, context, result);
         return returnValue;
     }

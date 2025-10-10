@@ -49,7 +49,7 @@ class ConfigurationPropertyUtilsTest {
                 assertEquals(prefix, getPrefix(name, context));
             }
         });
-        assertEquals(12345, serverProperties.getPort());
+        assertEquals((Integer) 12345, serverProperties.getPort());
     }
 
     @Test
