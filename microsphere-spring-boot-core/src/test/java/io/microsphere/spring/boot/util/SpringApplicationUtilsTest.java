@@ -116,6 +116,6 @@ class SpringApplicationUtilsTest {
         String name = MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
         String arg = "--" + name + "=" + level;
         ConfigurableApplicationContext context = springApplication.run(arg);
-        log(springApplication, context, level, arg);
+        log(springApplication, new String[]{level, arg}, context, "content : {}", "for testing...");
     }
 }
