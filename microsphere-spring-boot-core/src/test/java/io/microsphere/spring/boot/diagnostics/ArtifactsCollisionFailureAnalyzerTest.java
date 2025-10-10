@@ -24,8 +24,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.stereotype.Component;
 
 import static io.microsphere.collection.Sets.ofSet;
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * {@link ArtifactsCollisionFailureAnalyzer} Test
@@ -39,8 +39,7 @@ class ArtifactsCollisionFailureAnalyzerTest implements CommandLineRunner {
 
     @Test
     void test() {
-        SpringApplication springApplication = new SpringApplication(getClass());
-        springApplication.setWebApplicationType(NONE);
+        SpringApplication springApplication = application(getClass());
         assertThrows(Exception.class, springApplication::run);
     }
 

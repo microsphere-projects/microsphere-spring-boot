@@ -24,6 +24,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
+import static io.microsphere.util.ArrayUtils.combine;
 import static java.lang.String.valueOf;
 import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,12 +40,12 @@ import static org.springframework.boot.WebApplicationType.NONE;
  */
 public abstract class TestUtils {
 
-    public static SpringApplication application() {
-        return application(currentThread().getContextClassLoader());
+    public static SpringApplication application(Class<?>... primarySources) {
+        return application(currentThread().getContextClassLoader(), primarySources);
     }
 
-    public static SpringApplication application(@Nullable ClassLoader classLoader) {
-        SpringApplication springApplication = new SpringApplication();
+    public static SpringApplication application(@Nullable ClassLoader classLoader, Class<?>... primarySources) {
+        SpringApplication springApplication = new SpringApplication(combine(Object.class, primarySources));
         springApplication.setWebApplicationType(NONE);
         if (classLoader != null) {
             ResourcePatternResolver resourceLoader = new PathMatchingResourcePatternResolver(classLoader);

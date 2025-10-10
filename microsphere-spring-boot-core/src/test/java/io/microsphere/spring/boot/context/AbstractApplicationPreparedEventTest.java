@@ -21,8 +21,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ConfigurableApplicationContext;
 
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static java.lang.System.nanoTime;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * Abstract class for {@link ApplicationPreparedEvent} Test
@@ -34,9 +34,7 @@ import static org.springframework.boot.WebApplicationType.NONE;
 class AbstractApplicationPreparedEventTest {
 
     protected ApplicationPreparedEvent createEvent(String... args) {
-        SpringApplication springApplication = new SpringApplication(getClass());
-        springApplication.setWebApplicationType(NONE);
-        springApplication.setMainApplicationClass(getClass());
+        SpringApplication springApplication = application(getClass());
         ConfigurableApplicationContext context = springApplication.run(args);
         context.setId("test-context-" + nanoTime());
         return new ApplicationPreparedEvent(springApplication, args, context);

@@ -34,10 +34,10 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultP
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getLoggingLevel;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * {@link SpringApplicationUtils} Test
@@ -71,7 +71,7 @@ class SpringApplicationUtilsTest {
 
     @Test
     void testGetResourceLoader() {
-        SpringApplication springApplication = new SpringApplication();
+        SpringApplication springApplication = application();
         ResourceLoader resourceLoader = getResourceLoader(springApplication);
         assertNotNull(resourceLoader);
 
@@ -112,8 +112,7 @@ class SpringApplicationUtilsTest {
     }
 
     void testLog(String level) {
-        SpringApplication springApplication = new SpringApplication(SpringApplicationUtilsTest.class);
-        springApplication.setWebApplicationType(NONE);
+        SpringApplication springApplication = application(SpringApplicationUtilsTest.class);
         String name = MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
         String arg = "--" + name + "=" + level;
         ConfigurableApplicationContext context = springApplication.run(arg);
