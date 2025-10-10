@@ -64,16 +64,8 @@ public class ConfigurationMetadataEndpoint {
             return groups;
         }
 
-        public void setGroups(Collection<ItemMetadata> groups) {
-            this.groups = groups;
-        }
-
         public Collection<ItemMetadata> getProperties() {
             return properties;
-        }
-
-        public void setProperties(Collection<ItemMetadata> properties) {
-            this.properties = properties;
         }
     }
 }
