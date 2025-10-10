@@ -18,21 +18,21 @@
 package io.microsphere.spring.boot.env;
 
 
+import io.microsphere.spring.boot.util.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import java.io.IOException;
 import java.net.URLClassLoader;
 
 import static io.microsphere.util.ArrayUtils.ofArray;
+import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * {@link DefaultPropertiesApplicationListener} Test
@@ -81,11 +81,7 @@ class DefaultPropertiesApplicationListenerTest {
     }
 
     private SpringApplication application() {
-        SpringApplication springApplication = new SpringApplication(getClass());
-        springApplication.setWebApplicationType(NONE);
-        springApplication.setMainApplicationClass(getClass());
-        ClassLoader classLoader = new URLClassLoader(ofArray(), springApplication.getClassLoader());
-        springApplication.setResourceLoader(new PathMatchingResourcePatternResolver(classLoader));
-        return springApplication;
+        ClassLoader classLoader = new URLClassLoader(ofArray(), currentThread().getContextClassLoader());
+        return TestUtils.application(classLoader);
     }
 }

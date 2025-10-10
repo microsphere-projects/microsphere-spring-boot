@@ -23,6 +23,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 
 import static io.microsphere.collection.Sets.ofSet;
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.boot.WebApplicationType.NONE;
 
@@ -37,7 +38,7 @@ class ArtifactsCollisionFailureAnalyzerTest implements CommandLineRunner {
 
     @Test
     void test() {
-        SpringApplication springApplication = new SpringApplication(getClass());
+        SpringApplication springApplication = application(getClass());
         springApplication.setWebApplicationType(NONE);
         assertThrows(Exception.class, springApplication::run);
     }

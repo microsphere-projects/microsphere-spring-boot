@@ -23,6 +23,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
@@ -43,7 +44,7 @@ class ConditionEvaluationSpringBootExceptionReporterTest {
 
     @Test
     void testReportExceptionWithinSpringApplication() {
-        SpringApplication springApplication = new SpringApplication(getClass());
+        SpringApplication springApplication = application();
         springApplication.addInitializers(context -> {
             throw new RuntimeException("For testing");
         });
