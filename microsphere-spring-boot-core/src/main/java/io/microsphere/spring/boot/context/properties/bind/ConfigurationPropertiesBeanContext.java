@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
+import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
@@ -111,23 +112,20 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private boolean isCandidateProperty(PropertyDescriptor descriptor) {
+    boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
-    private boolean isCandidateClass(Class<?> beanClass) {
+    boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
-            return false;
-        }
-        if (beanClass.isInterface() || beanClass.isEnum() || beanClass.isAnnotation() || beanClass.isArray() || beanClass.isSynthetic()) {
             return false;
         }
         String className = beanClass.getName();
         if (className.startsWith("java.") || className.startsWith("javax.")) {
             return false;
         }
-        return true;
+        return isConcreteClass(beanClass);
     }
 
     public void setProperty(ConfigurationProperty property, Object newValue) {
