@@ -28,7 +28,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.ResourcePropertySource;
 
@@ -37,6 +37,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.microsphere.spring.boot.util.TestUtils.application;
+import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -75,12 +76,21 @@ class OriginTrackedConfigurationPropertyInitializerTest {
         MutablePropertySources propertySources = new MutablePropertySources();
 
         String name = "[classpath:/not-found.yaml]";
-        EncodedResource resource = new EncodedResource(new ClassPathResource("META-INF/config/default/test.properties"));
-        ResourcePropertySource propertySource = new ResourcePropertySource(name, resource);
+        ResourcePropertySource propertySource = createResourcePropertySource(name, "META-INF/config/default/test.properties");
 
         propertySources.addLast(propertySource);
         this.initializer.initializePropertySources(propertySources);
         assertSame(propertySource, propertySources.get(name));
+    }
+
+    @Test
+    void testCreateOriginTrackedPropertySourceWithResourcePropertySource() throws IOException {
+        String location = "classpath:/META-INF/config/default/test.properties";
+        String name = "[" + location + "]";
+        ResourcePropertySource propertySource = createResourcePropertySource(name, location);
+        PropertySource originTrackedPropertySource = this.initializer.createOriginTrackedPropertySource(propertySource);
+        assertEquals(name, originTrackedPropertySource.getName());
+        assertEquals("test", originTrackedPropertySource.getProperty("test.name"));
     }
 
     @Test
@@ -104,5 +114,11 @@ class OriginTrackedConfigurationPropertyInitializerTest {
         String name = "test";
         NamedOrigin namedOrigin = new NamedOrigin(name);
         assertEquals(name, namedOrigin.toString());
+    }
+
+    ResourcePropertySource createResourcePropertySource(String name, String location) throws IOException {
+        Resource resource = context.getResource(location);
+        EncodedResource encodedResource = new EncodedResource(resource, defaultCharset());
+        return new ResourcePropertySource(name, encodedResource);
     }
 }
