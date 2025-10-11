@@ -145,8 +145,8 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         }
     }
 
-    private boolean isExcluded(String autoConfigurationClass) {
-        return hasText(autoConfigurationClass) && excludedAutoConfigurationClasses.contains(autoConfigurationClass);
+    boolean isExcluded(String autoConfigurationClassName) {
+        return hasText(autoConfigurationClassName) && excludedAutoConfigurationClasses.contains(autoConfigurationClassName);
     }
 
     @Override
