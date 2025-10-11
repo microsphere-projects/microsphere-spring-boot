@@ -2,7 +2,6 @@ package io.microsphere.spring.boot.actuate.endpoint;
 
 import org.springframework.boot.actuate.endpoint.InvocationContext;
 import org.springframework.boot.actuate.endpoint.OperationType;
-import org.springframework.boot.actuate.endpoint.SecurityContext;
 import org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation;
 import org.springframework.boot.actuate.endpoint.annotation.DiscoveredEndpoint;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
@@ -17,9 +16,12 @@ import org.springframework.boot.actuate.endpoint.web.annotation.WebEndpoint;
 
 import java.lang.reflect.Method;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+
+import static java.util.Collections.emptyMap;
+import static org.springframework.boot.actuate.endpoint.OperationType.READ;
+import static org.springframework.boot.actuate.endpoint.SecurityContext.NONE;
 
 /**
  * An aggregation {@link WebEndpoint @WebEndpoint} for all {@link WebEndpoint WebEndpoints}
@@ -76,14 +78,14 @@ public class WebEndpoints {
     }
 
     private InvocationContext createInvocationContext() {
-        return new InvocationContext(SecurityContext.NONE, Collections.emptyMap());
+        return new InvocationContext(NONE, emptyMap());
     }
 
     private boolean isReadWebOperationCandidate(WebOperation webOperation) {
         if (webOperation instanceof AbstractDiscoveredOperation) {
             AbstractDiscoveredOperation discoveredOperation = (AbstractDiscoveredOperation) webOperation;
             OperationMethod operationMethod = discoveredOperation.getOperationMethod();
-            if (OperationType.READ.equals(operationMethod.getOperationType())) {
+            if (READ.equals(operationMethod.getOperationType())) {
                 Method method = operationMethod.getMethod();
                 if (method.getParameterCount() == 0) {
                     return true;
