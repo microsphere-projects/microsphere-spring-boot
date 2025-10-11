@@ -29,6 +29,7 @@ import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigura
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -116,6 +117,22 @@ class ConfigurableAutoConfigurationImportFilterTest {
         addExcludedAutoConfigurationClass(environment, TEST_CLASS_NAME_3);
         classNames = getExcludedAutoConfigurationClasses(environment);
         assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
+    }
 
+    @Test
+    void testIsExcluded() {
+        ConfigurableAutoConfigurationImportFilter filter = new ConfigurableAutoConfigurationImportFilter();
+        filter.setEnvironment(this.environment);
+
+        assertFalse(filter.isExcluded(null));
+        assertFalse(filter.isExcluded(""));
+        assertFalse(filter.isExcluded(" "));
+
+        String autoConfigurationClassName = "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration";
+        assertFalse(filter.isExcluded(autoConfigurationClassName));
+
+        addExcludedAutoConfigurationClass(environment, autoConfigurationClassName);
+        filter.setEnvironment(this.environment);
+        assertTrue(filter.isExcluded(autoConfigurationClassName));
     }
 }
