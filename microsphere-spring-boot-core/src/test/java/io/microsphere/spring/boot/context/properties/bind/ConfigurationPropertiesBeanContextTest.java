@@ -21,14 +21,21 @@ package io.microsphere.spring.boot.context.properties.bind;
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
+
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateClass;
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
 import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
 /**
@@ -45,9 +52,10 @@ class ConfigurationPropertiesBeanContextTest {
     @BeforeEach
     void setUp() {
         ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-        ConfigurableApplicationContext context = new GenericApplicationContext();
+        GenericApplicationContext context = new GenericApplicationContext();
         context.refresh();
-        this.beanContext = new ConfigurationPropertiesBeanContext(beanInfo.getBeanClass(), beanInfo.getAnnotation(), beanInfo.getPrefix(), context);
+        this.beanContext = new ConfigurationPropertiesBeanContext(beanInfo.getBeanClass(), beanInfo.getAnnotation(),
+                beanInfo.getPrefix(), context);
     }
 
     @Test
@@ -59,10 +67,12 @@ class ConfigurationPropertiesBeanContextTest {
         ServerProperties bean = (ServerProperties) this.beanContext.getInitializedBean();
         assertNull(bean.getPort());
 
-
+        // setProperty
         String propertyName = "server.port";
         String propertyValue = "8080";
         ConfigurationProperty configurationProperty = new ConfigurationProperty(of(propertyName), propertyValue, null);
+        this.beanContext.setProperty(configurationProperty, "9090");
+        // setProperty again
         this.beanContext.setProperty(configurationProperty, "9090");
 
         assertEquals(valueOf(9090), this.beanContext.getPropertyValue("port"));
@@ -80,5 +90,19 @@ class ConfigurationPropertiesBeanContextTest {
     @Test
     void testGetBeanClass() {
         assertEquals(ServerProperties.class, this.beanContext.getBeanClass());
+    }
+
+    @Test
+    void testIsCandidateProperty() throws Exception {
+        Method readMethod = null;
+        Method writeMethod = BeanNameAware.class.getMethod("setBeanName", String.class);
+        PropertyDescriptor propertyDescriptor = new PropertyDescriptor("beanName", readMethod, writeMethod);
+        assertTrue(isCandidateProperty(propertyDescriptor));
+    }
+
+    @Test
+    void testIsCandidateClass() {
+        assertTrue(isCandidateClass(ServerProperties.class));
+        assertFalse(isCandidateClass(String.class));
     }
 }
