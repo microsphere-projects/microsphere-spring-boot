@@ -131,9 +131,10 @@ class ConfigurationPropertiesBeanContext {
     public void setProperty(ConfigurationProperty property, Object newValue) {
         ConfigurationPropertyName name = property.getName();
         String propertyName = getPropertyName(name);
+        Object convertedNewValue = this.initializedBeanWrapper.convertForProperty(newValue, propertyName);
         Object oldValue = getPropertyValue(propertyName);
-        if (!Objects.deepEquals(oldValue, newValue)) {
-            initializedBeanWrapper.setPropertyValue(propertyName, newValue);
+        if (!Objects.deepEquals(oldValue, convertedNewValue)) {
+            initializedBeanWrapper.setPropertyValue(propertyName, convertedNewValue);
             publishEvent(property, propertyName, oldValue, newValue);
         }
     }
