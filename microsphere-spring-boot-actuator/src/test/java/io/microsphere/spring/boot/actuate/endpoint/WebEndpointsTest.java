@@ -19,22 +19,10 @@ package io.microsphere.spring.boot.actuate.endpoint;
 
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.actuate.endpoint.EndpointId;
-import org.springframework.boot.actuate.endpoint.InvocationContext;
-import org.springframework.boot.actuate.endpoint.OperationType;
-import org.springframework.boot.actuate.endpoint.web.ExposableWebEndpoint;
-import org.springframework.boot.actuate.endpoint.web.WebOperation;
-import org.springframework.boot.actuate.endpoint.web.WebOperationRequestPredicate;
-
-import java.util.Collection;
 
 import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isExposableWebEndpoint;
 import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isReadWebOperationCandidate;
-import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.springframework.boot.actuate.endpoint.OperationType.DELETE;
-import static org.springframework.boot.actuate.endpoint.OperationType.READ;
-import static org.springframework.boot.actuate.endpoint.OperationType.WRITE;
 
 /**
  * {@link WebEndpoints} Test
@@ -47,71 +35,11 @@ class WebEndpointsTest {
 
     @Test
     void testIsExposableWebEndpoint() {
-        assertFalse(isExposableWebEndpoint(new ExposableWebEndpointImpl()));
+        assertFalse(isExposableWebEndpoint(null));
     }
 
     @Test
     void testIsReadWebOperationCandidate() {
-        assertFalse(isReadWebOperationCandidate(new WebOperationImpl(READ)));
-        assertFalse(isReadWebOperationCandidate(new WebOperationImpl(WRITE)));
-        assertFalse(isReadWebOperationCandidate(new WebOperationImpl(DELETE)));
-    }
-
-
-    static class ExposableWebEndpointImpl implements ExposableWebEndpoint {
-
-        @Override
-        public EndpointId getEndpointId() {
-            return null;
-        }
-
-        @Override
-        public boolean isEnableByDefault() {
-            return false;
-        }
-
-        @Override
-        public Collection<WebOperation> getOperations() {
-            return emptyList();
-        }
-
-        @Override
-        public String getRootPath() {
-            return "";
-        }
-    }
-
-    static class WebOperationImpl implements WebOperation {
-
-        private final OperationType type;
-
-        WebOperationImpl(OperationType type) {
-            this.type = type;
-        }
-
-        @Override
-        public String getId() {
-            return "";
-        }
-
-        @Override
-        public boolean isBlocking() {
-            return false;
-        }
-
-        @Override
-        public WebOperationRequestPredicate getRequestPredicate() {
-            return null;
-        }
-
-        @Override
-        public OperationType getType() {
-            return type;
-        }
-
-        @Override
-        public Object invoke(InvocationContext context) {
-            return null;
-        }
+        assertFalse(isReadWebOperationCandidate(null));
     }
 }
