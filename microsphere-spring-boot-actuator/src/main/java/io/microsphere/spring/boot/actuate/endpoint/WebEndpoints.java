@@ -56,7 +56,7 @@ public class WebEndpoints {
         InvocationContext context = createInvocationContext();
 
         for (ExposableWebEndpoint webEndpoint : webEndpoints) {
-            if (webEndpoint instanceof DiscoveredEndpoint) {
+            if (isExposableWebEndpoint(webEndpoint)) {
                 DiscoveredEndpoint discoveredEndpoint = (DiscoveredEndpoint) webEndpoint;
                 Object endpointBean = discoveredEndpoint.getEndpointBean();
                 if (endpointBean == this) { // ignore self
@@ -81,7 +81,11 @@ public class WebEndpoints {
         return new InvocationContext(NONE, emptyMap());
     }
 
-    private boolean isReadWebOperationCandidate(WebOperation webOperation) {
+    static boolean isExposableWebEndpoint(ExposableWebEndpoint webEndpoint) {
+        return webEndpoint instanceof DiscoveredEndpoint;
+    }
+
+    static boolean isReadWebOperationCandidate(WebOperation webOperation) {
         if (webOperation instanceof AbstractDiscoveredOperation) {
             AbstractDiscoveredOperation discoveredOperation = (AbstractDiscoveredOperation) webOperation;
             OperationMethod operationMethod = discoveredOperation.getOperationMethod();
@@ -94,5 +98,4 @@ public class WebEndpoints {
         }
         return false;
     }
-
 }
