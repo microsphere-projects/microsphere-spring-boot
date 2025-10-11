@@ -35,6 +35,7 @@ import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
@@ -90,6 +91,13 @@ class ConfigurationPropertiesBeanContextTest {
     @Test
     void testGetBeanClass() {
         assertEquals(ServerProperties.class, this.beanContext.getBeanClass());
+    }
+
+    @Test
+    void testConvertForProperty() {
+        ServerProperties serverProperties = new ServerProperties();
+        this.beanContext.initialize(serverProperties);
+        assertSame(serverProperties, this.beanContext.convertForProperty("port", serverProperties));
     }
 
     @Test

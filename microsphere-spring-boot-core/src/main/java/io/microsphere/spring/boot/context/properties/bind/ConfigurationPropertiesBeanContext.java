@@ -139,7 +139,7 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private Object convertForProperty(String propertyName, Object value) {
+    Object convertForProperty(String propertyName, Object value) {
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
         if (conversionService.canConvert(value.getClass(), propertyType)) {
@@ -153,7 +153,11 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private String getPropertyName(ConfigurationPropertyName name) {
-        return bindingPropertyNames.get(name.toString());
+        return getPropertyName(name.toString());
+    }
+
+    private String getPropertyName(String propertyName) {
+        return this.bindingPropertyNames.get(propertyName);
     }
 
     public String getPrefix() {
