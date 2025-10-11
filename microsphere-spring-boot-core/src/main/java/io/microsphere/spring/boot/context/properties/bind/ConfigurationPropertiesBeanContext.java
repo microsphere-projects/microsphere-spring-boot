@@ -112,17 +112,17 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    boolean isCandidateProperty(PropertyDescriptor descriptor) {
+    static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
-    boolean isCandidateClass(Class<?> beanClass) {
+    static boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
             return false;
         }
         String className = beanClass.getName();
-        if (className.startsWith("java.") || className.startsWith("javax.")) {
+        if (className.startsWith("java.")) {
             return false;
         }
         return isConcreteClass(beanClass);
