@@ -46,6 +46,7 @@ class ConfigurationPropertiesBeanContextTest {
     void setUp() {
         ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(ServerProperties.class);
         ConfigurableApplicationContext context = new GenericApplicationContext();
+        context.refresh();
         this.beanContext = new ConfigurationPropertiesBeanContext(beanInfo.getBeanClass(), beanInfo.getAnnotation(), beanInfo.getPrefix(), context);
     }
 
