@@ -21,6 +21,7 @@ package io.microsphere.spring.boot.context.properties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.servlet.MultipartProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.beans.PropertyDescriptor;
@@ -65,6 +66,7 @@ class ConfigurationPropertiesBeanInfoTest {
     @Test
     void testGetPrefix() {
         assertEquals("server", this.info.getPrefix());
+        assertEquals("spring.servlet.multipart", new ConfigurationPropertiesBeanInfo(MultipartProperties.class).getPrefix());
     }
 
     @Test
