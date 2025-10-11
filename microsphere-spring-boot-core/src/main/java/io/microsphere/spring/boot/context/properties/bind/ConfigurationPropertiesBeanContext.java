@@ -139,7 +139,7 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private Object convertForProperty(String propertyName, Object value) {
+    Object convertForProperty(String propertyName, Object value) {
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
         if (conversionService.canConvert(value.getClass(), propertyType)) {
