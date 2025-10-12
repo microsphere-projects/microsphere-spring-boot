@@ -44,7 +44,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
-import static org.springframework.core.ResolvableType.forClass;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -145,13 +144,11 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
         this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
     }
 
-
     @Test
     void testInitConfigurationPropertiesBeanContextOnNullValue() {
         ConfigurationPropertyName name = of("test-name");
-        Bindable<?> target = mock(Bindable.class);
-        when(target.getType()).thenReturn(forClass(ServerProperties.class));
-        when(target.getValue()).thenReturn(() -> null);
+        Bindable<?> target = Bindable.of(ServerProperties.class);
+        target.withSuppliedValue(() -> null);
 
         BindContext context = mock(BindContext.class);
         when(context.getDepth()).thenReturn(0);
