@@ -58,7 +58,7 @@ public abstract class OnceMainApplicationPreparedEventListener extends OnceAppli
             main = isBootstrapContext((ConfigurableApplicationContext) parentContext);
         }
 
-        logger.debug("Current ApplicationContext[id : '{}' , parentId : '{}'] is {}main ApplicationContext",
+        logger.trace("Current ApplicationContext[id : '{}' , parentId : '{}'] is {}main ApplicationContext",
                 context.getId(), parentId, main ? "" : "not ");
 
         return main;
