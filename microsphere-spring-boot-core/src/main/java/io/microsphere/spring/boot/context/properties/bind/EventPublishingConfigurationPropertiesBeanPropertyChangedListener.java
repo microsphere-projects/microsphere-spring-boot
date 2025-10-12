@@ -88,7 +88,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
             Supplier<?> value = target.getValue();
             Object bean = value.get();
             if (bean != null) {
-                logger.debug("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), bean);
+                logger.trace("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), bean);
                 configurationPropertiesBeanContext.initialize(bean);
             }
         }
@@ -108,7 +108,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         if (property != null && isBoundProperty(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             configurationPropertiesBeanContext.setProperty(property, result);
-            logger.debug("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
+            logger.trace("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
         }
     }
 
