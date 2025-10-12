@@ -103,9 +103,9 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         });
     }
 
-    private void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+    void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         ConfigurationProperty property = context.getConfigurationProperty();
-        if (property!=null && isBoundProperty(context)) {
+        if (property != null && isBoundProperty(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             configurationPropertiesBeanContext.setProperty(property, result);
             logger.trace("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
