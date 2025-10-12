@@ -149,11 +149,10 @@ class ConfigurableAutoConfigurationImportFilterTest {
         assertFalse(filter.isExcluded(""));
         assertFalse(filter.isExcluded(" "));
 
-        String autoConfigurationClassName = "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration";
-        assertFalse(filter.isExcluded(autoConfigurationClassName));
+        assertFalse(filter.isExcluded(TEST_CLASS_NAME_1));
 
-        addExcludedAutoConfigurationClass(environment, autoConfigurationClassName);
+        addExcludedAutoConfigurationClass(environment, TEST_CLASS_NAME_1);
         filter.setEnvironment(this.environment);
-        assertTrue(filter.isExcluded(autoConfigurationClassName));
+        assertTrue(filter.isExcluded(TEST_CLASS_NAME_1));
     }
 }
