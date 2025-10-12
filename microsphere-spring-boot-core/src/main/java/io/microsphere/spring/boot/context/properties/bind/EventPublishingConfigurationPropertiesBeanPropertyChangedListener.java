@@ -82,7 +82,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         }
     }
 
-    private void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
+    void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
         if (isConfigurationPropertiesBean(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             Supplier<?> value = target.getValue();

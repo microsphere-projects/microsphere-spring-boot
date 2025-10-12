@@ -42,6 +42,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
+import static org.springframework.core.ResolvableType.forClass;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -49,9 +50,11 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+@SpringBootTest(classes = {
+        ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
-        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
+})
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
@@ -145,5 +148,18 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         when(context.getConfigurationProperty()).thenReturn(configurationProperty);
         when(context.getDepth()).thenReturn(0);
         this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
+    }
+
+    @Test
+    void testInitConfigurationPropertiesBeanContextOnNullValue() {
+        ConfigurationPropertyName name = of("test-name");
+        Bindable<?> target = mock(Bindable.class);
+        when(target.getType()).thenReturn(forClass(ServerProperties.class));
+        when(target.getValue()).thenReturn(() -> null);
+
+        BindContext context = mock(BindContext.class);
+        when(context.getDepth()).thenReturn(0);
+
+        this.listener.initConfigurationPropertiesBeanContext(name, target, context);
     }
 }
