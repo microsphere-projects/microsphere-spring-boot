@@ -153,7 +153,7 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     void testInitConfigurationPropertiesBeanContextOnNullValue() {
         ConfigurationPropertyName name = of("test-name");
         Bindable<?> target = Bindable.of(ServerProperties.class);
-        target.withSuppliedValue(() -> null);
+        target = target.withSuppliedValue(() -> null);
 
         BindContext context = mock(BindContext.class);
         when(context.getDepth()).thenReturn(0);
