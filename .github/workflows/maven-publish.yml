@@ -9,6 +9,8 @@
 name: Maven Publish
 
 on:
+  push:
+    branches: [ 'release-1.x' ]
   workflow_dispatch:
     inputs:
       revision:
@@ -34,7 +36,6 @@ jobs:
           server-password: MAVEN_PASSWORD
           cache: maven
 
-      - name: Publish package
       - name: Publish package
         run: mvn
           --batch-mode
