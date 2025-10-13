@@ -19,11 +19,12 @@ public class SpringApplicationRunListenerAdapter implements SpringApplicationRun
 
     protected final String[] args;
 
-    private int order = 0;
+    private int order;
 
     public SpringApplicationRunListenerAdapter(SpringApplication springApplication, String[] args) {
         this.springApplication = springApplication;
         this.args = args;
+        this.setOrder(0);
     }
 
     public void starting(ConfigurableBootstrapContext bootstrapContext) {
