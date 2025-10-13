@@ -38,6 +38,7 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter.onCreateMethodHandle;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -95,6 +96,12 @@ class ListenableBindHandlerAdapterTest {
 
     @Test
     void testOnFailure() {
+        ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(emptyList());
+        ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
+        BindContext context = null;
+        Exception error = new Exception("For testing...");
+        assertThrows(Exception.class, () -> adapter.onFailure(name, bindable, context, error));
+
         assertThrows(Exception.class, () -> this.binder.bind("", this.bindable, createBinder(createBindHandler(false, false))));
     }
 
