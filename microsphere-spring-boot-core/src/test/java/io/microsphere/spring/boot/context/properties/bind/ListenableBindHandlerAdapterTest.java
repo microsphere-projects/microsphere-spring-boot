@@ -34,6 +34,7 @@ import static io.microsphere.spring.boot.context.properties.bind.util.BindHandle
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
@@ -81,13 +82,21 @@ class ListenableBindHandlerAdapterTest {
     }
 
     @Test
-    void testOnFailure() throws Exception {
-        ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(emptyList());
+    void testOnFailureWithoutThrowingException() throws Exception {
+        ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(new BindHandler() {
+            @Override
+            public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
+                return error;
+            }
+        }, emptyList());
         ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
         BindContext context = null;
         Exception error = new Exception("For testing...");
-        assertThrows(Exception.class, () -> adapter.onFailure(name, bindable, context, error));
+        assertSame(error, adapter.onFailure(name, bindable, context, error));
+    }
 
+    @Test
+    void testOnFailure() {
         assertThrows(Exception.class, () -> this.binder.bind("", this.bindable, createBinder(createBindHandler(false, false))));
     }
 
