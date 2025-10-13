@@ -22,17 +22,16 @@ import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.bind.PropertySourcesPlaceholdersResolver;
-import org.springframework.boot.context.properties.bind.handler.IgnoreErrorsBindHandler;
-import org.springframework.boot.context.properties.bind.handler.NoUnboundElementsBindHandler;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
-import org.springframework.boot.context.properties.source.UnboundElementsSourceFilter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
 
 import java.util.Map;
 
+import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
 import static java.util.Arrays.asList;
+import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertySources.from;
 
 /**
@@ -61,27 +60,14 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
         Iterable<ConfigurationPropertySource> configurationPropertySources = from(propertySources);
 
         // Wrap Bindable from configuration bean
-        Bindable bindable = Bindable.ofInstance(configurationBean);
+        Bindable bindable = ofInstance(configurationBean);
 
         Binder binder = new Binder(configurationPropertySources, new PropertySourcesPlaceholdersResolver(propertySources), conversionService);
 
         // Get BindHandler
-        BindHandler bindHandler = getBindHandler(ignoreUnknownFields, ignoreInvalidFields);
+        BindHandler bindHandler = createBindHandler(ignoreUnknownFields, ignoreInvalidFields);
 
         // Bind
         binder.bind("", bindable, bindHandler);
-    }
-
-    private BindHandler getBindHandler(boolean ignoreUnknownFields,
-                                       boolean ignoreInvalidFields) {
-        BindHandler handler = BindHandler.DEFAULT;
-        if (ignoreInvalidFields) {
-            handler = new IgnoreErrorsBindHandler(handler);
-        }
-        if (!ignoreUnknownFields) {
-            UnboundElementsSourceFilter filter = new UnboundElementsSourceFilter();
-            handler = new NoUnboundElementsBindHandler(handler, filter);
-        }
-        return handler;
     }
 }

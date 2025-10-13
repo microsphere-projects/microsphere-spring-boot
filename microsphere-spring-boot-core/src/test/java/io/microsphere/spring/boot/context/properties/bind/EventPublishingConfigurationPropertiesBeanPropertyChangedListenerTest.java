@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -24,7 +25,10 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.context.properties.bind.BindContext;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
+import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -32,10 +36,12 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
 import org.springframework.test.context.TestPropertySource;
 
-import javax.annotation.PostConstruct;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -43,13 +49,15 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-@SpringBootTest(classes = {ListenableConfigurationPropertiesBindHandlerAdvisor.class,
+@SpringBootTest(classes = {
+        ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
-        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class})
+        EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
+})
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
+class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
@@ -63,10 +71,13 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     @Autowired
     private ServerProperties serverProperties;
 
+    @Autowired
+    private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
+
     private MockPropertySource mockPropertySource;
 
-    @PostConstruct
-    public void init() {
+    @BeforeEach
+    void setUp() {
         MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
         mockPropertySource = new MockPropertySource();
         propertySources.addFirst(mockPropertySource);
@@ -121,5 +132,32 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
         beanFactory.destroyBean(serverProperties);
         beanFactory.initializeBean(serverProperties, "server-serverProperties");
 
+    }
+
+    @Test
+    void testSetConfigurationPropertiesBeanPropertyOnFailed() {
+        ConfigurationPropertyName name = of("test-name");
+        Bindable<?> target = ofInstance(this.serverProperties);
+        BindContext context = mock(BindContext.class);
+        Object result = null;
+        when(context.getConfigurationProperty()).thenReturn(null);
+        this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
+
+        ConfigurationProperty configurationProperty = new ConfigurationProperty(name, "test-value", null);
+        when(context.getConfigurationProperty()).thenReturn(configurationProperty);
+        when(context.getDepth()).thenReturn(0);
+        this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
+    }
+
+    @Test
+    void testInitConfigurationPropertiesBeanContextOnNullValue() {
+        ConfigurationPropertyName name = of("test-name");
+        Bindable<?> target = Bindable.of(ServerProperties.class);
+        target = target.withSuppliedValue(() -> null);
+
+        BindContext context = mock(BindContext.class);
+        when(context.getDepth()).thenReturn(0);
+
+        this.listener.initConfigurationPropertiesBeanContext(name, target, context);
     }
 }

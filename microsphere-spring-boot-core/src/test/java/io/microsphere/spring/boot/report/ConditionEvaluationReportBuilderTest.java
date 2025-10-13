@@ -14,27 +14,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.boot.util;
 
-import io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils;
+package io.microsphere.spring.boot.report;
+
+
 import org.junit.jupiter.api.Test;
 
-import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
+import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getBeanFactoryId;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link ConfigurationPropertyUtils} Test
+ * {@link ConditionEvaluationReportBuilder} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ConditionEvaluationReportBuilder
  * @since 1.0.0
  */
-public class ConfigurationPropertyUtilsTest {
+class ConditionEvaluationReportBuilderTest {
 
     @Test
-    void testToDashedForm() {
-        assertEquals("my-name", toDashedForm("my-name"));
-        assertEquals("my-name", toDashedForm("myName"));
-        assertEquals("my-name", toDashedForm("MyName"));
-        assertEquals("my-name", toDashedForm("my_name"));
+    void testGetBeanFactoryIdWithNullBeanFactory() {
+        assertEquals("", getBeanFactoryId(null));
     }
 }

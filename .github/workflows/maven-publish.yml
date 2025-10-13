@@ -42,6 +42,7 @@ jobs:
           --update-snapshots
           --file pom.xml
           -Drevision=${{ inputs.revision }}
+          -Dsurefire.useSystemClassLoader=false
           -Dgpg.skip=true
           deploy
           --activate-profiles publish,ci

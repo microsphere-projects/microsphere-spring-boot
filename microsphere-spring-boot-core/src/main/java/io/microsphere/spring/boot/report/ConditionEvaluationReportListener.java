@@ -1,10 +1,11 @@
 package io.microsphere.spring.boot.report;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import io.microsphere.logging.Logger;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+
+import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
  * Spring Boot Conditions Evaluation report listener
@@ -14,7 +15,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  */
 public class ConditionEvaluationReportListener implements ApplicationListener<ApplicationReadyEvent> {
 
-    private static final Log logger = LogFactory.getLog(ConditionEvaluationReportListener.class);
+    private static final Logger logger = getLogger(ConditionEvaluationReportListener.class);
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {

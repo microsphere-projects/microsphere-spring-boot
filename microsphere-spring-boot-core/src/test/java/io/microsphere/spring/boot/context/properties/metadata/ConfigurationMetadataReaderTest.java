@@ -16,9 +16,16 @@
  */
 package io.microsphere.spring.boot.context.properties.metadata;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternResolver;
 
+import java.io.IOException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -27,12 +34,50 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
-public class ConfigurationMetadataReaderTest {
+class ConfigurationMetadataReaderTest {
+
+    private ConfigurationMetadataReader reader;
+
+    @BeforeEach
+    void setUp() {
+        this.reader = new ConfigurationMetadataReader();
+    }
 
     @Test
     void test() {
-        ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
-        ConfigurationMetadata metadata = reader.read();
+        ConfigurationMetadata metadata = this.reader.read();
         assertTrue(metadata.getItems().size() > 1);
+    }
+
+    @Test
+    void testOnLoadingResourceFailed() {
+        this.reader.setResourceLoader(new ResourcePatternResolver() {
+
+            @Override
+            public Resource getResource(String location) {
+                throw new RuntimeException("For testing");
+            }
+
+            @Override
+            public ClassLoader getClassLoader() {
+                throw new RuntimeException("For testing");
+            }
+
+            @Override
+            public Resource[] getResources(String locationPattern) throws IOException {
+                throw new IOException("For testing");
+            }
+        });
+        ConfigurationMetadata metadata = this.reader.read();
+        assertTrue(metadata.getItems().isEmpty());
+
+    }
+
+    @Test
+    void testGetResourcePatternResolver() {
+        assertNotNull(this.reader.getResourcePatternResolver());
+
+        this.reader.setResourceLoader(new DefaultResourceLoader());
+        assertNotNull(this.reader.getResourcePatternResolver());
     }
 }
