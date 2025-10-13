@@ -19,7 +19,9 @@ package io.microsphere.spring.boot.actuate.endpoint;
 
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.actuate.endpoint.annotation.DiscoveredEndpoint;
 import org.springframework.boot.actuate.endpoint.web.ExposableWebEndpoint;
+import org.springframework.boot.actuate.endpoint.web.WebOperation;
 
 import java.util.Map;
 
@@ -29,6 +31,8 @@ import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isReadWeb
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.actuate.endpoint.OperationType.WRITE;
 
 /**
  * {@link WebEndpoints} Test
@@ -38,6 +42,20 @@ import static org.mockito.Mockito.mock;
  * @since 1.0.0
  */
 class WebEndpointsTest {
+
+    interface WebEndpoint extends ExposableWebEndpoint, DiscoveredEndpoint<WebOperation> {
+    }
+
+    @Test
+    void testWebEndpointsOnWriteOperations() {
+        WebEndpoint webEndpoint = mock(WebEndpoint.class);
+        WebEndpoints webEndpoints = new WebEndpoints(() -> ofList(webEndpoint));
+        WebOperation webOperation = mock(WebOperation.class);
+        when(webOperation.getType()).thenReturn(WRITE);
+        when(webEndpoint.getOperations()).thenReturn(ofList(webOperation));
+        Map<String, Object> results = webEndpoints.invokeReadOperations();
+        assertTrue(results.isEmpty());
+    }
 
     @Test
     void testWebEndpointsOnNotDiscoveredEndpoints() {
