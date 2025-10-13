@@ -1,16 +1,21 @@
 package io.microsphere.spring.boot.report;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getReportsMap;
 import static io.microsphere.text.FormatUtils.format;
+import static java.lang.System.lineSeparator;
+import static java.util.Collections.singleton;
 
 /**
  * Spring Boot Conditions Report builder
@@ -20,9 +25,19 @@ import static io.microsphere.text.FormatUtils.format;
  */
 public class ConditionsReportMessageBuilder {
 
-    public static final String BASE_PACKAGES_PROPERTY_NAME = "microsphere.conditions.report.base-packages";
+    private static final String DEFAULT_BASE_PACKAGE = "io.microsphere";
 
-    private static final Set<String> DEFAULT_BASE_PACKAGES = Collections.singleton("io.github.microsphere");
+    /**
+     * The base packages for Spring Boot Conditions Report : "microsphere.spring.boot.conditions.report.base-packages"
+     */
+    @ConfigurationProperty(
+            type = String[].class,
+            defaultValue = DEFAULT_BASE_PACKAGE,
+            source = APPLICATION_SOURCE
+    )
+    public static final String BASE_PACKAGES_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "conditions.report.base-packages";
+
+    private static final Set<String> DEFAULT_BASE_PACKAGES = singleton(DEFAULT_BASE_PACKAGE);
 
     private final ConfigurableApplicationContext context;
 
@@ -31,16 +46,14 @@ public class ConditionsReportMessageBuilder {
     }
 
     List<String> build() {
-        Map<String, ConditionEvaluationReport> reportsMap = ConditionEvaluationReportBuilder.getReportsMap();
-        List<String> reportMessages = new LinkedList<>();
-        reportsMap.forEach((id, report) -> {
-            reportMessages.add(buildSingle(id, report));
-        });
+        Map<String, ConditionEvaluationReport> reportsMap = getReportsMap();
+        List<String> reportMessages = newArrayList(reportsMap.size());
+        reportsMap.forEach((id, report) -> reportMessages.add(buildSingle(id, report)));
         return reportMessages;
     }
 
     String buildSingle(String id, ConditionEvaluationReport report) {
-        StringBuilder reportMessage = new StringBuilder(System.lineSeparator());
+        StringBuilder reportMessage = new StringBuilder(lineSeparator());
         appendTitle(id, reportMessage);
         appendExclusions(report, reportMessage);
         appendUnconditionalClasses(report, reportMessage);
@@ -107,6 +120,6 @@ public class ConditionsReportMessageBuilder {
     }
 
     private void appendLine(StringBuilder stringBuilder, String text, Object... args) {
-        stringBuilder.append(format(text, args)).append(System.lineSeparator());
+        stringBuilder.append(format(text, args)).append(lineSeparator());
     }
 }

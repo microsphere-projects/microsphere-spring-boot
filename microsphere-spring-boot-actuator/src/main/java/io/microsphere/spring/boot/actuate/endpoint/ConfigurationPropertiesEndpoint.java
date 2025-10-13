@@ -16,17 +16,23 @@
  */
 package io.microsphere.spring.boot.actuate.endpoint;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.beans.ConfigurationProperty;
+import io.microsphere.beans.ConfigurationProperty.Metadata;
 import io.microsphere.spring.boot.env.config.metadata.ConfigurationMetadataRepository;
-import io.microsphere.spring.config.ConfigurationProperty;
 import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.EventListener;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
+
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 
 /**
  * {@link Endpoint @Endpoint} to expose the configuration properties.
@@ -45,30 +51,64 @@ public class ConfigurationPropertiesEndpoint {
         this.configurationMetadataRepository = configurationMetadataRepository;
     }
 
-    @EventListener(ApplicationReadyEvent.class)
-    public void onApplicationReadyEvent(ApplicationReadyEvent event) {
-        ConfigurableApplicationContext context = event.getApplicationContext();
-    }
-
     @ReadOperation
     public ConfigurationPropertiesDescriptor getConfigurationProperties() {
-        ConfigurationPropertiesDescriptor configurationProperties = new ConfigurationPropertiesDescriptor();
+        ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
+        List<ConfigurationProperty> configurationProperties = loadFromServiceLoaders();
+        List<ConfigurationProperty> adaptedConfigurationProperties = adaptFromConfigurationMetadataRepository();
+        descriptor.addConfigurationProperties(configurationProperties)
+                .addConfigurationProperties(adaptedConfigurationProperties);
+        return descriptor;
+    }
+
+    private List<ConfigurationProperty> loadFromServiceLoaders() {
+        return loadAll();
+    }
+
+    private List<ConfigurationProperty> adaptFromConfigurationMetadataRepository() {
+        Collection<ItemMetadata> properties = configurationMetadataRepository.getProperties();
+        List<ConfigurationProperty> configurationProperties = newArrayList(properties.size());
+        for (ItemMetadata property : properties) {
+            ConfigurationProperty configurationProperty = adaptConfigurationProperty(property);
+            configurationProperties.add(configurationProperty);
+        }
         return configurationProperties;
+    }
+
+    private ConfigurationProperty adaptConfigurationProperty(ItemMetadata property) {
+        String name = property.getName();
+        String type = property.getType();
+        String description = property.getDescription();
+        String sourceType = property.getSourceType();
+        String sourceMethod = property.getSourceMethod();
+        Object defaultValue = property.getDefaultValue();
+
+        ConfigurationProperty configurationProperty = new ConfigurationProperty(name);
+        configurationProperty.setType(type == null ? String.class.getName() : type);
+        configurationProperty.setDescription(description);
+        configurationProperty.setDefaultValue(defaultValue);
+
+        Metadata metadata = configurationProperty.getMetadata();
+        metadata.setDeclaredClass(sourceType);
+        metadata.setDeclaredField(sourceMethod);
+        metadata.getSources().add(APPLICATION_SOURCE);
+
+        return configurationProperty;
     }
 
 
     public static class ConfigurationPropertiesDescriptor {
 
-        private List<ConfigurationProperty> configurationProperties;
+        private final List<ConfigurationProperty> configurationProperties = new LinkedList<>();
 
+        @Nonnull
         public List<ConfigurationProperty> getConfigurationProperties() {
             return configurationProperties;
         }
 
-        public void setConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
-            this.configurationProperties = configurationProperties;
+        ConfigurationPropertiesDescriptor addConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
+            this.configurationProperties.addAll(configurationProperties);
+            return this;
         }
     }
-
-
 }

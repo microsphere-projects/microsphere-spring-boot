@@ -46,10 +46,10 @@ import java.util.List;
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
-public class ApplicationAutoConfigurationTest {
+class ApplicationAutoConfigurationTest {
 
     @Test
-    public void test() {
+    void test() {
     }
 
     static class TestConfig {

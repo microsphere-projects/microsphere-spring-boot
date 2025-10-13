@@ -16,6 +16,9 @@
  */
 package io.microsphere.spring.boot.context.properties.bind.util;
 
+import io.microsphere.spring.boot.context.properties.bind.BindListener;
+import io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter;
+import io.microsphere.util.Utils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindResult;
@@ -23,9 +26,14 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
-import org.springframework.core.env.ConfigurableEnvironment;
+import org.springframework.core.env.Environment;
 
 import java.util.Map;
+
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
+import static org.springframework.boot.context.properties.bind.Bindable.of;
+import static org.springframework.boot.context.properties.bind.Binder.get;
 
 /**
  * The utilities class for binding
@@ -34,14 +42,10 @@ import java.util.Map;
  * @see Binder
  * @since 1.0.0
  */
-public abstract class BindUtils {
-
-    private BindUtils() throws InstantiationException {
-        throw new InstantiationException();
-    }
+public abstract class BindUtils implements Utils {
 
     public static boolean isConfigurationPropertiesBean(Bindable<?> target, BindContext context) {
-        return target.getAnnotation(ConfigurationProperties.class) != null && context.getDepth() == 0;
+        return target != null && target.getAnnotation(CONFIGURATION_PROPERTIES_CLASS) != null && isConfigurationPropertiesBean(context);
     }
 
     public static boolean isConfigurationPropertiesBean(BindContext context) {
@@ -52,19 +56,24 @@ public abstract class BindUtils {
         return context != null && context.getDepth() > 0;
     }
 
-    public static <T> T bind(ConfigurableEnvironment environment, String propertyNamePrefix, Class<T> targetType) {
-        Binder binder = Binder.get(environment);
-        return bind(binder, propertyNamePrefix, targetType);
+    public static <T> T bind(Environment environment, String propertyNamePrefix, Class<T> targetType, BindListener... bindListeners) {
+        Binder binder = get(environment);
+        return bind(binder, propertyNamePrefix, targetType, bindListeners);
     }
 
-    public static <T> T bind(Map<?, ?> properties, String propertyNamePrefix, Class<T> targetType) {
+    public static <T> T bind(Map<?, ?> properties, String propertyNamePrefix, Class<T> targetType, BindListener... bindListeners) {
         ConfigurationPropertySource propertySource = new MapConfigurationPropertySource(properties);
         Binder binder = new Binder(propertySource);
-        return bind(binder, propertyNamePrefix, targetType);
+        return bind(binder, propertyNamePrefix, targetType, bindListeners);
     }
 
-    protected static <T> T bind(Binder binder, String name, Class<T> targetType) {
-        BindResult<T> result = binder.bind(name, targetType);
+    protected static <T> T bind(Binder binder, String name, Class<T> targetType, BindListener... bindListeners) {
+        ListenableBindHandlerAdapter bindHandlerAdapter = new ListenableBindHandlerAdapter(ofList(bindListeners));
+        Bindable<T> bindable = of(targetType);
+        BindResult<T> result = binder.bind(name, bindable, bindHandlerAdapter);
         return result.orElse(null);
+    }
+
+    private BindUtils() {
     }
 }

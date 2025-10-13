@@ -43,7 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 })
 @EnableAutoConfiguration
-public class ActuatorAutoConfigurationTest {
+class ActuatorAutoConfigurationTest {
 
     @Autowired
     @SuppressWarnings("unchecked")
@@ -56,7 +56,7 @@ public class ActuatorAutoConfigurationTest {
     private String prefix;
 
     @Test
-    public void testActuatorTaskScheduler() {
+    void testActuatorTaskScheduler() {
         assertNotNull(actuatorTaskScheduler, "Actuator task scheduler should not be null");
         assertEquals(prefix, actuatorTaskScheduler.getThreadNamePrefix(), "Thread name prefix should match");
         assertEquals(0, actuatorTaskScheduler.getPoolSize(), "Pool size should match");

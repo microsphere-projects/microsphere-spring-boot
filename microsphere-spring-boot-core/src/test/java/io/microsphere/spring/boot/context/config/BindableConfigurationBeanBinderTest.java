@@ -18,6 +18,7 @@ package io.microsphere.spring.boot.context.config;
 
 import io.microsphere.spring.boot.domain.User;
 import io.microsphere.spring.context.config.ConfigurationBeanBinder;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Map;
 
 import static io.microsphere.spring.core.env.PropertySourcesUtils.getSubProperties;
-import static java.lang.Integer.valueOf;
+import static java.lang.String.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -46,7 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ContextConfiguration(
         classes = BindableConfigurationBeanBinder.class
 )
-public class BindableConfigurationBeanBinderTest {
+class BindableConfigurationBeanBinderTest {
 
     @Autowired
     private ConfigurationBeanBinder beanBinder;
@@ -54,12 +55,25 @@ public class BindableConfigurationBeanBinderTest {
     @Autowired
     private ConfigurableEnvironment environment;
 
+    @BeforeEach
+    void setUp() {
+        this.beanBinder.setConversionService(this.environment.getConversionService());
+    }
+
     @Test
     void testBind() {
         User user = new User();
         Map<String, Object> properties = getSubProperties(environment.getPropertySources(), "user");
+
         beanBinder.bind(properties, true, true, user);
+        assertUser(user);
+
+        beanBinder.bind(properties, true, false, user);
+        assertUser(user);
+    }
+
+    void assertUser(User user) {
         assertEquals("mercyblitz", user.getName());
-        assertEquals(valueOf(37), user.getAge());
+        assertEquals("37", valueOf(user.getAge()));
     }
 }

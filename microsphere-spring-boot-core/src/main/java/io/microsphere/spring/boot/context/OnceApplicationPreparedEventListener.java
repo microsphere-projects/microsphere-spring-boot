@@ -43,7 +43,7 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
         String contextId = context.getId();
 
         if (isProcessed(contextId)) {
-            logger.debug("Current ApplicationContext[id : {}] has been processed!", contextId);
+            logger.trace("Current ApplicationContext[id : {}] has been processed!", contextId);
             return;
         }
 
@@ -52,7 +52,7 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
         if (isIgnored(springApplication, args, context)) {
             markProcessed(contextId);
-            logger.debug("Current ApplicationContext[id : {}] is ignored!", contextId);
+            logger.trace("Current ApplicationContext[id : {}] is ignored!", contextId);
             return;
         }
 
@@ -68,13 +68,10 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
     protected void markProcessed(String contextId) {
         processedContextIds.add(contextId);
-        logger.debug("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
+        logger.trace("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
     }
 
-    protected boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
-        // Sub-Class implements current method
-        return false;
-    }
+    protected abstract boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
     protected abstract void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 

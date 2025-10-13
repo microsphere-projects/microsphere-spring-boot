@@ -16,6 +16,8 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,6 +33,9 @@ import java.util.Map;
 import java.util.Objects;
 
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
+import static io.microsphere.util.Assert.assertNotBlank;
+import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
@@ -55,12 +60,64 @@ class ConfigurationPropertiesBeanContext {
 
     private volatile Object bean;
 
-    public ConfigurationPropertiesBeanContext(Class<?> beanClass, ConfigurationProperties annotation, String prefix, ConfigurableApplicationContext context) {
+    /**
+     * Constructor
+     *
+     * @param beanClass  the bean class
+     * @param annotation the annotation of {@link ConfigurationProperties}
+     * @param prefix     {@link ConfigurationProperties#prefix() the prefix}
+     * @param context    {@link ConfigurableApplicationContext}
+     * @throws IllegalArgumentException If <code>beanClass</code> or <code>annotation</code> or <code>context</code> argument is null,
+     *                                  or the <code>prefix</code> is blank
+     */
+    public ConfigurationPropertiesBeanContext(Class<?> beanClass, ConfigurationProperties annotation, String prefix,
+                                              ConfigurableApplicationContext context) throws IllegalArgumentException {
+        assertNotNull(beanClass, () -> "The 'beanClass' must not be null!");
+        assertNotNull(annotation, () -> "The 'annotation' must not be null!");
+        assertNotBlank(prefix, () -> "The 'prefix' must not be black!");
+        assertNotNull(context, () -> "The 'assertNotNull' must not be null!");
         // TODO support @ConstructorBinding creating beans
         this.annotation = annotation;
         this.prefix = prefix;
         this.context = context;
         this.initializedBeanWrapper = createInitializedBeanWrapper(beanClass);
+    }
+
+    protected void initialize(Object bean) {
+        this.bean = bean;
+        setProperties(bean);
+        initBinding(bean);
+    }
+
+    public void setProperty(ConfigurationProperty property, Object newValue) {
+        ConfigurationPropertyName name = property.getName();
+        String propertyName = getPropertyName(name);
+        Object convertedNewValue = convertForProperty(propertyName, newValue);
+        Object oldValue = getPropertyValue(propertyName);
+        if (!Objects.deepEquals(oldValue, convertedNewValue)) {
+            initializedBeanWrapper.setPropertyValue(propertyName, convertedNewValue);
+            publishEvent(property, propertyName, oldValue, newValue);
+        }
+    }
+
+    @Nonnull
+    public String getPrefix() {
+        return prefix;
+    }
+
+    @Nonnull
+    public Class<?> getBeanClass() {
+        return initializedBeanWrapper.getWrappedClass();
+    }
+
+    @Nullable
+    public Object getPropertyValue(String name) {
+        return initializedBeanWrapper.getPropertyValue(name);
+    }
+
+    @Nonnull
+    public Object getInitializedBean() {
+        return this.initializedBeanWrapper.getWrappedInstance();
     }
 
     private BeanWrapperImpl createInitializedBeanWrapper(Class<?> beanClass) {
@@ -73,12 +130,6 @@ class ConfigurationPropertiesBeanContext {
 
     private ConversionService getConversionService(ConfigurableApplicationContext context) {
         return new ConversionServiceResolver(context.getBeanFactory()).resolve();
-    }
-
-    protected void initialize(Object bean) {
-        this.bean = bean;
-        setProperties(bean);
-        initBinding(bean);
     }
 
     private void setProperties(Object bean) {
@@ -111,33 +162,29 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private boolean isCandidateProperty(PropertyDescriptor descriptor) {
+    Object convertForProperty(String propertyName, Object value) {
+        Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
+        ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
+        if (conversionService.canConvert(value.getClass(), propertyType)) {
+            return conversionService.convert(value, propertyType);
+        }
+        return value;
+    }
+
+    static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
-    private boolean isCandidateClass(Class<?> beanClass) {
+    static boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
             return false;
         }
-        if (beanClass.isInterface() || beanClass.isEnum() || beanClass.isAnnotation() || beanClass.isArray() || beanClass.isSynthetic()) {
-            return false;
-        }
         String className = beanClass.getName();
-        if (className.startsWith("java.") || className.startsWith("javax.")) {
+        if (className.startsWith("java.")) {
             return false;
         }
-        return true;
-    }
-
-    public void setProperty(ConfigurationProperty property, Object newValue) {
-        ConfigurationPropertyName name = property.getName();
-        String propertyName = getPropertyName(name);
-        Object oldValue = getPropertyValue(propertyName);
-        if (!Objects.deepEquals(oldValue, newValue)) {
-            initializedBeanWrapper.setPropertyValue(propertyName, newValue);
-            publishEvent(property, propertyName, oldValue, newValue);
-        }
+        return isConcreteClass(beanClass);
     }
 
     private void publishEvent(ConfigurationProperty property, String propertyName, Object oldValue, Object newValue) {
@@ -146,21 +193,5 @@ class ConfigurationPropertiesBeanContext {
 
     private String getPropertyName(ConfigurationPropertyName name) {
         return bindingPropertyNames.get(name.toString());
-    }
-
-    public String getPrefix() {
-        return prefix;
-    }
-
-    public Class<?> getBeanClass() {
-        return initializedBeanWrapper.getWrappedClass();
-    }
-
-    public Object getPropertyValue(String name) {
-        return initializedBeanWrapper.getPropertyValue(name);
-    }
-
-    public Object getInitializedBean() {
-        return this.initializedBeanWrapper.getWrappedInstance();
     }
 }
