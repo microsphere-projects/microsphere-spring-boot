@@ -19,10 +19,16 @@ package io.microsphere.spring.boot.actuate.endpoint;
 
 
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.actuate.endpoint.web.ExposableWebEndpoint;
 
+import java.util.Map;
+
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isExposableWebEndpoint;
 import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isReadWebOperationCandidate;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  * {@link WebEndpoints} Test
@@ -32,6 +38,14 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
  * @since 1.0.0
  */
 class WebEndpointsTest {
+
+    @Test
+    void testWebEndpointsOnNotDiscoveredEndpoints() {
+        ExposableWebEndpoint webEndpoint = mock(ExposableWebEndpoint.class);
+        WebEndpoints webEndpoints = new WebEndpoints(() -> ofList(webEndpoint));
+        Map<String, Object> results = webEndpoints.invokeReadOperations();
+        assertTrue(results.isEmpty());
+    }
 
     @Test
     void testIsExposableWebEndpoint() {
