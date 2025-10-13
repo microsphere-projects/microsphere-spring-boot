@@ -42,9 +42,10 @@ jobs:
           --update-snapshots
           --file pom.xml
           -Drevision=${{ inputs.revision }}
+          -Dsurefire.useSystemClassLoader=false
           -Dgpg.skip=true
           deploy
-          --activate-profiles release,ci
+          --activate-profiles publish,ci
         env:
           MAVEN_USERNAME: ${{ secrets.OSS_SONATYPE_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSS_SONATYPE_PASSWORD }}

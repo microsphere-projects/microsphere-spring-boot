@@ -12,14 +12,14 @@ on:
   push:
     branches: [ 'dev' ]
   pull_request:
-    branches: [ 'main' , 'release' ]
+    branches: [ 'main', 'dev' , 'release' ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        java: [ '17' , '21' ]
+        java: [ '17' , '21' , '25' ]
         maven-profile-spring-boot: [ 'spring-boot-3.0' , 'spring-boot-3.1' , 'spring-boot-3.2' ,
                                      'spring-boot-3.3' , 'spring-boot-3.4' ]
     steps:
@@ -39,6 +39,7 @@ jobs:
           --update-snapshots
           --file pom.xml
           -Drevision=0.0.1-SNAPSHOT
+          -Dsurefire.useSystemClassLoader=false
           test
           --activate-profiles test,coverage,${{ matrix.maven-profile-spring-boot }}
 

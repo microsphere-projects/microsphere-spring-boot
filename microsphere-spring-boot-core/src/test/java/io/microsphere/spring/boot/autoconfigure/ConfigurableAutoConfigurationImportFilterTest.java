@@ -26,9 +26,11 @@ import java.util.TreeSet;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClass;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.getExcludedAutoConfigurationClasses;
+import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -38,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConfigurableAutoConfigurationImportFilter
  * @since 1.0.0
  */
-public class ConfigurableAutoConfigurationImportFilterTest {
+class ConfigurableAutoConfigurationImportFilterTest {
 
     private static final String TEST_CLASS_NAME_1 = "org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration";
 
@@ -49,17 +51,37 @@ public class ConfigurableAutoConfigurationImportFilterTest {
     private MockEnvironment environment;
 
     @BeforeEach
-    public void before() {
+    void setUp() {
         environment = new MockEnvironment();
     }
 
     @Test
-    public void testConstants() {
+    void testConstants() {
         assertEquals("microsphere.autoconfigure.exclude", AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
     }
 
     @Test
-    public void testGetExcludedAutoConfigurationClasses() {
+    void testMatch() {
+        ConfigurableAutoConfigurationImportFilter filter = new ConfigurableAutoConfigurationImportFilter();
+        filter.setEnvironment(this.environment);
+
+        String[] autoConfigurationClasses = ofArray(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3);
+
+        boolean[] result = filter.match(autoConfigurationClasses, null);
+        assertTrue(result[0]);
+        assertTrue(result[1]);
+        assertTrue(result[2]);
+
+        this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, TEST_CLASS_NAME_1);
+        filter.setEnvironment(this.environment);
+        result = filter.match(autoConfigurationClasses, null);
+        assertFalse(result[0]);
+        assertTrue(result[1]);
+        assertTrue(result[2]);
+    }
+
+    @Test
+    void testGetExcludedAutoConfigurationClasses() {
         Set<String> classNames = getExcludedAutoConfigurationClasses(environment);
         assertTrue(classNames.isEmpty());
 
@@ -94,7 +116,7 @@ public class ConfigurableAutoConfigurationImportFilterTest {
     }
 
     @Test
-    public void testAddExcludedAutoConfigurationClass() {
+    void testAddExcludedAutoConfigurationClass() {
         Set<String> classNames = getExcludedAutoConfigurationClasses(environment);
         assertTrue(classNames.isEmpty());
 
@@ -116,6 +138,21 @@ public class ConfigurableAutoConfigurationImportFilterTest {
         addExcludedAutoConfigurationClass(environment, TEST_CLASS_NAME_3);
         classNames = getExcludedAutoConfigurationClasses(environment);
         assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
+    }
 
+    @Test
+    void testIsExcluded() {
+        ConfigurableAutoConfigurationImportFilter filter = new ConfigurableAutoConfigurationImportFilter();
+        filter.setEnvironment(this.environment);
+
+        assertFalse(filter.isExcluded(null));
+        assertFalse(filter.isExcluded(""));
+        assertFalse(filter.isExcluded(" "));
+
+        assertFalse(filter.isExcluded(TEST_CLASS_NAME_1));
+
+        addExcludedAutoConfigurationClass(environment, TEST_CLASS_NAME_1);
+        filter.setEnvironment(this.environment);
+        assertTrue(filter.isExcluded(TEST_CLASS_NAME_1));
     }
 }

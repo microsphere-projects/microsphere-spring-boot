@@ -19,13 +19,13 @@ package io.microsphere.spring.boot.autoconfigure;
 import io.microsphere.spring.context.event.BeanListener;
 import io.microsphere.spring.context.event.BeanTimeStatistics;
 import io.microsphere.spring.context.event.LoggingBeanListener;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -46,10 +46,10 @@ import java.util.List;
         },
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @EnableAutoConfiguration
-public class ApplicationAutoConfigurationTest {
+class ApplicationAutoConfigurationTest {
 
     @Test
-    public void test() {
+    void test() {
     }
 
     static class TestConfig {

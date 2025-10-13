@@ -17,11 +17,12 @@
 package io.microsphere.spring.boot.context.properties.source.util;
 
 import org.springframework.boot.context.properties.bind.BindContext;
+import org.springframework.boot.context.properties.bind.DataObjectPropertyName;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
-import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
-import static io.microsphere.util.ClassLoaderUtils.resolveClass;
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.util.StringUtils.substringBeforeLast;
 
 /**
  * The utilities class of {@link ConfigurationProperty}
@@ -31,35 +32,19 @@ import static io.microsphere.util.ClassLoaderUtils.resolveClass;
  */
 public abstract class ConfigurationPropertyUtils {
 
-    private static final ClassLoader classLoader = ConfigurationPropertyUtils.class.getClassLoader();
-
     /**
-     * The class name before Spring Boot 2.2.3
+     * Get the prefix of the specified {@link ConfigurationPropertyName}
+     *
+     * @param name    the {@link ConfigurationPropertyName}
+     * @param context the {@link BindContext}
+     * @return the prefix of the specified {@link ConfigurationPropertyName}
      */
-    private static final String BEAN_PROPERTY_NAME_CLASS_NAME = "org.springframework.boot.context.properties.bind.BeanPropertyName";
-
-    /**
-     * The class name as a constant since Spring Boot 2.2.3
-     */
-    private static final String DATA_OBJECT_PROPERTY_NAME_CLASS_NAME = "org.springframework.boot.context.properties.bind.DataObjectPropertyName";
-
-    private static final Class<?> BEAN_PROPERTY_NAME_CLASS = resolveClass(BEAN_PROPERTY_NAME_CLASS_NAME, classLoader);
-
-    private static final Class<?> DATA_OBJECT_PROPERTY_NAME_CLASS = resolveClass(DATA_OBJECT_PROPERTY_NAME_CLASS_NAME, classLoader);
-
-    private ConfigurationPropertyUtils() throws InstantiationException {
-        throw new InstantiationException();
-    }
-
     public static final String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
         String propertyName = name.toString();
         String prefix = propertyName;
         for (int i = 0; i < depth; i++) {
-            int lastIndex = prefix.lastIndexOf('.');
-            if (lastIndex > -1) {
-                prefix = prefix.substring(0, lastIndex);
-            }
+            prefix = substringBeforeLast(prefix, DOT);
         }
         return prefix;
     }
@@ -69,36 +54,12 @@ public abstract class ConfigurationPropertyUtils {
      *
      * @param name the source name
      * @return the dashed from
-     * @see org.springframework.boot.context.properties.bind.BeanPropertyName
-     * @see org.springframework.boot.context.properties.bind.DataObjectPropertyName
+     * @see org.springframework.boot.context.properties.bind.DataObjectPropertyName#toDashedForm(String)
      */
     public static String toDashedForm(String name) {
-        if (DATA_OBJECT_PROPERTY_NAME_CLASS != null) {
-            return invokeStaticMethod(DATA_OBJECT_PROPERTY_NAME_CLASS, "toDashedForm", name);
-        }
-        return toDashedForm(name, 0);
+        return DataObjectPropertyName.toDashedForm(name);
     }
 
-    /**
-     * Return the specified Java Bean property name in dashed form.
-     * (Source from org.springframework.boot.context.properties.bind.BeanPropertyName)
-     *
-     * @param name  the source name
-     * @param start the starting char
-     * @return the dashed from
-     */
-    protected static String toDashedForm(String name, int start) {
-        StringBuilder result = new StringBuilder();
-        char[] chars = name.replace("_", "-").toCharArray();
-        for (int i = start; i < chars.length; i++) {
-            char ch = chars[i];
-            if (Character.isUpperCase(ch) && result.length() > 0 && result.charAt(result.length() - 1) != '-') {
-                result.append("-");
-            }
-            result.append(Character.toLowerCase(ch));
-        }
-        return result.toString();
+    private ConfigurationPropertyUtils() {
     }
-
-
 }

@@ -6,6 +6,8 @@ import org.springframework.boot.diagnostics.FailureAnalyzer;
 
 import java.util.Set;
 
+import static java.lang.System.lineSeparator;
+
 /**
  * Artifacts Collision {@link FailureAnalyzer} Class
  *
@@ -22,13 +24,13 @@ public class ArtifactsCollisionFailureAnalyzer extends AbstractFailureAnalyzer<A
     private String buildAction(ArtifactsCollisionException cause) {
         Set<String> artifacts = cause.getArtifacts();
         StringBuilder actionBuilder = new StringBuilder("Analyze conflict Artifacts by running the following Maven command in the root directory of the project source code:")
-                .append(System.lineSeparator())
+                .append(lineSeparator())
                 .append("mvn dependency:tree -Dincludes=");
         for (String artifact : artifacts) {
             actionBuilder.append(artifact).append(",");
         }
 
-        actionBuilder.append(System.lineSeparator()).append("After analyzing the results, exclude them in the pom.xml file one by one!");
+        actionBuilder.append(lineSeparator()).append("After analyzing the results, exclude them in the pom.xml file one by one!");
 
         return actionBuilder.toString();
     }

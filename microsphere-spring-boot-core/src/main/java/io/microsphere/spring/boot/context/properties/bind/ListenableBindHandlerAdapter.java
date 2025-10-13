@@ -16,21 +16,31 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
+import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.AbstractBindHandler;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 /**
  * Listable {@link BindHandler} Adapter
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ListenableConfigurationPropertiesBindHandlerAdvisor
+ * @see BindHandler
+ * @see Binder
+ * @see Bindable
  * @since 1.0.0
  */
 public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     private final BindListeners bindHandlers;
+
+    public ListenableBindHandlerAdapter(Iterable<BindListener> bindListeners) {
+        this(DEFAULT, bindListeners);
+    }
 
     public ListenableBindHandlerAdapter(BindHandler parent, Iterable<BindListener> bindListeners) {
         super(parent);
@@ -60,9 +70,12 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
-        Object result = super.onFailure(name, target, context, error);
-        bindHandlers.onFailure(name, target, context, error);
-        return result;
+        try {
+            return super.onFailure(name, target, context, error);
+        } catch (Exception e) {
+            bindHandlers.onFailure(name, target, context, error);
+            throw e;
+        }
     }
 
     @Override
