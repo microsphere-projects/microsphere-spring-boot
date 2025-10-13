@@ -82,13 +82,13 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         }
     }
 
-    private void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
+    void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
         if (isConfigurationPropertiesBean(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             Supplier<?> value = target.getValue();
             Object bean = value.get();
             if (bean != null) {
-                logger.debug("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), bean);
+                logger.trace("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), bean);
                 configurationPropertiesBeanContext.initialize(bean);
             }
         }
@@ -103,12 +103,12 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         });
     }
 
-    private void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+    void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         ConfigurationProperty property = context.getConfigurationProperty();
         if (property != null && isBoundProperty(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             configurationPropertiesBeanContext.setProperty(property, result);
-            logger.debug("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
+            logger.trace("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
         }
     }
 

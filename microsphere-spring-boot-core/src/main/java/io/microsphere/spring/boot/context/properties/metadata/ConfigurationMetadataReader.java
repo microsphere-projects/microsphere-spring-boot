@@ -25,7 +25,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
-import java.io.IOException;
+import java.io.InputStream;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static org.springframework.core.io.support.ResourcePatternResolver.CLASSPATH_ALL_URL_PREFIX;
@@ -60,18 +60,16 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
             for (Resource resource : resources) {
                 readMetadata(metadata, resource);
             }
-        } catch (IOException e) {
-            logger.error("The configuration metadata resource pattern[{}] can't be read", locationPattern);
+        } catch (Exception e) {
+            logger.error("The configuration metadata resource pattern['{}'] can't be read", locationPattern, e);
         }
     }
 
-    private void readMetadata(ConfigurationMetadata metadata, Resource resource) {
+    private void readMetadata(ConfigurationMetadata metadata, Resource resource) throws Exception {
         JsonMarshaller jsonMarshaller = new JsonMarshaller();
-        try {
-            ConfigurationMetadata resourceMetadata = jsonMarshaller.read(resource.getInputStream());
+        try (InputStream inputStream = resource.getInputStream()) {
+            ConfigurationMetadata resourceMetadata = jsonMarshaller.read(inputStream);
             metadata.merge(resourceMetadata);
-        } catch (Throwable e) {
-            logger.warn("Resource[{}] can't be read", resource, e);
         }
     }
 
@@ -84,7 +82,7 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
         }
     }
 
-    private ResourcePatternResolver getResourcePatternResolver() {
+    public ResourcePatternResolver getResourcePatternResolver() {
         ResourcePatternResolver resourcePatternResolver = this.resourcePatternResolver;
         if (resourcePatternResolver == null) {
             resourcePatternResolver = new PathMatchingResourcePatternResolver();

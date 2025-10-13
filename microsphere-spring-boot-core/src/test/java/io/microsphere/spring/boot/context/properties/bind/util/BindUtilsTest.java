@@ -32,7 +32,7 @@ import java.util.Map;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
-import static io.microsphere.spring.boot.util.AbstractTest.assertServerPropertiesPort;
+import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static io.microsphere.spring.core.env.EnvironmentUtils.getProperties;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

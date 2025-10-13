@@ -15,36 +15,31 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.diagnostics;
+package io.microsphere.spring.boot.actuate.endpoint;
 
 
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.stereotype.Component;
 
-import static io.microsphere.collection.Sets.ofSet;
-import static io.microsphere.spring.boot.util.TestUtils.application;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isExposableWebEndpoint;
+import static io.microsphere.spring.boot.actuate.endpoint.WebEndpoints.isReadWebOperationCandidate;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * {@link ArtifactsCollisionFailureAnalyzer} Test
+ * {@link WebEndpoints} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see ArtifactsCollisionFailureAnalyzer
+ * @see WebEndpoints
  * @since 1.0.0
  */
-@Component
-class ArtifactsCollisionFailureAnalyzerTest implements CommandLineRunner {
+class WebEndpointsTest {
 
     @Test
-    void test() {
-        SpringApplication springApplication = application(getClass());
-        assertThrows(Exception.class, springApplication::run);
+    void testIsExposableWebEndpoint() {
+        assertFalse(isExposableWebEndpoint(null));
     }
 
-    @Override
-    public void run(String... args) throws Exception {
-        throw new ArtifactsCollisionException("For testing", ofSet("test-groupId:test-artifactId"));
+    @Test
+    void testIsReadWebOperationCandidate() {
+        assertFalse(isReadWebOperationCandidate(null));
     }
 }

@@ -18,7 +18,7 @@ import static org.springframework.util.ObjectUtils.identityToString;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-class ConditionEvaluationReportBuilder {
+abstract class ConditionEvaluationReportBuilder {
 
     private static final Map<ConfigurableListableBeanFactory, ConditionEvaluationReport> reports = new ConcurrentHashMap<>();
 
@@ -41,5 +41,8 @@ class ConditionEvaluationReportBuilder {
             return ((DefaultListableBeanFactory) beanFactory).getSerializationId();
         }
         return identityToString(beanFactory);
+    }
+
+    private ConditionEvaluationReportBuilder() {
     }
 }

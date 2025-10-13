@@ -18,24 +18,21 @@
 package io.microsphere.spring.boot.classloading;
 
 
-import io.microsphere.annotation.Nullable;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.ResourceLoader;
 
 import java.net.URLClassLoader;
 import java.util.Properties;
 
 import static io.microsphere.spring.boot.classloading.BannedArtifactClassLoadingListener.BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME;
+import static io.microsphere.spring.boot.util.TestUtils.application;
 import static io.microsphere.util.ArrayUtils.ofArray;
 import static java.lang.System.getProperties;
 import static java.lang.Thread.currentThread;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.springframework.boot.WebApplicationType.NONE;
 
 /**
  * {@link BannedArtifactClassLoadingListener} Test
@@ -94,20 +91,5 @@ class BannedArtifactClassLoadingListenerTest {
             properties.remove(BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME);
             currentThread().setContextClassLoader(classLoader);
         }
-    }
-
-    SpringApplication application() {
-        return application(currentThread().getContextClassLoader());
-    }
-
-    SpringApplication application(@Nullable ClassLoader classLoader) {
-        SpringApplication springApplication = new SpringApplication();
-        springApplication.setWebApplicationType(NONE);
-        springApplication.setMainApplicationClass(getClass());
-        if (classLoader != null) {
-            ResourceLoader resourceLoader = new DefaultResourceLoader(classLoader);
-            springApplication.setResourceLoader(resourceLoader);
-        }
-        return springApplication;
     }
 }

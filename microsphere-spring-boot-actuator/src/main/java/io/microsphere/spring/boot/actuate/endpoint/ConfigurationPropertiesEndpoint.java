@@ -31,7 +31,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
-import static io.microsphere.collection.CollectionUtils.isNotEmpty;
 import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 
@@ -107,10 +106,8 @@ public class ConfigurationPropertiesEndpoint {
             return configurationProperties;
         }
 
-        public ConfigurationPropertiesDescriptor addConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
-            if (isNotEmpty(configurationProperties)) {
-                this.configurationProperties.addAll(configurationProperties);
-            }
+        ConfigurationPropertiesDescriptor addConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
+            this.configurationProperties.addAll(configurationProperties);
             return this;
         }
     }
