@@ -38,7 +38,7 @@ import static org.mockito.Mockito.mock;
  * @since 1.0.0
  */
 class WebEndpointsTest {
-    
+
     @Test
     void testWebEndpointsOnNotDiscoveredEndpoints() {
         ExposableWebEndpoint webEndpoint = mock(ExposableWebEndpoint.class);
