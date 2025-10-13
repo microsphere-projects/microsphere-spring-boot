@@ -13,17 +13,18 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
+public abstract class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
 
     protected final SpringApplication springApplication;
 
     protected final String[] args;
 
-    private int order = 0;
+    private int order;
 
     public SpringApplicationRunListenerAdapter(SpringApplication springApplication, String[] args) {
         this.springApplication = springApplication;
         this.args = args;
+        this.setOrder(0);
     }
 
     public void starting(ConfigurableBootstrapContext bootstrapContext) {

@@ -38,7 +38,9 @@ import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter.onCreateMethodHandle;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
+import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
@@ -91,6 +93,20 @@ class ListenableBindHandlerAdapterTest {
             ServerProperties serverProperties = invokeMethod(this.binder, method, "server", this.bindable, adapter);
             assertNull(serverProperties.getPort());
         }
+    }
+
+    @Test
+    void testOnFailureWithoutThrowingException() throws Exception {
+        ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(new BindHandler() {
+            @Override
+            public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
+                return error;
+            }
+        }, emptyList());
+        ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
+        BindContext context = null;
+        Exception error = new Exception("For testing...");
+        assertSame(error, adapter.onFailure(name, bindable, context, error));
     }
 
     @Test
