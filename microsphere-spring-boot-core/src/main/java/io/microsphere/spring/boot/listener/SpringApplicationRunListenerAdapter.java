@@ -13,7 +13,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
+public abstract class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
 
     protected final SpringApplication springApplication;
 
