@@ -62,8 +62,8 @@ pom.xml:
 
 | **Branches** | **Purpose**                               | **Latest Version** |
 |--------------|-------------------------------------------|--------------------|
-| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.2.x | 0.2.1              |
-| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x | 0.1.1              |
+| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x | 0.2.2              |
+| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x | 0.1.2              |
 
 Then add the specific modules you need:
 
