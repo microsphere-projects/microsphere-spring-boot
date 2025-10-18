@@ -33,6 +33,36 @@ import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
 /**
  * {@link ConfigurationPropertiesBindHandlerAdvisor} supports the chaining of the {@link BindListener BindListeners' beans}
  *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * @Component
+ * public class MyBindListener implements BindListener {
+ *
+ *     @Override
+ *     public void onStart(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
+ *         System.out.println("Binding started for: " + name);
+ *     }
+ *
+ *     @Override
+ *     public Object onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+ *         System.out.println("Binding succeeded for: " + name);
+ *         return result;
+ *     }
+ *
+ *     @Override
+ *     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) {
+ *         System.out.println("Binding failed for: " + name + ", error: " + error.getMessage());
+ *         return null;
+ *     }
+ * }
+ * }</pre>
+ *
+ * <p>
+ * Multiple listeners can be registered as Spring beans and will be automatically discovered and applied
+ * in order according to their {@link org.springframework.core.annotation.Order} annotation or
+ * {@link org.springframework.core.Ordered} interface implementation.
+ * </p>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationPropertiesBindHandlerAdvisor
  * @see BindHandler
