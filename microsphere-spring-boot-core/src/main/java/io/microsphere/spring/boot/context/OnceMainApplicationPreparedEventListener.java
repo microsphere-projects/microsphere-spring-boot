@@ -12,9 +12,27 @@ import static org.springframework.util.ClassUtils.isPresent;
 
 
 /**
- * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener} for Main {@link ApplicationContext}
+ * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener} for Main {@link ApplicationContext}.
+ * <p>
+ * This listener is designed to execute only once for the main application context, ignoring any bootstrap contexts
+ * that might be created by Spring Cloud. It extends {@link OnceApplicationPreparedEventListener} to provide
+ * specialized behavior for main application contexts.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyMainApplicationListener extends OnceMainApplicationPreparedEventListener {
+ *
+ *     @Override
+ *     protected void onMainApplicationPrepared(SpringApplication springApplication, String[] args,
+ *                                              ConfigurableApplicationContext context) {
+ *         // Your custom logic here - this will only execute for the main application context
+ *         System.out.println("Main application context is prepared: " + context.getApplicationName());
+ *     }
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
+ * @see OnceApplicationPreparedEventListener
  * @since 1.0.0
  */
 public abstract class OnceMainApplicationPreparedEventListener extends OnceApplicationPreparedEventListener {
