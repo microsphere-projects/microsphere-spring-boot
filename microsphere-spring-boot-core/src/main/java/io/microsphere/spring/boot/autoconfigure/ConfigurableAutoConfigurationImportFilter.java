@@ -25,7 +25,17 @@ import static org.springframework.util.StringUtils.commaDelimitedListToSet;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * Configurable {@link AutoConfigurationImportFilter}
+ * Configurable {@link AutoConfigurationImportFilter} for excluding specific Spring Boot auto-configuration classes.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Exclude auto-configuration classes via property
+ * microsphere.autoconfigure.exclude=com.example.FooAutoConfiguration,com.example.BarAutoConfiguration
+ *
+ * // Programmatically exclude classes
+ * ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClass(environment, "com.example.FooAutoConfiguration");
+ * ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClasses(environment, "com.example.BarAutoConfiguration", "com.example.BazAutoConfiguration");
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
