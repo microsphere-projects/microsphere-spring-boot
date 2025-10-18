@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.context.properties.bind.util;
 
 import io.microsphere.annotation.Nonnull;
+import io.microsphere.util.Utils;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.handler.IgnoreErrorsBindHandler;
 import org.springframework.boot.context.properties.bind.handler.NoUnboundElementsBindHandler;
@@ -34,7 +35,7 @@ import static org.springframework.boot.context.properties.bind.BindHandler.DEFAU
  * @see NoUnboundElementsBindHandler
  * @since 1.0.0
  */
-public abstract class BindHandlerUtils {
+public abstract class BindHandlerUtils implements Utils {
 
     /**
      * Create a {@link BindHandler} instance based on the given flags.
