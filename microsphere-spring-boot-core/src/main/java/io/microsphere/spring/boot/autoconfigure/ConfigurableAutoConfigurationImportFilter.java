@@ -28,11 +28,13 @@ import static org.springframework.util.StringUtils.hasText;
  * Configurable {@link AutoConfigurationImportFilter} for excluding specific Spring Boot auto-configuration classes.
  *
  * <h3>Example Usage</h3>
+ * <h4>Exclude auto-configuration classes via property</h4>
  * <pre>{@code
- * // Exclude auto-configuration classes via property
  * microsphere.autoconfigure.exclude=com.example.FooAutoConfiguration,com.example.BarAutoConfiguration
+ * }</pre>
  *
- * // Programmatically exclude classes
+ * <h4>Programmatically exclude classes</h4>
+ * <pre>{@code
  * ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClass(environment, "com.example.FooAutoConfiguration");
  * ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClasses(environment, "com.example.BarAutoConfiguration", "com.example.BazAutoConfiguration");
  * }</pre>
