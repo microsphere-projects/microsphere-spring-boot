@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties
  * @see BeanPropertyChangedEvent
+ * @see EventPublishingConfigurationPropertiesBeanPropertyChangedListener
  * @since 1.0.0
  */
 public class ConfigurationPropertiesBeanPropertyChangedEvent<T> extends BeanPropertyChangedEvent {
