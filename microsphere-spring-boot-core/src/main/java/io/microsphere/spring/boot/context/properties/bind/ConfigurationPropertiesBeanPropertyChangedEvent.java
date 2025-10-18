@@ -21,14 +21,15 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 
 /**
- * Event raised when the property of bean annotated {@link ConfigurationProperties @ConfigurationProperties} was changed
+ * Event raised when the property of bean annotated {@link ConfigurationProperties @ConfigurationProperties} was changed.
  *
+ * @param <T> the type of the bean annotated with {@link ConfigurationProperties}
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties
  * @see BeanPropertyChangedEvent
  * @since 1.0.0
  */
-public class ConfigurationPropertiesBeanPropertyChangedEvent extends BeanPropertyChangedEvent {
+public class ConfigurationPropertiesBeanPropertyChangedEvent<T> extends BeanPropertyChangedEvent {
 
     private final ConfigurationProperty configurationProperty;
 
