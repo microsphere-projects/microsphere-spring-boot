@@ -95,5 +95,4 @@ public class ActuatorAutoConfiguration {
         threadPoolTaskScheduler.setThreadNamePrefix(threadNamePrefix);
         return threadPoolTaskScheduler;
     }
-
 }
