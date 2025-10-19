@@ -32,7 +32,30 @@ import static java.util.Objects.hash;
 import static org.springframework.util.StringUtils.hasText;
 
 /**
- * The information class for introspecting the bean annotated {@link ConfigurationProperties @ConfigurationProperties}
+ * The information class for introspecting the bean annotated {@link ConfigurationProperties @ConfigurationProperties}.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create instance with bean class only
+ * ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(MyConfiguration.class);
+ *
+ * // Create instance with bean class and annotation
+ * ConfigurationProperties annotation = MyConfiguration.class.getAnnotation(ConfigurationProperties.class);
+ * ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(MyConfiguration.class, annotation);
+ *
+ * // Create instance with all parameters
+ * ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(
+ *     MyConfiguration.class,
+ *     annotation,
+ *     "my.config.prefix"
+ * );
+ *
+ * // Access properties
+ * Class<?> beanClass = info.getBeanClass();
+ * String prefix = info.getPrefix();
+ * List<PropertyDescriptor> descriptors = info.getPropertyDescriptors();
+ * PropertyDescriptor descriptor = info.getPropertyDescriptor("propertyName");
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties

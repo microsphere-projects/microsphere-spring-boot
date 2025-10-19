@@ -39,6 +39,26 @@ import static org.springframework.util.StringUtils.hasText;
 
 /**
  * The composite class of {@link PropertySourceLoader} with utilities features
+ * <p>
+ * This class loads property sources from various file formats by delegating to individual
+ * {@link PropertySourceLoader} implementations. It supports all file extensions that are
+ * supported by the loaded factories.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * // Create a new PropertySourceLoaders instance
+ * PropertySourceLoaders loaders = new PropertySourceLoaders();
+ *
+ * // Get supported file extensions
+ * String[] extensions = loaders.getFileExtensions();
+ *
+ * // Load property sources from a resource
+ * Resource resource = new ClassPathResource("application.properties");
+ * List<PropertySource<?>> propertySources = loaders.load("myProperties", resource);
+ *
+ * // Reload a property source with origin tracking
+ * PropertySource<?> trackedSource = loaders.reloadAsOriginTracked(propertySources.get(0));
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see PropertySourceLoader

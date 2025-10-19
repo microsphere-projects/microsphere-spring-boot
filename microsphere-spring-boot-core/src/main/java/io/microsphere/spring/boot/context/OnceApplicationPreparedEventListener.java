@@ -15,7 +15,29 @@ import java.util.concurrent.ConcurrentSkipListSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
- * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener}
+ * This abstract class provides a base implementation for application listeners that should only
+ * execute once per application context. It handles the logic of tracking which contexts have
+ * already been processed to prevent duplicate execution.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * public class MyOnceApplicationPreparedEventListener extends OnceApplicationPreparedEventListener {
+ *
+ *     @Override
+ *     protected boolean isIgnored(SpringApplication springApplication, String[] args,
+ *                               ConfigurableApplicationContext context) {
+ *         // Return true to skip processing for this context
+ *         return false; // Process all contexts by default
+ *     }
+ *
+ *     @Override
+ *     protected void onApplicationEvent(SpringApplication springApplication, String[] args,
+ *                                     ConfigurableApplicationContext context) {
+ *         // Your one-time initialization logic here
+ *         System.out.println("Application prepared event handled once for context: " + context.getId());
+ *     }
+ * }
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see io.microsphere.spring.context.event.OnceApplicationContextEventListener
