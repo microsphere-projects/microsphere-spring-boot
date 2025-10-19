@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.spring.boot.actuate.MonitoredThreadPoolTaskScheduler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
@@ -23,6 +24,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
+import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.spring.boot.actuate.constants.PropertyConstants.TASK_SCHEDULER_PROPERTY_NAME_PREFIX;
 import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 
 /**
@@ -36,14 +39,56 @@ import static org.springframework.core.Ordered.LOWEST_PRECEDENCE;
 public class ActuatorAutoConfiguration {
 
     /**
+     * The default value of {@link ThreadPoolTaskScheduler#setPoolSize(int)} for Actuator : "1"
+     */
+    static final String DEFAULT_TASK_SCHEDULER_POOL_SIZE = "1";
+
+    /**
+     * The property name of {@link ThreadPoolTaskScheduler#setPoolSize(int)} for Actuator :
+     * "microsphere.spring.boot.actuator.task-scheduler.pool-size"
+     */
+    @ConfigurationProperty(
+            defaultValue = DEFAULT_TASK_SCHEDULER_POOL_SIZE,
+            source = APPLICATION_SOURCE
+    )
+    static final String TASK_SCHEDULER_POOL_SIZE_PROPERTY_NAME = TASK_SCHEDULER_PROPERTY_NAME_PREFIX + "pool-size";
+
+    /**
+     * The {@link Value @Value} expression of {@link ThreadPoolTaskScheduler#setPoolSize(int)} for Actuator :
+     * "${microsphere.spring.boot.actuator.task-scheduler.pool-size:1}"
+     */
+    static final String TASK_SCHEDULER_POOL_SIZE_VALUE_EXPRESSION = "${" + TASK_SCHEDULER_POOL_SIZE_PROPERTY_NAME + ":" + DEFAULT_TASK_SCHEDULER_POOL_SIZE + "}";
+
+    /**
+     * The default thread name prefix of {@link ThreadPoolTaskScheduler} for Actuator : "microsphere-spring-boot-actuator-task-"
+     */
+    static final String DEFAULT_TASK_SCHEDULER_THREAD_NAME_PREFIX = "microsphere-spring-boot-actuator-task-";
+
+    /**
+     * The property name of {@link ThreadPoolTaskScheduler#setThreadNamePrefix(String)} for Actuator :
+     * "microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix"
+     */
+    @ConfigurationProperty(
+            defaultValue = DEFAULT_TASK_SCHEDULER_THREAD_NAME_PREFIX,
+            source = APPLICATION_SOURCE
+    )
+    static final String TASK_SCHEDULER_THREAD_NAME_PREFIX_PROPERTY_NAME = TASK_SCHEDULER_PROPERTY_NAME_PREFIX + "thread-name-prefix";
+
+    /**
+     * The {@link Value @Value} expression of {@link ThreadPoolTaskScheduler#setThreadNamePrefix(String)} for Actuator :
+     * "${microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix:microsphere-spring-boot-actuator-task-}"
+     */
+    static final String TASK_SCHEDULER_THREAD_NAME_PREFIX_VALUE_EXPRESSION = "${" + TASK_SCHEDULER_THREAD_NAME_PREFIX_PROPERTY_NAME + ":" + DEFAULT_TASK_SCHEDULER_THREAD_NAME_PREFIX + "}";
+
+    /**
      * The bean name of {@link ThreadPoolTaskScheduler} for Actuator : "actuatorTaskScheduler"
      */
     public static final String ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME = "actuatorTaskScheduler";
 
     @Bean(name = ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME, destroyMethod = "shutdown")
     public ThreadPoolTaskScheduler actuatorTaskScheduler(
-            @Value("${microsphere.spring.boot.actuator.task-scheduler.pool-size:1}") int poolSize,
-            @Value("${microsphere.spring.boot.actuator.task-scheduler.prefix:microsphere-spring-boot-actuator-task-}") String threadNamePrefix) {
+            @Value(TASK_SCHEDULER_POOL_SIZE_VALUE_EXPRESSION) int poolSize,
+            @Value(TASK_SCHEDULER_THREAD_NAME_PREFIX_VALUE_EXPRESSION) String threadNamePrefix) {
         MonitoredThreadPoolTaskScheduler threadPoolTaskScheduler = new MonitoredThreadPoolTaskScheduler();
         threadPoolTaskScheduler.setPoolSize(poolSize);
         threadPoolTaskScheduler.setDaemon(true);
