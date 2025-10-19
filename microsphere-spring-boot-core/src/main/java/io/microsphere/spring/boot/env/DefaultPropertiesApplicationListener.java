@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -29,11 +28,46 @@ import static io.microsphere.spring.core.io.ResourceLoaderUtils.getResourcePatte
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
 
 /**
- * Listable {@link ApplicationEnvironmentPreparedEvent} {@link ApplicationListener} Class
- * {@link SpringApplication#setDefaultProperties(Properties) "defaultProperties"}
- *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see SpringApplication#setDefaultProperties(Properties)
+ * {@link ApplicationListener} implementation that handles {@link ApplicationEnvironmentPreparedEvent}
+ * to process and merge default properties from various sources into Spring Boot application environment.
+ * 
+ * <p>This listener works at {@link ApplicationEnvironmentPreparedEvent} phase, which occurs after the
+ * {@link org.springframework.core.env.Environment} is prepared but before the application context
+ * is created. It collects default properties from multiple sources including:</p>
+ * 
+ * <ul>
+ *   <li>{@link DefaultPropertiesPostProcessor} implementations loaded via Spring Factories mechanism</li>
+ *   <li>Resources specified through {@link io.microsphere.spring.boot.util.SpringApplicationUtils#getDefaultPropertiesResources()}</li>
+ * </ul>
+ * 
+ * <h3>Example Usage</h3>
+ * <p>Example usage in a custom {@link DefaultPropertiesPostProcessor}:</p>
+ * 
+ * <pre>{@code
+ * public class CustomDefaultPropertiesPostProcessor implements DefaultPropertiesPostProcessor {
+ *     
+ *     @Override
+ *     public void initializeResources(Set<String> defaultPropertiesResources) {
+ *         defaultPropertiesResources.add("classpath*:META-INF/custom-default.properties");
+ *     }
+ *     
+ *     @Override
+ *     public void postProcess(Map<String> defaultProperties) {
+ *         // Add or modify default properties
+ *         defaultProperties.put("custom.property", "defaultValue");
+ *     }
+ * }
+ * }</pre>
+ * 
+ * <p>Register the processor in META-INF/spring.factories:</p>
+ * 
+ * <pre>{@code
+ * io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
+ * com.example.CustomDefaultPropertiesPostProcessor
+ * }</pre>
+ * 
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see SpringApplication#setDefaultProperties
  * @see DefaultPropertiesPostProcessor
  * @since 1.0.0
  */

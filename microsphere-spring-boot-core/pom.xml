@@ -65,6 +65,20 @@
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-spring-test</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-recipes</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-test</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>

@@ -64,7 +64,6 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
 
     private boolean bound = false;
 
-
     @Override
     public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
         if (isBound()) {

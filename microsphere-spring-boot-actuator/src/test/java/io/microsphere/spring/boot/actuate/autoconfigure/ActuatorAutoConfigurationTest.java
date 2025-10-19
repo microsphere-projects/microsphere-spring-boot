@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
                 ActuatorAutoConfigurationTest.class
         }, properties = {
         "microsphere.spring.boot.actuator.task-scheduler.pool-size=2",
-        "microsphere.spring.boot.actuator.task-scheduler.prefix=my-prefix",
+        "microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix=my-prefix",
 
 })
 @EnableAutoConfiguration
@@ -52,7 +52,7 @@ class ActuatorAutoConfigurationTest {
     @Value("${microsphere.spring.boot.actuator.task-scheduler.pool-size}")
     private int poolSize;
 
-    @Value("${microsphere.spring.boot.actuator.task-scheduler.prefix}")
+    @Value("${microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix}")
     private String prefix;
 
     @Test

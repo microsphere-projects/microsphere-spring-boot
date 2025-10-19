@@ -23,8 +23,21 @@ import static java.lang.Boolean.getBoolean;
 import static java.lang.Thread.currentThread;
 
 /**
- * {@link ApplicationStartingEvent ApplicationStartingEvent} {@link ApplicationListener Listener} bans
- * the load of Artifacts collision class
+ * {@link ApplicationStartingEvent} {@link ApplicationListener} that bans loading of artifact collision classes.
+ * <h3>Example Usage</h3>
+ * <h4>Enable artifact banning via system property</h4>
+ * <pre>{@code
+ * -Dmicrosphere.spring.boot.banned-artifacts.enabled=true
+ * }</pre>
+ *
+ * <h4>Register listener in Spring Boot application</h4>
+ * <pre>{@code
+ * SpringApplication app = new SpringApplication(MyApplication.class);
+ * app.addListeners(new BannedArtifactClassLoadingListener(app));
+ * app.run(args);
+ * }</pre>
+ * <p>
+ * When enabled, this listener will prevent loading of banned artifacts during application startup.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

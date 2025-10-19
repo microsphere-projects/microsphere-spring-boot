@@ -30,7 +30,7 @@ import static io.microsphere.spring.constants.PropertyConstants.MICROSPHERE_SPRI
 public interface PropertyConstants {
 
     /**
-     * The property name prefix of Microsphere Spring Boot
+     * The property name prefix of Microsphere Spring Boot : "microsphere.spring.boot."
      */
     String MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_PROPERTY_NAME_PREFIX + "boot.";
 
