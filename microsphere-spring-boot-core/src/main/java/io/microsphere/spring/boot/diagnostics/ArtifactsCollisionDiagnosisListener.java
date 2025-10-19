@@ -27,7 +27,32 @@ import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
 
 /**
- * Artifacts Collision diagnosis listener
+ * {@link ApplicationListener} to detect and diagnose artifacts collision in the application classpath.
+ * <p>
+ * This listener will be triggered when {@link ApplicationContextInitializedEvent} is published,
+ * and it will scan all artifacts in the classpath to detect if there are any duplicate artifacts
+ * (same group ID and artifact ID) existing.
+ *
+ * <h3>Example Usage</h3>
+ * <p>
+ * To enable this diagnosis, set the property:
+ * <pre>
+ * microsphere.spring.boot.artifacts-collision.enabled=true
+ * </pre>
+ * <p>
+ * Example configuration in application.properties:
+ * <pre>
+ * microsphere.spring.boot.artifacts-collision.enabled=true
+ * </pre>
+ * <p>
+ * Example configuration in application.yml:
+ * <pre>
+ * microsphere:
+ *   spring:
+ *     boot:
+ *       artifacts-collision:
+ *         enabled: true
+ * </pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0

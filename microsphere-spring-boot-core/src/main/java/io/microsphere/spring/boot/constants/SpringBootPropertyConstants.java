@@ -28,5 +28,4 @@ public interface SpringBootPropertyConstants {
      * @see ConfigurationPropertySources#ATTACHED_PROPERTY_SOURCE_NAME
      */
     String ATTACHED_PROPERTY_SOURCE_NAME = "configurationProperties";
-
 }
