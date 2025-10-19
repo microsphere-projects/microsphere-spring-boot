@@ -28,6 +28,23 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * {@link Conditional} that checks if the prefix of properties are found in environment..
  *
+ * <h3>Example Usage</h3>
+ * <h4>Single prefix</h4>
+ * <pre>{@code
+ * @ConditionalOnPropertyPrefix("myapp.config")
+ * public class MyConfig {
+ *     // This bean will only be loaded if any property with prefix "myapp.config." exists
+ * }
+ * }</pre>
+ *
+ * <h4>Multiple prefixes</h4>
+ * <pre>{@code
+ * @ConditionalOnPropertyPrefix( {"feature.alpha", "feature.beta"} )
+ * public class FeatureConfig {
+ *     // Loaded if any property with prefix "feature.alpha." or "feature.beta." exists
+ * }
+ * }</pre>
+ *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see OnPropertyPrefixCondition
  * @since 1.0.0

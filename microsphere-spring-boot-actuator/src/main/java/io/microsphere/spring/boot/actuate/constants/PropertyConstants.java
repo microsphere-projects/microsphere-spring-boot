@@ -14,30 +14,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.microsphere.spring.boot.actuate.condition;
+package io.microsphere.spring.boot.actuate.constants;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.context.annotation.Conditional;
-
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
-
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
 
 /**
- * {@link Conditional @Conditional} that checks whether the artifact "org.springframework.boot:spring-boot-configuration-processor"
- * is present
+ * The Property constants for Microsphere Spring Boot Actuator
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
- * @see Conditional
  * @since 1.0.0
  */
-@Target({ TYPE, METHOD })
-@Retention(RUNTIME)
-@Documented
-@ConditionalOnClass(name = "org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata")
-public @interface ConditionalOnConfigurationProcessorPresent {
+public interface PropertyConstants {
+
+    /**
+     * The property name prefix of Microsphere Spring Boot : "microsphere.spring.boot.actuator."
+     */
+    String MICROSPHERE_SPRING_BOOT_ACTUATOR_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "actuator.";
+
+    /**
+     * The property name prefix of Microsphere Spring Boot Actuator Task Scheduler : "microsphere.spring.boot.actuator.task-scheduler."
+     */
+    String TASK_SCHEDULER_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_ACTUATOR_PROPERTY_NAME_PREFIX + "task-scheduler.";
 }

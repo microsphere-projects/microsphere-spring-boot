@@ -24,12 +24,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.mock.env.MockEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.classloading.Artifact.create;
+import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionDiagnosisListener.ENABLED_PROPERTY_NAME;
 import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionResourceResolver.disable;
 import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionResourceResolver.enable;
 import static io.microsphere.spring.boot.util.TestUtils.application;
@@ -47,18 +52,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class ArtifactsCollisionDiagnosisListenerTest {
 
+    private MockEnvironment environment;
+
     private ArtifactsCollisionDiagnosisListener listener;
 
     @BeforeEach
     void setUp() {
+        this.environment = new MockEnvironment();
         this.listener = new ArtifactsCollisionDiagnosisListener();
     }
 
     @Test
-    void testOnApplicationEvent() {
+    void testOnApplicationEventOnDefault() {
         SpringApplication springApplication = application();
-        ApplicationContextInitializedEvent event = new ApplicationContextInitializedEvent(springApplication, EMPTY_STRING_ARRAY, null);
+        ConfigurableApplicationContext context = new GenericApplicationContext();
+        context.setEnvironment(this.environment);
+        ApplicationContextInitializedEvent event = new ApplicationContextInitializedEvent(springApplication, EMPTY_STRING_ARRAY, context);
         this.listener.onApplicationEvent(event);
+    }
+
+    @Test
+    void testOnApplicationEvent() {
+        this.environment.setProperty(ENABLED_PROPERTY_NAME, "true");
+        this.testOnApplicationEventOnDefault();
     }
 
     @Test
@@ -78,11 +94,11 @@ class ArtifactsCollisionDiagnosisListenerTest {
     }
 
     @Test
-    void testGetArtifactsCollisionSet() {
+    void testGetArtifactsCollisionMap() {
         List<Artifact> artifacts = createArtifacts();
-        Set<String> artifactsCollisionSet = this.listener.getArtifactsCollisionSet(artifacts);
-        assertEquals(1, artifactsCollisionSet.size());
-        assertTrue(artifactsCollisionSet.contains("test-artifact"));
+        Map<String, Artifact> artifactsCollisionMap = this.listener.getArtifactsCollisionMap(artifacts);
+        assertEquals(1, artifactsCollisionMap.size());
+        assertTrue(artifactsCollisionMap.containsKey("test-artifact"));
     }
 
     private List<Artifact> createArtifacts() {
