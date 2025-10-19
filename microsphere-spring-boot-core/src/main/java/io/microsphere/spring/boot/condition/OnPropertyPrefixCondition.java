@@ -40,7 +40,7 @@ import static org.springframework.core.annotation.AnnotationAttributes.fromMap;
  * @see ConditionalOnPropertyPrefix
  * @since 1.0.0
  */
-public class OnPropertyPrefixCondition extends SpringBootCondition {
+class OnPropertyPrefixCondition extends SpringBootCondition {
 
     @Override
     public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {

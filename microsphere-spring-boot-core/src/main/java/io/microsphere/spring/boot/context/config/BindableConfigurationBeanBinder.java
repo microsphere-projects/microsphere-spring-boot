@@ -29,16 +29,29 @@ import org.springframework.core.env.PropertySource;
 
 import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
 import static java.util.Arrays.asList;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertySources.from;
 
 /**
- * {@link Bindable} {@link ConfigurationBeanBinder} based on Spring Boot 2 {@link Binder}
+ * A {@link ConfigurationBeanBinder} implementation based on Spring Boot 2's {@link Binder},
+ * which binds configuration properties to a given bean using {@link Bindable}.
+ *
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ *     Map<String, Object> properties = new HashMap<>();
+ *     properties.put("app.name", "demo");
+ *     MyConfigBean bean = new MyConfigBean();
+ *     BindableConfigurationBeanBinder binder = new BindableConfigurationBeanBinder();
+ *     binder.bind(properties, true, true, bean);
+ *     // bean.getAppName() == "demo"
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see DefaultConfigurationBeanBinder
+ * @see ConfigurationBeanBinder
  * @since 1.0.0
  */
 public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder {
@@ -54,7 +67,7 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
     public void bind(Map<String, Object> configurationProperties, boolean ignoreUnknownFields,
                      boolean ignoreInvalidFields, Object configurationBean) {
 
-        Iterable<PropertySource<?>> propertySources = asList(new MapPropertySource("internal", configurationProperties));
+        Iterable<PropertySource<?>> propertySources = ofList(new MapPropertySource("internal", configurationProperties));
 
         // Converts ConfigurationPropertySources
         Iterable<ConfigurationPropertySource> configurationPropertySources = from(propertySources);

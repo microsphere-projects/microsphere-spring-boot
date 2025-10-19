@@ -32,6 +32,12 @@ import static org.springframework.core.io.support.ResourcePatternResolver.CLASSP
 
 /**
  * {@link ConfigurationMetadata} Reader
+ * <h3>Example Usage</h3>
+ * <pre>{@code
+ * ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
+ * reader.setResourceLoader(resourceLoader); // Optional, will use default if not set
+ * ConfigurationMetadata metadata = reader.read();
+ * }</pre>
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0

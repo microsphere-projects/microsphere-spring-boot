@@ -15,28 +15,27 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.context;
+package io.microsphere.spring.boot.actuate.constants;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
-import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
+import org.junit.jupiter.api.Test;
+
+import static io.microsphere.spring.boot.actuate.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_ACTUATOR_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.boot.actuate.constants.PropertyConstants.TASK_SCHEDULER_PROPERTY_NAME_PREFIX;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * {@link OnceMainApplicationPreparedEventListener} for Logging with specified level
+ * {@link PropertyConstants} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see OnceMainApplicationPreparedEventListener
+ * @see PropertyConstants
  * @since 1.0.0
  */
-public class LoggingOnceMainApplicationPreparedEventListener extends OnceMainApplicationPreparedEventListener {
+class PropertyConstantsTest {
 
-    public LoggingOnceMainApplicationPreparedEventListener() {
-        super.setOrder(LOWEST_PRECEDENCE);
-    }
-
-    @Override
-    protected void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
-        log(springApplication, args, context, "onApplicationPreparedEvent");
+    @Test
+    void testConstants() {
+        assertEquals("microsphere.spring.boot.actuator.", MICROSPHERE_SPRING_BOOT_ACTUATOR_PROPERTY_NAME_PREFIX);
+        assertEquals("microsphere.spring.boot.actuator.task-scheduler.", TASK_SCHEDULER_PROPERTY_NAME_PREFIX);
     }
 }
