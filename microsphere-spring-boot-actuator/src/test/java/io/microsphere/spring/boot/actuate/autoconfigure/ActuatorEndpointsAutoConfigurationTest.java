@@ -18,6 +18,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.boot.WebApplicationType.SERVLET;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
  * {@link ActuatorEndpointsAutoConfiguration} Test
@@ -27,7 +28,7 @@ import static org.springframework.boot.WebApplicationType.SERVLET;
  * @since 1.0.0
  */
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        webEnvironment = RANDOM_PORT,
         classes = {
                 ActuatorEndpointsAutoConfigurationTest.class,
         },
