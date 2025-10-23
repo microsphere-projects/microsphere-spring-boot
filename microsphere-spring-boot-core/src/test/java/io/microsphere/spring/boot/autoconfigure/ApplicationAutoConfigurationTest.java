@@ -28,6 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
 
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 /**
  * Application AutoConfiguration Test
  *
@@ -44,7 +46,7 @@ import java.util.List;
                 "spring.mvc.format.date=dd/MM/yyyy",
                 "logging.level.io.microsphere.spring=DEBUG"
         },
-        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+        webEnvironment = RANDOM_PORT)
 @EnableAutoConfiguration
 class ApplicationAutoConfigurationTest {
 
