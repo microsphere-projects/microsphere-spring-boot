@@ -19,7 +19,7 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-spring.version>0.1.3</microsphere-spring.version>
+        <microsphere-spring.version>0.1.4</microsphere-spring.version>
         <jolokia.version>1.7.2</jolokia.version>
     </properties>
 
