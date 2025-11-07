@@ -19,7 +19,7 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-spring.version>0.2.4</microsphere-spring.version>
+        <microsphere-spring.version>0.2.5</microsphere-spring.version>
         <jolokia.version>1.7.2</jolokia.version>
     </properties>
 
@@ -44,6 +44,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <profiles>
         <profile>
@@ -88,6 +96,13 @@
             </activation>
             <properties>
                 <spring-boot.version>3.5.7</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-4.0</id>
+            <properties>
+                <spring-boot.version>4.0.0-RC2</spring-boot.version>
             </properties>
         </profile>
     </profiles>

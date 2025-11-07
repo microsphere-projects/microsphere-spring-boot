@@ -3,6 +3,7 @@ package io.microsphere.spring.boot.autoconfigure;
 import io.microsphere.annotation.ConfigurationProperty;
 import org.springframework.boot.autoconfigure.AutoConfigurationImportFilter;
 import org.springframework.boot.autoconfigure.AutoConfigurationMetadata;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.context.EnvironmentAware;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -12,13 +13,15 @@ import org.springframework.core.env.PropertySource;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.spring.core.env.EnvironmentUtils.asConfigurableEnvironment;
+import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.combine;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
 import static java.util.Collections.unmodifiableSet;
+import static org.springframework.boot.context.properties.bind.Binder.get;
 import static org.springframework.util.Assert.isInstanceOf;
 import static org.springframework.util.StringUtils.collectionToCommaDelimitedString;
 import static org.springframework.util.StringUtils.commaDelimitedListToSet;
@@ -31,6 +34,11 @@ import static org.springframework.util.StringUtils.hasText;
  * <h4>Exclude auto-configuration classes via property</h4>
  * <pre>{@code
  * microsphere.autoconfigure.exclude=com.example.FooAutoConfiguration,com.example.BarAutoConfiguration
+ * }</pre>
+ * or
+ * <pre>{@code
+ * microsphere.autoconfigure.exclude[0]=com.example.FooAutoConfiguration
+ * microsphere.autoconfigure.exclude[1]=com.example.BarAutoConfiguration
  * }</pre>
  *
  * <h4>Programmatically exclude classes</h4>
@@ -70,18 +78,39 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
     }
 
     public static Set<String> getExcludedAutoConfigurationClasses(Environment environment) {
-        MutablePropertySources propertySources = getPropertySources(environment);
-        Set<String> allExcludedClasses = new TreeSet<>();
+        ConfigurableEnvironment configurableEnvironment = asConfigurableEnvironment(environment);
+        Set<String> allExcludedClasses = new LinkedHashSet<>();
+        addExcludedAutoConfigurationClasses(environment, getExcludedAutoConfigurationClasses(configurableEnvironment), allExcludedClasses);
+        addExcludedAutoConfigurationClasses(environment, getExcludedAutoConfigurationClassesFromBinder(configurableEnvironment), allExcludedClasses);
+        return allExcludedClasses.isEmpty() ? emptySet() : unmodifiableSet(allExcludedClasses);
+    }
+
+    private static void addExcludedAutoConfigurationClasses(Environment environment, String[] excludedClasses,
+                                                            Set<String> allExcludedClasses) {
+        for (String excludedClass : excludedClasses) {
+            String resolvedExcludeClass = environment.resolvePlaceholders(excludedClass);
+            allExcludedClasses.addAll(commaDelimitedListToSet(resolvedExcludeClass));
+        }
+    }
+
+    private static String[] getExcludedAutoConfigurationClasses(ConfigurableEnvironment environment) {
+        Set<String> excludedClasses = new LinkedHashSet<>();
+        MutablePropertySources propertySources = environment.getPropertySources();
         for (PropertySource propertySource : propertySources) {
             Object property = propertySource.getProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
             if (property instanceof String) {
                 String exclude = (String) property;
                 String resolvedExclude = environment.resolvePlaceholders(exclude);
-                Set<String> excludedClasses = commaDelimitedListToSet(resolvedExclude);
-                allExcludedClasses.addAll(excludedClasses);
+                Set<String> classes = commaDelimitedListToSet(resolvedExclude);
+                excludedClasses.addAll(classes);
             }
         }
-        return allExcludedClasses.isEmpty() ? emptySet() : unmodifiableSet(allExcludedClasses);
+        return excludedClasses.isEmpty() ? EMPTY_STRING_ARRAY : excludedClasses.toArray(EMPTY_STRING_ARRAY);
+    }
+
+    private static String[] getExcludedAutoConfigurationClassesFromBinder(ConfigurableEnvironment environment) {
+        Binder binder = get(environment);
+        return binder.bind(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, String[].class).orElse(EMPTY_STRING_ARRAY);
     }
 
     /**

@@ -8,8 +8,7 @@
 [![Codecov](https://codecov.io/gh/microsphere-projects/microsphere-spring-boot/branch/main/graph/badge.svg)](https://app.codecov.io/gh/microsphere-projects/microsphere-spring-boot)
 ![Maven](https://img.shields.io/maven-central/v/io.github.microsphere-projects/microsphere-spring-boot.svg)
 ![License](https://img.shields.io/github/license/microsphere-projects/microsphere-spring-boot.svg)
-[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/microsphere-projects/microsphere-spring-boot.svg)](http://isitmaintained.com/project/microsphere-projects/microsphere-spring-boot "Average time to resolve an issue")
-[![Percentage of issues still open](http://isitmaintained.com/badge/open/microsphere-projects/microsphere-spring-boot.svg)](http://isitmaintained.com/project/microsphere-projects/microsphere-spring-boot "Percentage of issues still open")
+
 
 Microsphere Spring Boot is a collection of libraries that extends Spring Boot's capabilities with additional features
 focused on configuration management, application diagnostics, and enhanced monitoring. The project is structured as a
@@ -62,8 +61,8 @@ pom.xml:
 
 | **Branches** | **Purpose**                               | **Latest Version** |
 |--------------|-------------------------------------------|--------------------|
-| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x | 0.2.4              |
-| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x | 0.1.4              |
+| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x | 0.2.5              |
+| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x | 0.1.5              |
 
 Then add the specific modules you need:
 
