@@ -45,6 +45,14 @@
         </dependencies>
     </dependencyManagement>
 
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
+
     <profiles>
         <profile>
             <id>spring-boot-3.0</id>
@@ -88,6 +96,13 @@
             </activation>
             <properties>
                 <spring-boot.version>3.5.7</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-4.0</id>
+            <properties>
+                <spring-boot.version>4.0.0-RC2</spring-boot.version>
             </properties>
         </profile>
     </profiles>
