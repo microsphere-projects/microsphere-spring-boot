@@ -31,7 +31,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
-import static java.util.Arrays.asList;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertySources.from;
 
@@ -81,6 +81,6 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
         BindHandler bindHandler = createBindHandler(ignoreUnknownFields, ignoreInvalidFields);
 
         // Bind
-        binder.bind("", bindable, bindHandler);
+        binder.bind(EMPTY_STRING, bindable, bindHandler);
     }
 }
