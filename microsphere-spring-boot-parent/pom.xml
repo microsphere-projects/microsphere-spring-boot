@@ -20,7 +20,7 @@
 
     <properties>
         <microsphere-spring.version>0.2.5</microsphere-spring.version>
-        <jolokia.version>1.7.2</jolokia.version>
+        <jolokia.version>2.5.1</jolokia.version>
     </properties>
 
     <dependencyManagement>
