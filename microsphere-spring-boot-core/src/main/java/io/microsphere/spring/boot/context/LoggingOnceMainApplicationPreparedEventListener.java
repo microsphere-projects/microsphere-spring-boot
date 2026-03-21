@@ -31,10 +31,35 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  */
 public class LoggingOnceMainApplicationPreparedEventListener extends OnceMainApplicationPreparedEventListener {
 
+    /**
+     * Constructs a new {@code LoggingOnceMainApplicationPreparedEventListener} with the
+     * lowest precedence order.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   LoggingOnceMainApplicationPreparedEventListener listener =
+     *       new LoggingOnceMainApplicationPreparedEventListener();
+     * }</pre>
+     */
     public LoggingOnceMainApplicationPreparedEventListener() {
         super.setOrder(LOWEST_PRECEDENCE);
     }
 
+    /**
+     * Logs the application-prepared event details for the main application context using
+     * {@code SpringApplicationUtils#log}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is invoked by the framework when the ApplicationPreparedEvent fires
+     *   // for the main application context:
+     *   listener.onApplicationEvent(springApplication, args, context);
+     * }</pre>
+     *
+     * @param springApplication the Spring application instance
+     * @param args              the command-line arguments
+     * @param context           the configurable application context
+     */
     @Override
     protected void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
         log(springApplication, args, context, "onApplicationPreparedEvent");
