@@ -41,10 +41,33 @@ public class ConditionsReportMessageBuilder {
 
     private final ConfigurableApplicationContext context;
 
+    /**
+     * Constructs a new {@link ConditionsReportMessageBuilder} with the given application context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurableApplicationContext context = SpringApplication.run(MyApp.class, args);
+     *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
+     * }</pre>
+     *
+     * @param context the {@link ConfigurableApplicationContext} used for building condition reports
+     */
     public ConditionsReportMessageBuilder(ConfigurableApplicationContext context) {
         this.context = context;
     }
 
+    /**
+     * Builds a list of condition evaluation report messages, one per application context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
+     *   List<String> messages = builder.build();
+     *   messages.forEach(System.out::println);
+     * }</pre>
+     *
+     * @return a list of formatted report message strings
+     */
     List<String> build() {
         Map<String, ConditionEvaluationReport> reportsMap = getReportsMap();
         List<String> reportMessages = newArrayList(reportsMap.size());
@@ -52,6 +75,21 @@ public class ConditionsReportMessageBuilder {
         return reportMessages;
     }
 
+    /**
+     * Builds a single condition evaluation report message for the given context ID and report.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
+     *   ConditionEvaluationReport report = ConditionEvaluationReport.get(beanFactory);
+     *   String message = builder.buildSingle("myContext", report);
+     *   System.out.println(message);
+     * }</pre>
+     *
+     * @param id     the identifier of the application context
+     * @param report the {@link ConditionEvaluationReport} to format
+     * @return the formatted report message string
+     */
     String buildSingle(String id, ConditionEvaluationReport report) {
         StringBuilder reportMessage = new StringBuilder(lineSeparator());
         appendTitle(id, reportMessage);
