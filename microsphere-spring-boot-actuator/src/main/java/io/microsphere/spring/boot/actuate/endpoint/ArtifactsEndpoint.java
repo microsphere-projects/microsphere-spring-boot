@@ -20,10 +20,31 @@ public class ArtifactsEndpoint {
 
     private final ArtifactDetector artifactDetector;
 
+    /**
+     * Constructs a new {@link ArtifactsEndpoint} with the given {@link ClassLoader}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactsEndpoint endpoint = new ArtifactsEndpoint(Thread.currentThread().getContextClassLoader());
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} used to detect artifacts
+     */
     public ArtifactsEndpoint(ClassLoader classLoader) {
         this.artifactDetector = new ArtifactDetector(classLoader);
     }
 
+    /**
+     * Returns the list of detected {@link Artifact} metadata from the classpath.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactsEndpoint endpoint = new ArtifactsEndpoint(classLoader);
+     *   List<Artifact> artifacts = endpoint.getArtifactMetaInfoList();
+     * }</pre>
+     *
+     * @return a {@link List} of detected {@link Artifact} instances
+     */
     @ReadOperation
     public List<Artifact> getArtifactMetaInfoList() {
         return artifactDetector.detect(false);
