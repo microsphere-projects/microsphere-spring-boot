@@ -18,6 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      workflows: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
@@ -44,6 +45,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      workflows: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v5
