@@ -47,10 +47,36 @@ public class ConfigurationPropertiesEndpoint {
 
     private final ConfigurationMetadataRepository configurationMetadataRepository;
 
+    /**
+     * Constructs a {@link ConfigurationPropertiesEndpoint} backed by the given
+     * {@link ConfigurationMetadataRepository}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationMetadataRepository repository = new ConfigurationMetadataRepository(reader);
+     *   ConfigurationPropertiesEndpoint endpoint = new ConfigurationPropertiesEndpoint(repository);
+     * }</pre>
+     *
+     * @param configurationMetadataRepository the repository providing configuration metadata
+     */
     public ConfigurationPropertiesEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
         this.configurationMetadataRepository = configurationMetadataRepository;
     }
 
+    /**
+     * Returns a {@link ConfigurationPropertiesDescriptor} containing all configuration
+     * properties loaded from service loaders and the configuration metadata repository.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesEndpoint endpoint = new ConfigurationPropertiesEndpoint(repository);
+     *   ConfigurationPropertiesDescriptor descriptor = endpoint.getConfigurationProperties();
+     *   List<ConfigurationProperty> props = descriptor.getConfigurationProperties();
+     *   props.forEach(p -> System.out.println(p.getName()));
+     * }</pre>
+     *
+     * @return a descriptor containing all discovered configuration properties
+     */
     @ReadOperation
     public ConfigurationPropertiesDescriptor getConfigurationProperties() {
         ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
@@ -101,11 +127,36 @@ public class ConfigurationPropertiesEndpoint {
 
         private final List<ConfigurationProperty> configurationProperties = new LinkedList<>();
 
+        /**
+         * Returns the list of all {@link ConfigurationProperty} instances in this descriptor.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationPropertiesDescriptor descriptor = endpoint.getConfigurationProperties();
+         *   List<ConfigurationProperty> properties = descriptor.getConfigurationProperties();
+         *   properties.forEach(p -> System.out.println(p.getName() + " = " + p.getDefaultValue()));
+         * }</pre>
+         *
+         * @return the list of configuration properties, never {@code null}
+         */
         @Nonnull
         public List<ConfigurationProperty> getConfigurationProperties() {
             return configurationProperties;
         }
 
+        /**
+         * Adds the given list of {@link ConfigurationProperty} instances to this descriptor.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
+         *   List<ConfigurationProperty> properties = loadAll();
+         *   descriptor.addConfigurationProperties(properties);
+         * }</pre>
+         *
+         * @param configurationProperties the list of configuration properties to add
+         * @return this descriptor for fluent chaining
+         */
         ConfigurationPropertiesDescriptor addConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
             this.configurationProperties.addAll(configurationProperties);
             return this;

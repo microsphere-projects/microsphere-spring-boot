@@ -85,6 +85,25 @@ public class ActuatorAutoConfiguration {
      */
     public static final String ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME = "actuatorTaskScheduler";
 
+    /**
+     * Creates a {@link MonitoredThreadPoolTaskScheduler} bean for actuator tasks, configured
+     * with the given pool size and thread name prefix from application properties.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Configured via application properties:
+     *   // microsphere.spring.boot.actuator.task-scheduler.pool-size=2
+     *   // microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix=my-actuator-
+     *
+     *   @Autowired
+     *   @Qualifier("actuatorTaskScheduler")
+     *   private ThreadPoolTaskScheduler scheduler;
+     * }</pre>
+     *
+     * @param poolSize the thread pool size resolved from configuration properties
+     * @param threadNamePrefix the thread name prefix resolved from configuration properties
+     * @return a configured {@link ThreadPoolTaskScheduler} instance
+     */
     @Bean(name = ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME, destroyMethod = "shutdown")
     public ThreadPoolTaskScheduler actuatorTaskScheduler(
             @Value(TASK_SCHEDULER_POOL_SIZE_VALUE_EXPRESSION) int poolSize,
