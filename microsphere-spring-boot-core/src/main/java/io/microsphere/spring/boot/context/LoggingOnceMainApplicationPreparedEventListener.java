@@ -31,6 +31,17 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  */
 public class LoggingOnceMainApplicationPreparedEventListener extends OnceMainApplicationPreparedEventListener {
 
+    /**
+     * Constructs a new logging listener for the main application context
+     * with the lowest precedence order.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   LoggingOnceMainApplicationPreparedEventListener listener =
+     *       new LoggingOnceMainApplicationPreparedEventListener();
+     *   // listener is configured with LOWEST_PRECEDENCE order
+     * }</pre>
+     */
     public LoggingOnceMainApplicationPreparedEventListener() {
         super.setOrder(LOWEST_PRECEDENCE);
     }

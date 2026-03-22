@@ -186,6 +186,19 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         }
     }
 
+    /**
+     * Checks whether the given auto-configuration class name is in the exclusion set.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurableAutoConfigurationImportFilter filter = new ConfigurableAutoConfigurationImportFilter();
+     *   filter.setEnvironment(environment);
+     *   boolean excluded = filter.isExcluded("com.example.FooAutoConfiguration");
+     * }</pre>
+     *
+     * @param autoConfigurationClassName the fully qualified class name to check
+     * @return {@code true} if the class is excluded, {@code false} otherwise
+     */
     boolean isExcluded(String autoConfigurationClassName) {
         return hasText(autoConfigurationClassName) && excludedAutoConfigurationClasses.contains(autoConfigurationClassName);
     }

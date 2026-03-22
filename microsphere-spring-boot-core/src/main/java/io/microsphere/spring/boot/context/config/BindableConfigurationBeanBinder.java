@@ -57,6 +57,20 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
 
     private ConversionService conversionService;
 
+    /**
+     * Sets the {@link ConversionService} used during property binding to convert
+     * configuration values to the appropriate target types.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   BindableConfigurationBeanBinder binder = new BindableConfigurationBeanBinder();
+     *   binder.setConversionService(environment.getConversionService());
+     *   User user = new User();
+     *   binder.bind(properties, true, true, user);
+     * }</pre>
+     *
+     * @param conversionService the {@link ConversionService} to use for type conversion
+     */
     @Override
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;

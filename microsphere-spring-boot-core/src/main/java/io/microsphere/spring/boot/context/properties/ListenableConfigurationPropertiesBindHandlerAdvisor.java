@@ -74,12 +74,40 @@ public class ListenableConfigurationPropertiesBindHandlerAdvisor implements Conf
 
     private BeanFactory beanFactory;
 
+    /**
+     * Applies the {@link BindListener} chain by wrapping the given {@link BindHandler}
+     * with a {@link ListenableBindHandlerAdapter}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableConfigurationPropertiesBindHandlerAdvisor advisor =
+     *       new ListenableConfigurationPropertiesBindHandlerAdvisor();
+     *   advisor.setBeanFactory(beanFactory);
+     *   BindHandler wrappedHandler = advisor.apply(BindHandler.DEFAULT);
+     * }</pre>
+     *
+     * @param bindHandler the original {@link BindHandler} to wrap
+     * @return a new {@link BindHandler} that delegates to all registered {@link BindListener} beans
+     */
     @Override
     public BindHandler apply(BindHandler bindHandler) {
         List<BindListener> bindListeners = getSortedBeans(this.beanFactory, BindListener.class);
         return new ListenableBindHandlerAdapter(bindHandler, bindListeners);
     }
 
+    /**
+     * Sets the {@link BeanFactory} used to look up {@link BindListener} beans.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableConfigurationPropertiesBindHandlerAdvisor advisor =
+     *       new ListenableConfigurationPropertiesBindHandlerAdvisor();
+     *   advisor.setBeanFactory(applicationContext.getBeanFactory());
+     * }</pre>
+     *
+     * @param beanFactory the {@link BeanFactory} to use
+     * @throws BeansException if the bean factory cannot be set
+     */
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;

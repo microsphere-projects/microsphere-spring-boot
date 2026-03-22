@@ -32,6 +32,17 @@ class BindListeners implements BindListener {
 
     private final Iterable<BindListener> listeners;
 
+    /**
+     * Constructs a composite {@link BindListener} that delegates to all provided listeners.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<BindListener> listeners = Arrays.asList(listener1, listener2);
+     *   BindListeners composite = new BindListeners(listeners);
+     * }</pre>
+     *
+     * @param listeners the {@link BindListener} instances to compose
+     */
     BindListeners(Iterable<BindListener> listeners) {
         this.listeners = listeners;
     }
