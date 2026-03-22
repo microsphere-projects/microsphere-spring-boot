@@ -22,6 +22,18 @@ public class ConditionEvaluationReportListener implements ApplicationListener<Ap
         reportConditions(event.getApplicationContext());
     }
 
+    /**
+     * Report condition evaluation results for the given application context.
+     * Builds the condition evaluation report messages and logs each one at info level.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConditionEvaluationReportListener listener = new ConditionEvaluationReportListener();
+     *   listener.reportConditions(context);
+     * }</pre>
+     *
+     * @param context the {@link ConfigurableApplicationContext} to report conditions for
+     */
     protected void reportConditions(ConfigurableApplicationContext context) {
         ConditionsReportMessageBuilder messageBuilder = new ConditionsReportMessageBuilder(context);
         messageBuilder.build().forEach(logger::info);

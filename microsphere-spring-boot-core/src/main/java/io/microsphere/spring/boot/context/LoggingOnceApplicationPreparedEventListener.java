@@ -33,6 +33,16 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  */
 public class LoggingOnceApplicationPreparedEventListener extends OnceApplicationPreparedEventListener {
 
+    /**
+     * Constructs a new logging listener with the lowest precedence order.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   LoggingOnceApplicationPreparedEventListener listener =
+     *       new LoggingOnceApplicationPreparedEventListener();
+     *   // listener is configured with LOWEST_PRECEDENCE order
+     * }</pre>
+     */
     public LoggingOnceApplicationPreparedEventListener() {
         super.setOrder(LOWEST_PRECEDENCE);
     }

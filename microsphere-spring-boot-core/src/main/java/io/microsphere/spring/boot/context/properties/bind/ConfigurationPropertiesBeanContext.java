@@ -83,12 +83,39 @@ class ConfigurationPropertiesBeanContext {
         this.initializedBeanWrapper = createInitializedBeanWrapper(beanClass);
     }
 
+    /**
+     * Initializes this context with the actual bean instance by copying its current
+     * property values and setting up the binding property name mappings.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext beanContext =
+     *       new ConfigurationPropertiesBeanContext(MyConfig.class, annotation, "my.config", appContext);
+     *   MyConfig bean = appContext.getBean(MyConfig.class);
+     *   beanContext.initialize(bean);
+     * }</pre>
+     *
+     * @param bean the bean instance to initialize with
+     */
     protected void initialize(Object bean) {
         this.bean = bean;
         setProperties(bean);
         initBinding(bean);
     }
 
+    /**
+     * Sets a property on the wrapped bean, publishing a
+     * {@link ConfigurationPropertiesBeanPropertyChangedEvent} if the value has changed.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationProperty property = context.getConfigurationProperty();
+     *   beanContext.setProperty(property, newValue);
+     * }</pre>
+     *
+     * @param property the {@link ConfigurationProperty} being set
+     * @param newValue the new property value
+     */
     public void setProperty(ConfigurationProperty property, Object newValue) {
         ConfigurationPropertyName name = property.getName();
         String propertyName = getPropertyName(name);
@@ -100,21 +127,68 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
+    /**
+     * Returns the configuration properties prefix associated with this bean context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   String prefix = ctx.getPrefix(); // e.g., "server", "spring.datasource"
+     * }</pre>
+     *
+     * @return the property name prefix, never {@code null}
+     */
     @Nonnull
     public String getPrefix() {
         return prefix;
     }
 
+    /**
+     * Returns the class of the {@link ConfigurationProperties} bean managed by this context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Class<?> beanClass = ctx.getBeanClass(); // e.g., ServerProperties.class
+     * }</pre>
+     *
+     * @return the bean class, never {@code null}
+     */
     @Nonnull
     public Class<?> getBeanClass() {
         return initializedBeanWrapper.getWrappedClass();
     }
 
+    /**
+     * Retrieves the current value of the specified property from the initialized bean.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Object port = ctx.getPropertyValue("port"); // e.g., 8080
+     * }</pre>
+     *
+     * @param name the property name
+     * @return the property value, or {@code null} if not set
+     */
     @Nullable
     public Object getPropertyValue(String name) {
         return initializedBeanWrapper.getPropertyValue(name);
     }
 
+    /**
+     * Returns the initialized bean instance managed by this context. This is a snapshot
+     * of the bean with its initial property values set at creation time.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Object bean = ctx.getInitializedBean();
+     *   // Use the bean to compare old vs new property values
+     * }</pre>
+     *
+     * @return the initialized bean instance, never {@code null}
+     */
     @Nonnull
     public Object getInitializedBean() {
         return this.initializedBeanWrapper.getWrappedInstance();
@@ -162,6 +236,20 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
+    /**
+     * Converts the given value to the type of the specified property using the configured
+     * {@link ConversionService}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Object converted = beanContext.convertForProperty("port", "8080");
+     *   // converted is Integer 8080 if the property type is int
+     * }</pre>
+     *
+     * @param propertyName the name of the target property
+     * @param value        the value to convert
+     * @return the converted value, or the original value if conversion is not supported
+     */
     Object convertForProperty(String propertyName, Object value) {
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
@@ -171,11 +259,38 @@ class ConfigurationPropertiesBeanContext {
         return value;
     }
 
+    /**
+     * Determines whether the given {@link PropertyDescriptor} is a candidate for binding.
+     * A property is a candidate unless its read method is declared directly on {@link Object}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(MyConfig.class, "port");
+     *   boolean candidate = ConfigurationPropertiesBeanContext.isCandidateProperty(descriptor); // true
+     * }</pre>
+     *
+     * @param descriptor the {@link PropertyDescriptor} to evaluate
+     * @return {@code true} if the property is a binding candidate, {@code false} otherwise
+     */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
+    /**
+     * Determines whether the given class is a candidate for configuration property binding.
+     * Primitives, wrappers, classes from {@code java.*} packages, and non-concrete classes are excluded.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean candidate1 = ConfigurationPropertiesBeanContext.isCandidateClass(MyConfig.class); // true
+     *   boolean candidate2 = ConfigurationPropertiesBeanContext.isCandidateClass(String.class);   // false
+     *   boolean candidate3 = ConfigurationPropertiesBeanContext.isCandidateClass(int.class);      // false
+     * }</pre>
+     *
+     * @param beanClass the class to evaluate
+     * @return {@code true} if the class is a binding candidate, {@code false} otherwise
+     */
     static boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
             return false;

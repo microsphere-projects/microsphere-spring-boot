@@ -37,6 +37,19 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  */
 public class LoggingSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
+    /**
+     * Construct a new {@link LoggingSpringApplicationRunListener} that logs application lifecycle events.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Typically registered in META-INF/spring.factories:
+     *   // org.springframework.boot.SpringApplicationRunListener=\
+     *   //   io.microsphere.spring.boot.listener.LoggingSpringApplicationRunListener
+     * }</pre>
+     *
+     * @param springApplication the {@link SpringApplication} instance
+     * @param args the command line arguments
+     */
     public LoggingSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);
     }

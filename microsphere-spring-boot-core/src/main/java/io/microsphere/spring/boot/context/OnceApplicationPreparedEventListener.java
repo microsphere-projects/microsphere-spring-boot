@@ -53,6 +53,29 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
     private int order = LOWEST_PRECEDENCE;
 
+    /**
+     * Constructs a new listener instance, initializing the set of processed context IDs
+     * for this listener's class.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   class MyListener extends OnceApplicationPreparedEventListener {
+     *       public MyListener() {
+     *           super(); // initializes processed context tracking
+     *       }
+     *
+     *       protected boolean isIgnored(SpringApplication app, String[] args,
+     *                                   ConfigurableApplicationContext ctx) {
+     *           return false;
+     *       }
+     *
+     *       protected void onApplicationEvent(SpringApplication app, String[] args,
+     *                                         ConfigurableApplicationContext ctx) {
+     *           // handle event once per context
+     *       }
+     *   }
+     * }</pre>
+     */
     public OnceApplicationPreparedEventListener() {
         this.processedContextIds = getProcessedContextIds(getClass());
     }
@@ -84,19 +107,97 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
     }
 
+    /**
+     * Checks whether the application context with the given ID has already been processed
+     * by this listener.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   if (isProcessed(context.getId())) {
+     *       // skip processing — this context was already handled
+     *       return;
+     *   }
+     * }</pre>
+     *
+     * @param contextId the {@link ConfigurableApplicationContext#getId() context ID} to check
+     * @return {@code true} if the context has already been processed, {@code false} otherwise
+     */
     protected boolean isProcessed(String contextId) {
         return processedContextIds.contains(contextId);
     }
 
+    /**
+     * Marks the application context with the given ID as processed so that subsequent
+     * events for the same context are ignored.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   markProcessed(context.getId());
+     *   // subsequent calls to isProcessed(context.getId()) will return true
+     * }</pre>
+     *
+     * @param contextId the {@link ConfigurableApplicationContext#getId() context ID} to mark as processed
+     */
     protected void markProcessed(String contextId) {
         processedContextIds.add(contextId);
         logger.trace("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
     }
 
+    /**
+     * Determines whether the given {@link ApplicationPreparedEvent} should be ignored.
+     * Subclasses implement this to define custom filtering logic.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   public class MyListener extends OnceApplicationPreparedEventListener {
+     *       protected boolean isIgnored(SpringApplication app, String[] args,
+     *               ConfigurableApplicationContext context) {
+     *           // Only handle non-bootstrap contexts
+     *           return "bootstrap".equals(context.getId());
+     *       }
+     *   }
+     * }</pre>
+     *
+     * @param springApplication the current {@link SpringApplication}
+     * @param args              the application arguments
+     * @param context           the application context being prepared
+     * @return {@code true} if the event should be ignored, {@code false} otherwise
+     */
     protected abstract boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
+    /**
+     * Handles the {@link ApplicationPreparedEvent} for the given context. This method is
+     * called at most once per context ID.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   public class MyListener extends OnceApplicationPreparedEventListener {
+     *       protected void onApplicationEvent(SpringApplication app, String[] args,
+     *               ConfigurableApplicationContext context) {
+     *           // Register custom beans or perform initialization
+     *           context.getBeanFactory().registerSingleton("myBean", new MyBean());
+     *       }
+     *   }
+     * }</pre>
+     *
+     * @param springApplication the current {@link SpringApplication}
+     * @param args              the application arguments
+     * @param context           the application context being prepared
+     */
     protected abstract void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
+    /**
+     * Sets the order value for this listener, controlling its execution priority
+     * relative to other {@link Ordered} listeners.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   OnceApplicationPreparedEventListener listener = new MyListener();
+     *   listener.setOrder(Ordered.HIGHEST_PRECEDENCE); // execute first
+     * }</pre>
+     *
+     * @param order the order value (lower values have higher priority)
+     */
     public final void setOrder(int order) {
         this.order = order;
     }

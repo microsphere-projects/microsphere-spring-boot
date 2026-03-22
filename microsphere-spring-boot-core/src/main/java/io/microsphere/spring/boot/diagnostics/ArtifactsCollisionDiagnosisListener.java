@@ -97,6 +97,22 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
         }
     }
 
+    /**
+     * Diagnose artifacts collision for the given {@link ClassLoader}.
+     * Detects all artifacts in the classpath and identifies duplicates based on group ID and artifact ID.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactsCollisionDiagnosisListener listener = new ArtifactsCollisionDiagnosisListener();
+     *   Set<String> collisions = listener.diagnose(Thread.currentThread().getContextClassLoader());
+     *   if (!collisions.isEmpty()) {
+     *       System.err.println("Colliding artifacts: " + collisions);
+     *   }
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} to scan for artifacts
+     * @return a set of colliding artifact identifiers (e.g., "groupId:artifactId"), empty if none
+     */
     protected Set<String> diagnose(ClassLoader classLoader) {
         ArtifactDetector detector = new ArtifactDetector(classLoader);
         List<Artifact> artifacts = detector.detect(false);
@@ -113,6 +129,20 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
         return artifactsCollisionMap.keySet();
     }
 
+    /**
+     * Build a map of colliding artifacts from the given list. An artifact is considered colliding
+     * if another artifact with the same identifier (group ID and artifact ID) already exists.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactsCollisionDiagnosisListener listener = new ArtifactsCollisionDiagnosisListener();
+     *   List<Artifact> artifacts = new ArtifactDetector(classLoader).detect(false);
+     *   Map<String, Artifact> collisions = listener.getArtifactsCollisionMap(artifacts);
+     * }</pre>
+     *
+     * @param artifacts the list of detected {@link Artifact} instances
+     * @return a map of colliding artifact identifiers to their {@link Artifact} instances
+     */
     Map<String, Artifact> getArtifactsCollisionMap(List<Artifact> artifacts) {
         int size = size(artifacts);
         Map<String, Artifact> artifactsCollisionMap = newLinkedHashMap(size);

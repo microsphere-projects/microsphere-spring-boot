@@ -63,10 +63,36 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     private final BindListeners bindHandlers;
 
+    /**
+     * Constructs a {@link ListenableBindHandlerAdapter} with the default parent handler
+     * and the given bind listeners.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<BindListener> listeners = Arrays.asList(listener1, listener2);
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     * }</pre>
+     *
+     * @param bindListeners the {@link BindListener} instances to notify during binding
+     */
     public ListenableBindHandlerAdapter(Iterable<BindListener> bindListeners) {
         this(DEFAULT, bindListeners);
     }
 
+    /**
+     * Constructs a {@link ListenableBindHandlerAdapter} with the specified parent handler
+     * and the given bind listeners.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<BindListener> listeners = Arrays.asList(listener1, listener2);
+     *   ListenableBindHandlerAdapter adapter =
+     *       new ListenableBindHandlerAdapter(existingHandler, listeners);
+     * }</pre>
+     *
+     * @param parent        the parent {@link BindHandler} to delegate to
+     * @param bindListeners the {@link BindListener} instances to notify during binding
+     */
     public ListenableBindHandlerAdapter(BindHandler parent, Iterable<BindListener> bindListeners) {
         super(parent);
         this.bindHandlers = new BindListeners(bindListeners);
@@ -86,6 +112,24 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
+    /**
+     * Handles the creation of a bound object, delegating to the parent handler if the
+     * {@code onCreate} method is available (Spring Boot 2.2.2+), and notifying all
+     * registered bind listeners.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called internally by the Binder during object creation
+     *   ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
+     *   Object result = adapter.onCreate(name, target, context, boundObject);
+     * }</pre>
+     *
+     * @param name    the configuration property name being bound
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the created object
+     * @return the (possibly modified) result
+     */
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = result;
         if (onCreateMethodHandle != NOT_FOUND_METHOD_HANDLE) {

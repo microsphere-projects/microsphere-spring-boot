@@ -48,6 +48,20 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
 
     private ClassLoader classLoader;
 
+    /**
+     * Creates an {@link ArtifactsEndpoint} bean using the auto-detected bean class loader.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Auto-configured; access the endpoint via actuator:
+     *   // GET /actuator/artifacts
+     *
+     *   @Autowired
+     *   private ArtifactsEndpoint artifactsEndpoint;
+     * }</pre>
+     *
+     * @return a new {@link ArtifactsEndpoint} instance
+     */
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnAvailableEndpoint
@@ -55,6 +69,21 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         return new ArtifactsEndpoint(classLoader);
     }
 
+    /**
+     * Creates a {@link WebEndpoints} bean that aggregates all available web endpoints.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Auto-configured in web applications; access via actuator:
+     *   // GET /actuator/webEndpoints
+     *
+     *   @Autowired
+     *   private WebEndpoints webEndpoints;
+     * }</pre>
+     *
+     * @param webEndpointsSupplier the supplier of web endpoint instances
+     * @return a new {@link WebEndpoints} instance
+     */
     @Bean
     @ConditionalOnMissingBean
     @ConditionalOnWebApplication
@@ -66,18 +95,56 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     @ConditionalOnConfigurationProcessorPresent
     static class ConfigurationProcessorConfiguration {
 
+        /**
+         * Creates a {@link ConfigurationMetadataReader} bean for reading Spring Boot
+         * configuration metadata JSON files.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   @Autowired
+         *   private ConfigurationMetadataReader configurationMetadataReader;
+         * }</pre>
+         *
+         * @return a new {@link ConfigurationMetadataReader} instance
+         */
         @Bean
         @ConditionalOnMissingBean
         public ConfigurationMetadataReader configurationMetadataReader() {
             return new ConfigurationMetadataReader();
         }
 
+        /**
+         * Creates a {@link ConfigurationMetadataRepository} bean backed by the given
+         * {@link ConfigurationMetadataReader}.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   @Autowired
+         *   private ConfigurationMetadataRepository configurationMetadataRepository;
+         * }</pre>
+         *
+         * @param configurationMetadataReader the reader used to load configuration metadata
+         * @return a new {@link ConfigurationMetadataRepository} instance
+         */
         @Bean
         @ConditionalOnMissingBean
         public ConfigurationMetadataRepository configurationMetadataRepository(ConfigurationMetadataReader configurationMetadataReader) {
             return new ConfigurationMetadataRepository(configurationMetadataReader);
         }
 
+        /**
+         * Creates a {@link ConfigurationMetadataEndpoint} bean exposing configuration metadata
+         * via the actuator.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   // Access the endpoint via actuator:
+         *   // GET /actuator/configMetadata
+         * }</pre>
+         *
+         * @param configurationMetadataRepository the repository providing configuration metadata
+         * @return a new {@link ConfigurationMetadataEndpoint} instance
+         */
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnAvailableEndpoint
@@ -85,6 +152,19 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
             return new ConfigurationMetadataEndpoint(configurationMetadataRepository);
         }
 
+        /**
+         * Creates a {@link ConfigurationPropertiesEndpoint} bean exposing configuration
+         * properties via the actuator.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   // Access the endpoint via actuator:
+         *   // GET /actuator/configProperties
+         * }</pre>
+         *
+         * @param configurationMetadataRepository the repository providing configuration metadata
+         * @return a new {@link ConfigurationPropertiesEndpoint} instance
+         */
         @Bean
         @ConditionalOnMissingBean
         @ConditionalOnAvailableEndpoint
@@ -93,6 +173,18 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         }
     }
 
+    /**
+     * Sets the bean {@link ClassLoader} used for artifact detection in
+     * the {@link ArtifactsEndpoint}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Automatically called by the Spring container for BeanClassLoaderAware beans.
+     *   // No manual invocation is needed when using Spring's lifecycle management.
+     * }</pre>
+     *
+     * @param classLoader the class loader provided by the Spring container
+     */
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {
         this.classLoader = classLoader;

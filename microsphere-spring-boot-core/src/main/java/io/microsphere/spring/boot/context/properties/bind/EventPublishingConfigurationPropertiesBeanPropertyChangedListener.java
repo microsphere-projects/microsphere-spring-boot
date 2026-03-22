@@ -81,6 +81,21 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         }
     }
 
+    /**
+     * Initializes the {@link ConfigurationPropertiesBeanContext} for the bean being bound,
+     * capturing the initial property values before binding proceeds.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called internally during binding lifecycle
+     *   ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
+     *   listener.initConfigurationPropertiesBeanContext(name, target, context);
+     * }</pre>
+     *
+     * @param name    the configuration property name being bound
+     * @param target  the bindable target
+     * @param context the bind context
+     */
     void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
         if (isConfigurationPropertiesBean(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
@@ -102,6 +117,22 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         });
     }
 
+    /**
+     * Sets a property on the {@link ConfigurationPropertiesBeanContext}, triggering a
+     * {@link ConfigurationPropertiesBeanPropertyChangedEvent} if the value has changed.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called internally when a bound property value is successfully resolved
+     *   ConfigurationPropertyName name = ConfigurationPropertyName.of("server.port");
+     *   listener.setConfigurationPropertiesBeanProperty(name, target, context, 8080);
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the bound property value
+     */
     void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         ConfigurationProperty property = context.getConfigurationProperty();
         if (property != null && isBoundProperty(context)) {
@@ -134,6 +165,21 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         bound = true;
     }
 
+    /**
+     * Returns whether all singleton beans have been instantiated and the initial binding
+     * phase is complete. When {@code true}, subsequent bind events represent runtime
+     * property changes rather than initial configuration.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   if (listener.isBound()) {
+     *       // initial binding is complete — property changes are runtime updates
+     *   }
+     * }</pre>
+     *
+     * @return {@code true} if the initial binding phase is complete, {@code false} otherwise
+     */
     public boolean isBound() {
         return bound;
     }
