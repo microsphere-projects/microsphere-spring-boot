@@ -37,22 +37,67 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  */
 public class LoggingSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
+    /**
+     * Construct a new {@link LoggingSpringApplicationRunListener}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Typically instantiated by Spring Boot via spring.factories
+     *   // io.microsphere.spring.boot.listener.LoggingSpringApplicationRunListener
+     *   SpringApplication app = new SpringApplication(MyApplication.class);
+     *   app.run(args);
+     * }</pre>
+     *
+     * @param springApplication the {@link SpringApplication} instance
+     * @param args the command line arguments
+     */
     public LoggingSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);
     }
 
+    /**
+     * Logs the starting phase of the application with the given bootstrap context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot during the starting phase.
+     *   // It logs: "starting... : {bootstrapContext}"
+     * }</pre>
+     *
+     * @param bootstrapContext the {@link ConfigurableBootstrapContext}
+     */
     @Override
     public void starting(ConfigurableBootstrapContext bootstrapContext) {
         super.starting(bootstrapContext);
         log(getSpringApplication(), getArgs(), "starting... : {}", bootstrapContext);
     }
 
+    /**
+     * Logs the starting phase of the application (legacy callback without bootstrap context).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot during the starting phase.
+     *   // It logs: "starting..."
+     * }</pre>
+     */
     @Override
     public void starting() {
         super.starting();
         log(getSpringApplication(), getArgs(), "starting...");
     }
 
+    /**
+     * Logs that the {@link ConfigurableEnvironment} has been prepared.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot after environment preparation.
+     *   // It logs: "environmentPrepared : {environment}"
+     * }</pre>
+     *
+     * @param environment the prepared {@link ConfigurableEnvironment}
+     */
     @Override
     public void environmentPrepared(ConfigurableEnvironment environment) {
         super.environmentPrepared(environment);
@@ -60,6 +105,17 @@ public class LoggingSpringApplicationRunListener extends SpringApplicationRunLis
 
     }
 
+    /**
+     * Logs that the {@link ConfigurableApplicationContext} has been prepared.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot after context preparation.
+     *   // It logs: "contextPrepared : {context}"
+     * }</pre>
+     *
+     * @param context the prepared {@link ConfigurableApplicationContext}
+     */
     @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
         super.contextPrepared(context);
@@ -67,12 +123,34 @@ public class LoggingSpringApplicationRunListener extends SpringApplicationRunLis
 
     }
 
+    /**
+     * Logs that the {@link ConfigurableApplicationContext} has been loaded with bean definitions.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot after context loading.
+     *   // It logs: "contextLoaded : {context}"
+     * }</pre>
+     *
+     * @param context the loaded {@link ConfigurableApplicationContext}
+     */
     @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
         super.contextLoaded(context);
         log(getSpringApplication(), getArgs(), context, "contextLoaded : {}", context);
     }
 
+    /**
+     * Logs that the application context has been started.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot after the context is started.
+     *   // It logs: "started : {context}"
+     * }</pre>
+     *
+     * @param context the started {@link ConfigurableApplicationContext}
+     */
     @Override
     public void started(ConfigurableApplicationContext context) {
         super.started(context);
@@ -80,12 +158,35 @@ public class LoggingSpringApplicationRunListener extends SpringApplicationRunLis
 
     }
 
+    /**
+     * Logs that the application is fully running.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot when the application is running.
+     *   // It logs: "running : {context}"
+     * }</pre>
+     *
+     * @param context the running {@link ConfigurableApplicationContext}
+     */
     @Override
     public void running(ConfigurableApplicationContext context) {
         super.running(context);
         log(getSpringApplication(), getArgs(), context, "running : {}", context);
     }
 
+    /**
+     * Logs that the application has failed to start with the given exception.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot when the application fails.
+     *   // It logs: "failed : {exception}"
+     * }</pre>
+     *
+     * @param context   the {@link ConfigurableApplicationContext}, may be {@code null}
+     * @param exception the exception that caused the failure
+     */
     @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
         super.failed(context, exception);

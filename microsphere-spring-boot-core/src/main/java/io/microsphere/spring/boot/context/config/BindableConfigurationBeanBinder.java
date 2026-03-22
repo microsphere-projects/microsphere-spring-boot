@@ -58,11 +58,41 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
 
     private ConversionService conversionService;
 
+    /**
+     * Sets the {@link ConversionService} used during property binding to convert
+     * property values to the target types.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   BindableConfigurationBeanBinder binder = new BindableConfigurationBeanBinder();
+     *   binder.setConversionService(new DefaultConversionService());
+     * }</pre>
+     *
+     * @param conversionService the conversion service to use
+     */
     @Override
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 
+    /**
+     * Binds the given configuration properties to the specified bean using Spring Boot's
+     * {@link Binder}. Unknown and invalid fields can be optionally ignored.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Map<String, Object> properties = new HashMap<>();
+     *   properties.put("name", "demo");
+     *   MyBean bean = new MyBean();
+     *   binder.bind(properties, true, true, bean);
+     *   // bean.getName() returns "demo"
+     * }</pre>
+     *
+     * @param configurationProperties the configuration properties to bind
+     * @param ignoreUnknownFields     whether to ignore unknown fields
+     * @param ignoreInvalidFields     whether to ignore invalid fields
+     * @param configurationBean       the target bean to bind properties to
+     */
     @Override
     public void bind(Map<String, Object> configurationProperties, boolean ignoreUnknownFields,
                      boolean ignoreInvalidFields, Object configurationBean) {
