@@ -38,15 +38,54 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
 
     private final BindListeners bindHandlers;
 
+    /**
+     * Constructs a {@link ListenableBindHandlerAdapter} with the default parent {@link BindHandler}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<BindListener> listeners = Arrays.asList(myListener);
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     * }</pre>
+     *
+     * @param bindListeners the {@link BindListener} instances to delegate to
+     */
     public ListenableBindHandlerAdapter(Iterable<BindListener> bindListeners) {
         this(DEFAULT, bindListeners);
     }
 
+    /**
+     * Constructs a {@link ListenableBindHandlerAdapter} with the specified parent {@link BindHandler}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   List<BindListener> listeners = Arrays.asList(myListener);
+     *   BindHandler parent = new AbstractBindHandler() {};
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(parent, listeners);
+     * }</pre>
+     *
+     * @param parent        the parent {@link BindHandler} to delegate to
+     * @param bindListeners the {@link BindListener} instances to delegate to
+     */
     public ListenableBindHandlerAdapter(BindHandler parent, Iterable<BindListener> bindListeners) {
         super(parent);
         this.bindHandlers = new BindListeners(bindListeners);
     }
 
+    /**
+     * Delegates to the parent handler's {@code onStart} and then notifies all registered {@link BindListener}s.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     *   Bindable<MyBean> target = Bindable.of(MyBean.class);
+     *   adapter.onStart(ConfigurationPropertyName.of("app"), target, context);
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @return the bindable result from the parent handler
+     */
     @Override
     public <T> Bindable<T> onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
         Bindable<T> result = super.onStart(name, target, context);
@@ -54,6 +93,22 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return result;
     }
 
+    /**
+     * Delegates to the parent handler's {@code onSuccess} and then notifies all registered {@link BindListener}s.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     *   Object result = adapter.onSuccess(
+     *       ConfigurationPropertyName.of("app.name"), Bindable.of(String.class), context, "value");
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the bound result value
+     * @return the result from the parent handler
+     */
     @Override
     public Object onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = super.onSuccess(name, target, context, result);
@@ -61,6 +116,22 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
+    /**
+     * Delegates to the parent handler's {@code onCreate} and then notifies all registered {@link BindListener}s.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     *   Object created = adapter.onCreate(
+     *       ConfigurationPropertyName.of("app"), Bindable.of(MyBean.class), context, new MyBean());
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the created object
+     * @return the result from the parent handler
+     */
     @Override
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = super.onCreate(name, target, context, result);
@@ -68,6 +139,28 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         return returnValue;
     }
 
+    /**
+     * Delegates to the parent handler's {@code onFailure} and notifies all registered {@link BindListener}s
+     * if the parent throws an exception.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     *   try {
+     *       adapter.onFailure(ConfigurationPropertyName.of("app.name"),
+     *           Bindable.of(String.class), context, new RuntimeException("bind error"));
+     *   } catch (Exception e) {
+     *       // handle failure
+     *   }
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param error   the exception that occurred during binding
+     * @return the result from the parent handler
+     * @throws Exception if the parent handler rethrows or throws a new exception
+     */
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
         try {
@@ -78,6 +171,21 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
         }
     }
 
+    /**
+     * Delegates to the parent handler's {@code onFinish} and then notifies all registered {@link BindListener}s.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ListenableBindHandlerAdapter adapter = new ListenableBindHandlerAdapter(listeners);
+     *   adapter.onFinish(ConfigurationPropertyName.of("app"), Bindable.of(MyBean.class), context, myBean);
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the bound result value
+     * @throws Exception if an error occurs during finish processing
+     */
     @Override
     public void onFinish(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) throws Exception {
         super.onFinish(name, target, context, result);

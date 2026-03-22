@@ -42,6 +42,24 @@ import static org.springframework.core.annotation.AnnotationAttributes.fromMap;
  */
 class OnPropertyPrefixCondition extends SpringBootCondition {
 
+    /**
+     * Evaluates whether properties with the specified prefix exist in the {@link ConfigurableEnvironment}.
+     * Returns a match if at least one property name starts with any of the configured prefix values.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This condition is used with @ConditionalOnPropertyPrefix:
+     *   @Configuration
+     *   @ConditionalOnPropertyPrefix("my.custom.prefix")
+     *   public class MyAutoConfiguration {
+     *       // beans defined here
+     *   }
+     * }</pre>
+     *
+     * @param context  the {@link ConditionContext}
+     * @param metadata the {@link AnnotatedTypeMetadata} of the annotated class or method
+     * @return the {@link ConditionOutcome} indicating whether the condition matches
+     */
     @Override
     public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 

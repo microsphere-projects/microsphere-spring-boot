@@ -38,6 +38,16 @@ public class WebEndpoints {
 
     private final WebEndpointsSupplier webEndpointsSupplier;
 
+    /**
+     * Constructs a new {@link WebEndpoints} aggregation endpoint with the given {@link WebEndpointsSupplier}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   WebEndpoints webEndpoints = new WebEndpoints(webEndpointsSupplier);
+     * }</pre>
+     *
+     * @param webEndpointsSupplier the supplier providing the collection of {@link ExposableWebEndpoint} instances
+     */
     public WebEndpoints(WebEndpointsSupplier webEndpointsSupplier) {
         this.webEndpointsSupplier = webEndpointsSupplier;
     }
@@ -81,10 +91,33 @@ public class WebEndpoints {
         return new InvocationContext(NONE, emptyMap());
     }
 
+    /**
+     * Determines whether the given {@link ExposableWebEndpoint} is a {@link DiscoveredEndpoint}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean exposable = WebEndpoints.isExposableWebEndpoint(webEndpoint);
+     * }</pre>
+     *
+     * @param webEndpoint the {@link ExposableWebEndpoint} to check
+     * @return {@code true} if the endpoint is a {@link DiscoveredEndpoint}, {@code false} otherwise
+     */
     static boolean isExposableWebEndpoint(ExposableWebEndpoint webEndpoint) {
         return webEndpoint instanceof DiscoveredEndpoint;
     }
 
+    /**
+     * Determines whether the given {@link WebOperation} is a candidate for read invocation,
+     * i.e., it is a discovered {@link ReadOperation} with no parameters.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean candidate = WebEndpoints.isReadWebOperationCandidate(webOperation);
+     * }</pre>
+     *
+     * @param webOperation the {@link WebOperation} to evaluate
+     * @return {@code true} if the operation is a parameterless read operation, {@code false} otherwise
+     */
     static boolean isReadWebOperationCandidate(WebOperation webOperation) {
         if (webOperation instanceof AbstractDiscoveredOperation) {
             AbstractDiscoveredOperation discoveredOperation = (AbstractDiscoveredOperation) webOperation;
