@@ -48,10 +48,33 @@ public class ConfigurationPropertiesEndpoint {
 
     private final ConfigurationMetadataRepository configurationMetadataRepository;
 
+    /**
+     * Constructs a new {@link ConfigurationPropertiesEndpoint} with the given {@link ConfigurationMetadataRepository}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationMetadataRepository repository = new ConfigurationMetadataRepository(reader);
+     *   ConfigurationPropertiesEndpoint endpoint = new ConfigurationPropertiesEndpoint(repository);
+     * }</pre>
+     *
+     * @param configurationMetadataRepository the {@link ConfigurationMetadataRepository} to use
+     */
     public ConfigurationPropertiesEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
         this.configurationMetadataRepository = configurationMetadataRepository;
     }
 
+    /**
+     * Returns a {@link ConfigurationPropertiesDescriptor} containing all resolved configuration properties,
+     * loaded from both service loaders and the {@link ConfigurationMetadataRepository}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesEndpoint endpoint = new ConfigurationPropertiesEndpoint(repository);
+     *   ConfigurationPropertiesDescriptor descriptor = endpoint.getConfigurationProperties();
+     * }</pre>
+     *
+     * @return a {@link ConfigurationPropertiesDescriptor} with all configuration properties
+     */
     @ReadOperation
     public ConfigurationPropertiesDescriptor getConfigurationProperties() {
         ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
@@ -98,15 +121,49 @@ public class ConfigurationPropertiesEndpoint {
     }
 
 
+    /**
+     * Descriptor class that holds a collection of {@link ConfigurationProperty} instances,
+     * implementing {@link OperationResponseBody} for actuator endpoint serialization.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
+     *   descriptor.addConfigurationProperties(propertiesList);
+     *   List<ConfigurationProperty> all = descriptor.getConfigurationProperties();
+     * }</pre>
+     */
     public static class ConfigurationPropertiesDescriptor implements OperationResponseBody {
 
         private final List<ConfigurationProperty> configurationProperties = new LinkedList<>();
 
+        /**
+         * Returns the accumulated list of {@link ConfigurationProperty} instances.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
+         *   List<ConfigurationProperty> properties = descriptor.getConfigurationProperties();
+         * }</pre>
+         *
+         * @return a non-null {@link List} of {@link ConfigurationProperty}
+         */
         @Nonnull
         public List<ConfigurationProperty> getConfigurationProperties() {
             return configurationProperties;
         }
 
+        /**
+         * Adds the given list of {@link ConfigurationProperty} instances to this descriptor.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationPropertiesDescriptor descriptor = new ConfigurationPropertiesDescriptor();
+         *   descriptor.addConfigurationProperties(loadedProperties);
+         * }</pre>
+         *
+         * @param configurationProperties the {@link List} of {@link ConfigurationProperty} to add
+         * @return this descriptor for fluent chaining
+         */
         ConfigurationPropertiesDescriptor addConfigurationProperties(List<ConfigurationProperty> configurationProperties) {
             this.configurationProperties.addAll(configurationProperties);
             return this;

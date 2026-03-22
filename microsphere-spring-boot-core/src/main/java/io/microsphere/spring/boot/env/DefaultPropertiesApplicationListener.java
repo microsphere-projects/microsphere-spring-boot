@@ -84,6 +84,19 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
         this.setOrder(DEFAULT_ORDER);
     }
 
+    /**
+     * Handles the {@link ApplicationEnvironmentPreparedEvent} by processing and merging
+     * default properties from various sources into the Spring Boot application environment.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   // Typically invoked automatically by the Spring event system:
+     *   listener.onApplicationEvent(applicationEnvironmentPreparedEvent);
+     * }</pre>
+     *
+     * @param event the {@link ApplicationEnvironmentPreparedEvent} indicating the environment is prepared
+     */
     @Override
     public void onApplicationEvent(ApplicationEnvironmentPreparedEvent event) {
         ConfigurableEnvironment environment = event.getEnvironment();
@@ -192,11 +205,34 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
         });
     }
 
+    /**
+     * Returns the order value of this listener. Lower values have higher priority.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   int order = listener.getOrder();
+     *   System.out.println("Listener order: " + order);
+     * }</pre>
+     *
+     * @return the order value of this listener
+     */
     @Override
     public int getOrder() {
         return order;
     }
 
+    /**
+     * Sets the order value of this listener. Lower values have higher priority.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   listener.setOrder(Ordered.HIGHEST_PRECEDENCE);
+     * }</pre>
+     *
+     * @param order the order value to set
+     */
     public void setOrder(int order) {
         this.order = order;
     }
