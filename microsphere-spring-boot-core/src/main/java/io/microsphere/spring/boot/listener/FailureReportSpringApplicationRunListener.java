@@ -14,6 +14,20 @@ import java.io.PrintStream;
  */
 public class FailureReportSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
+    /**
+     * Construct a new {@link FailureReportSpringApplicationRunListener} for failure reporting.
+     * When the application fails to start, the failure details are printed to {@link System#err}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Typically registered in META-INF/spring.factories:
+     *   // org.springframework.boot.SpringApplicationRunListener=\
+     *   //   io.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
+     * }</pre>
+     *
+     * @param springApplication the {@link SpringApplication} instance
+     * @param args the command line arguments
+     */
     public FailureReportSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);
     }
