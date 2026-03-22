@@ -60,11 +60,39 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
         addShutdownHookCallback(processedMap::clear);
     }
 
+    /**
+     * Constructs a new {@link BannedArtifactClassLoadingListener} with the given
+     * {@link SpringApplication} and optional command-line arguments. The listener is
+     * assigned the {@link Ordered#HIGHEST_PRECEDENCE highest precedence} order.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringApplication app = new SpringApplication(MyApplication.class);
+     *   BannedArtifactClassLoadingListener listener =
+     *       new BannedArtifactClassLoadingListener(app, args);
+     * }</pre>
+     *
+     * @param springApplication the Spring Boot application instance
+     * @param args              the command-line arguments
+     */
     public BannedArtifactClassLoadingListener(SpringApplication springApplication, String... args) {
         super(springApplication, args);
         setOrder(HIGHEST_PRECEDENCE);
     }
 
+    /**
+     * Called when the application is starting. If the
+     * {@link #BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME banned-artifacts.enabled} system
+     * property is {@code true}, banned artifacts are detected and excluded from class loading.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   System.setProperty("microsphere.spring.boot.banned-artifacts.enabled", "true");
+     *   BannedArtifactClassLoadingListener listener =
+     *       new BannedArtifactClassLoadingListener(app, args);
+     *   listener.starting(); // triggers artifact banning
+     * }</pre>
+     */
     @Override
     public void starting() {
         if (isProcessed()) {

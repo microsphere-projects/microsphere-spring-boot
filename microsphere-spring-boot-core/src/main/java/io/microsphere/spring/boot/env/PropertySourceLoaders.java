@@ -72,19 +72,67 @@ public class PropertySourceLoaders implements PropertySourceLoader {
 
     private final List<PropertySourceLoader> loaders;
 
+    /**
+     * Constructs a new {@link PropertySourceLoaders} using the
+     * {@linkplain io.microsphere.util.ClassLoaderUtils#getDefaultClassLoader() default ClassLoader}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertySourceLoaders loaders = new PropertySourceLoaders();
+     *   List<PropertySource<?>> sources = loaders.load("test",
+     *       new ClassPathResource("test.properties"));
+     * }</pre>
+     */
     public PropertySourceLoaders() {
         this(getDefaultClassLoader());
     }
 
+    /**
+     * Constructs a new {@link PropertySourceLoaders} using the given {@link ClassLoader}
+     * to discover {@link PropertySourceLoader} factories.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+     *   PropertySourceLoaders loaders = new PropertySourceLoaders(classLoader);
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} used to load {@link PropertySourceLoader} factories
+     */
     public PropertySourceLoaders(ClassLoader classLoader) {
         this(new DefaultResourceLoader(classLoader));
     }
 
+    /**
+     * Constructs a new {@link PropertySourceLoaders} using the given {@link ResourceLoader}
+     * and its associated {@link ClassLoader} to discover {@link PropertySourceLoader} factories.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ResourceLoader resourceLoader = new DefaultResourceLoader();
+     *   PropertySourceLoaders loaders = new PropertySourceLoaders(resourceLoader);
+     * }</pre>
+     *
+     * @param resourceLoader the {@link ResourceLoader} used for resource resolution and factory loading
+     */
     public PropertySourceLoaders(ResourceLoader resourceLoader) {
         this.resourceLoader = resourceLoader;
         this.loaders = loadFactories(PropertySourceLoader.class, resourceLoader.getClassLoader());
     }
 
+    /**
+     * Returns the aggregated file extensions supported by all underlying
+     * {@link PropertySourceLoader} instances (e.g. {@code "properties"}, {@code "yml"}).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertySourceLoaders loaders = new PropertySourceLoaders();
+     *   String[] extensions = loaders.getFileExtensions();
+     *   // e.g. ["properties", "xml", "yml", "yaml"]
+     * }</pre>
+     *
+     * @return an array of supported file extensions
+     */
     @Override
     public String[] getFileExtensions() {
         String[] fileExtensions = loaders.stream()
@@ -95,6 +143,23 @@ public class PropertySourceLoaders implements PropertySourceLoader {
         return fileExtensions;
     }
 
+    /**
+     * Loads {@link PropertySource property sources} from the given {@link Resource} by
+     * delegating to every underlying {@link PropertySourceLoader} whose supported file
+     * extensions match the resource URL.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertySourceLoaders loaders = new PropertySourceLoaders();
+     *   Resource resource = new ClassPathResource("test.properties");
+     *   List<PropertySource<?>> sources = loaders.load("test", resource);
+     * }</pre>
+     *
+     * @param name     the root name of the {@link PropertySource}
+     * @param resource the {@link Resource} to load properties from
+     * @return a list of loaded {@link PropertySource} instances (may be empty)
+     * @throws IOException if an I/O error occurs while reading the resource
+     */
     @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
         List<PropertySource<?>> propertySources = new LinkedList<>();

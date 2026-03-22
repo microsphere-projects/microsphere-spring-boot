@@ -79,6 +79,16 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     private int order;
 
+    /**
+     * Constructs a new {@link DefaultPropertiesApplicationListener} with the
+     * {@link #DEFAULT_ORDER default order}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   listener.onApplicationEvent(event);
+     * }</pre>
+     */
     public DefaultPropertiesApplicationListener() {
         this.setOrder(DEFAULT_ORDER);
     }
@@ -191,11 +201,33 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
         });
     }
 
+    /**
+     * Returns the order value of this listener.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   int order = listener.getOrder(); // DEFAULT_ORDER (Ordered.LOWEST_PRECEDENCE - 1)
+     * }</pre>
+     *
+     * @return the order value
+     */
     @Override
     public int getOrder() {
         return order;
     }
 
+    /**
+     * Sets the order value of this listener.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   listener.setOrder(Ordered.HIGHEST_PRECEDENCE);
+     * }</pre>
+     *
+     * @param order the order value to set
+     */
     public void setOrder(int order) {
         this.order = order;
     }

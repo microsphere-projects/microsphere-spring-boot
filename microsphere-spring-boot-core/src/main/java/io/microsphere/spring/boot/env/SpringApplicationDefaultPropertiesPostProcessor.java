@@ -38,6 +38,22 @@ public class SpringApplicationDefaultPropertiesPostProcessor implements DefaultP
      */
     public static final String DEFAULT_PROPERTIES_RESOURCES_PATTERN = CLASSPATH_ALL_URL_PREFIX + "/META-INF/config/default/*.*";
 
+    /**
+     * Initializes the default properties resources by adding the
+     * {@link #DEFAULT_PROPERTIES_RESOURCES_PATTERN wildcard pattern} that loads all property
+     * files under {@code /META-INF/config/default/}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Set<String> resources = new LinkedHashSet<>();
+     *   SpringApplicationDefaultPropertiesPostProcessor processor =
+     *       new SpringApplicationDefaultPropertiesPostProcessor();
+     *   processor.initializeResources(resources);
+     *   // resources now contains "classpath*:/META-INF/config/default/*.*"
+     * }</pre>
+     *
+     * @param defaultPropertiesResources the mutable set of resource location patterns to populate
+     */
     @Override
     public void initializeResources(Set<String> defaultPropertiesResources) {
         // Loads all PropertySource Class-Path resources with the wildcard pattern "/config/default/*.*"
