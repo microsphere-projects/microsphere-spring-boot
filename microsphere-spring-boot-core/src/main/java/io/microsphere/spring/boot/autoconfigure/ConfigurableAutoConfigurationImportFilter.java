@@ -170,6 +170,21 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
             return null;
         }
 
+        /**
+         * Adds the given auto-configuration class names to the exclusion set.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ExcludedAutoConfigurationClassPropertySource source =
+         *       ExcludedAutoConfigurationClassPropertySource.get(environment);
+         *   source.addClasses(Arrays.asList(
+         *       "com.example.FooAutoConfiguration",
+         *       "com.example.BarAutoConfiguration"
+         *   ));
+         * }</pre>
+         *
+         * @param classNames the auto-configuration class names to exclude
+         */
         public void addClasses(Iterable<String> classNames) {
             Set<String> allClassNames = this.source;
             classNames.forEach(allClassNames::add);

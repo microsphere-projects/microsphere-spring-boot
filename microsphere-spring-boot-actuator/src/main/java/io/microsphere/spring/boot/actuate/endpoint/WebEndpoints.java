@@ -55,9 +55,21 @@ public class WebEndpoints {
     }
 
     /**
-     * all {@link OperationType#READ Read Opeartion} {@link WebEndpoint WebEndpoints} for Java {@link Method} without arguments
+     * Invokes all {@link OperationType#READ Read Operation} {@link WebEndpoint WebEndpoints} for Java {@link Method}
+     * without arguments and returns the aggregated results.
      *
-     * @return
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Access via actuator HTTP endpoint:
+     *   // GET /actuator/webEndpoints
+     *   //
+     *   // Programmatic usage:
+     *   WebEndpoints webEndpoints = new WebEndpoints(webEndpointsSupplier);
+     *   Map<String, Object> results = webEndpoints.invokeReadOperations();
+     *   results.forEach((id, result) -> System.out.println(id + " = " + result));
+     * }</pre>
+     *
+     * @return a {@link Map} of read operation IDs to their results
      */
     @ReadOperation
     public Map<String, Object> invokeReadOperations() {

@@ -143,8 +143,47 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
         logger.trace("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
     }
 
+    /**
+     * Determines whether the given {@link ApplicationPreparedEvent} should be ignored.
+     * Subclasses implement this to define custom filtering logic.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   public class MyListener extends OnceApplicationPreparedEventListener {
+     *       protected boolean isIgnored(SpringApplication app, String[] args,
+     *               ConfigurableApplicationContext context) {
+     *           // Only handle non-bootstrap contexts
+     *           return "bootstrap".equals(context.getId());
+     *       }
+     *   }
+     * }</pre>
+     *
+     * @param springApplication the current {@link SpringApplication}
+     * @param args              the application arguments
+     * @param context           the application context being prepared
+     * @return {@code true} if the event should be ignored, {@code false} otherwise
+     */
     protected abstract boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
+    /**
+     * Handles the {@link ApplicationPreparedEvent} for the given context. This method is
+     * called at most once per context ID.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   public class MyListener extends OnceApplicationPreparedEventListener {
+     *       protected void onApplicationEvent(SpringApplication app, String[] args,
+     *               ConfigurableApplicationContext context) {
+     *           // Register custom beans or perform initialization
+     *           context.getBeanFactory().registerSingleton("myBean", new MyBean());
+     *       }
+     *   }
+     * }</pre>
+     *
+     * @param springApplication the current {@link SpringApplication}
+     * @param args              the application arguments
+     * @param context           the application context being prepared
+     */
     protected abstract void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context);
 
     /**

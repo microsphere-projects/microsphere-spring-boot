@@ -127,21 +127,68 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
+    /**
+     * Returns the configuration properties prefix associated with this bean context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   String prefix = ctx.getPrefix(); // e.g., "server", "spring.datasource"
+     * }</pre>
+     *
+     * @return the property name prefix, never {@code null}
+     */
     @Nonnull
     public String getPrefix() {
         return prefix;
     }
 
+    /**
+     * Returns the class of the {@link ConfigurationProperties} bean managed by this context.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Class<?> beanClass = ctx.getBeanClass(); // e.g., ServerProperties.class
+     * }</pre>
+     *
+     * @return the bean class, never {@code null}
+     */
     @Nonnull
     public Class<?> getBeanClass() {
         return initializedBeanWrapper.getWrappedClass();
     }
 
+    /**
+     * Retrieves the current value of the specified property from the initialized bean.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Object port = ctx.getPropertyValue("port"); // e.g., 8080
+     * }</pre>
+     *
+     * @param name the property name
+     * @return the property value, or {@code null} if not set
+     */
     @Nullable
     public Object getPropertyValue(String name) {
         return initializedBeanWrapper.getPropertyValue(name);
     }
 
+    /**
+     * Returns the initialized bean instance managed by this context. This is a snapshot
+     * of the bean with its initial property values set at creation time.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   Object bean = ctx.getInitializedBean();
+     *   // Use the bean to compare old vs new property values
+     * }</pre>
+     *
+     * @return the initialized bean instance, never {@code null}
+     */
     @Nonnull
     public Object getInitializedBean() {
         return this.initializedBeanWrapper.getWrappedInstance();

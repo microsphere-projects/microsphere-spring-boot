@@ -52,6 +52,27 @@ public abstract class OnceMainApplicationPreparedEventListener extends OnceAppli
      */
     static final String DEFAULT_BOOTSTRAP_CONTEXT_ID = "bootstrap";
 
+    /**
+     * Determines whether the given {@link ApplicationPreparedEvent} should be ignored by
+     * delegating to {@link #isIgnored(ConfigurableApplicationContext)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called internally by OnceApplicationPreparedEventListener.
+     *   // Override isIgnored(ConfigurableApplicationContext) instead for custom logic:
+     *   public class MyMainListener extends OnceMainApplicationPreparedEventListener {
+     *       protected void onApplicationEvent(SpringApplication app, String[] args,
+     *               ConfigurableApplicationContext context) {
+     *           // handle event for main application context only
+     *       }
+     *   }
+     * }</pre>
+     *
+     * @param springApplication the current {@link SpringApplication}
+     * @param args              the application arguments
+     * @param context           the application context being prepared
+     * @return {@code true} if the event should be ignored
+     */
     protected final boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
         return isIgnored(context);
     }
