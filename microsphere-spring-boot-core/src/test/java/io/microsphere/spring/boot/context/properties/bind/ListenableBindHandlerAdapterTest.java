@@ -114,11 +114,11 @@ class ListenableBindHandlerAdapterTest {
         assertThrows(Exception.class, () -> this.binder.bind("", this.bindable, createBinder(createBindHandler(false, false))));
     }
 
-    ListenableBindHandlerAdapter createBinder(BindListener... bindListeners) {
+    BindHandler createBinder(BindListener... bindListeners) {
         return new ListenableBindHandlerAdapter(ofList(bindListeners));
     }
 
-    ListenableBindHandlerAdapter createBinder(BindHandler parent, BindListener... bindListeners) {
+    BindHandler createBinder(BindHandler parent, BindListener... bindListeners) {
         return new ListenableBindHandlerAdapter(parent, ofList(bindListeners));
     }
 }
