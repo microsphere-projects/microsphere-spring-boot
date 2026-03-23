@@ -31,6 +31,7 @@ import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindHandlerUtils.createBindHandler;
+import static io.microsphere.util.StringUtils.EMPTY_STRING;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertySources.from;
 
@@ -59,23 +60,39 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
 
     /**
      * Sets the {@link ConversionService} used during property binding to convert
-     * configuration values to the appropriate target types.
+     * property values to the target types.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   BindableConfigurationBeanBinder binder = new BindableConfigurationBeanBinder();
-     *   binder.setConversionService(environment.getConversionService());
-     *   User user = new User();
-     *   binder.bind(properties, true, true, user);
+     *   binder.setConversionService(new DefaultConversionService());
      * }</pre>
      *
-     * @param conversionService the {@link ConversionService} to use for type conversion
+     * @param conversionService the conversion service to use
      */
     @Override
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }
 
+    /**
+     * Binds the given configuration properties to the specified bean using Spring Boot's
+     * {@link Binder}. Unknown and invalid fields can be optionally ignored.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Map<String, Object> properties = new HashMap<>();
+     *   properties.put("name", "demo");
+     *   MyBean bean = new MyBean();
+     *   binder.bind(properties, true, true, bean);
+     *   // bean.getName() returns "demo"
+     * }</pre>
+     *
+     * @param configurationProperties the configuration properties to bind
+     * @param ignoreUnknownFields     whether to ignore unknown fields
+     * @param ignoreInvalidFields     whether to ignore invalid fields
+     * @param configurationBean       the target bean to bind properties to
+     */
     @Override
     public void bind(Map<String, Object> configurationProperties, boolean ignoreUnknownFields,
                      boolean ignoreInvalidFields, Object configurationBean) {
@@ -94,6 +111,6 @@ public class BindableConfigurationBeanBinder implements ConfigurationBeanBinder 
         BindHandler bindHandler = createBindHandler(ignoreUnknownFields, ignoreInvalidFields);
 
         // Bind
-        binder.bind("", bindable, bindHandler);
+        binder.bind(EMPTY_STRING, bindable, bindHandler);
     }
 }

@@ -85,9 +85,9 @@ public abstract class ConfigurationPropertyUtils {
      * }</pre>
      *
      * @param name the source name
-     * @return the dashed form
+     * @return the dashed from
      * @see org.springframework.boot.context.properties.bind.BeanPropertyName
-     * @see org.springframework.boot.context.properties.bind.DataObjectPropertyName
+     * @see org.springframework.boot.context.properties.bind.DataObjectPropertyName#toDashedForm(String)
      */
     public static String toDashedForm(String name) {
         if (DATA_OBJECT_PROPERTY_NAME_CLASS != null) {
