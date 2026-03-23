@@ -48,10 +48,36 @@ public class MonitoredThreadPoolTaskScheduler extends ThreadPoolTaskScheduler im
 
     private DelegatingScheduledExecutorService delegate;
 
+    /**
+     * Constructs a new {@link MonitoredThreadPoolTaskScheduler} instance, delegating to the
+     * parent {@link ThreadPoolTaskScheduler} constructor.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   MonitoredThreadPoolTaskScheduler scheduler = new MonitoredThreadPoolTaskScheduler();
+     *   scheduler.setPoolSize(2);
+     *   scheduler.initialize();
+     * }</pre>
+     */
     public MonitoredThreadPoolTaskScheduler() {
         super();
     }
 
+    /**
+     * Creates the underlying {@link ScheduledExecutorService} and wraps it in a
+     * {@link DelegatingScheduledExecutorService} for later monitoring instrumentation.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Invoked internally during initialize(); not called directly.
+     *   // The created executor is wrapped with monitoring support.
+     * }</pre>
+     *
+     * @param poolSize                  the core pool size for the executor
+     * @param threadFactory             the {@link ThreadFactory} to use
+     * @param rejectedExecutionHandler  the {@link RejectedExecutionHandler} to use
+     * @return the created {@link ScheduledExecutorService}
+     */
     @Override
     protected ScheduledExecutorService createExecutor(int poolSize, ThreadFactory threadFactory, RejectedExecutionHandler rejectedExecutionHandler) {
         ScheduledExecutorService scheduledExecutor = super.createExecutor(poolSize, threadFactory, rejectedExecutionHandler);
@@ -59,11 +85,34 @@ public class MonitoredThreadPoolTaskScheduler extends ThreadPoolTaskScheduler im
         return scheduledExecutor;
     }
 
+    /**
+     * Returns the delegating {@link ScheduledExecutorService} that provides monitoring capabilities.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   MonitoredThreadPoolTaskScheduler scheduler = new MonitoredThreadPoolTaskScheduler();
+     *   scheduler.initialize();
+     *   ScheduledExecutorService executor = scheduler.getScheduledExecutor();
+     * }</pre>
+     *
+     * @return the monitored {@link ScheduledExecutorService} delegate
+     * @throws IllegalStateException if the executor has not been initialized
+     */
     @Override
     public ScheduledExecutorService getScheduledExecutor() throws IllegalStateException {
         return delegate;
     }
 
+    /**
+     * Initializes the {@link ExecutorServiceMetrics} monitoring by obtaining the {@link MeterRegistry}
+     * from the {@link ApplicationContext} and wrapping the underlying executor.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called automatically by Spring after all singletons are instantiated.
+     *   // Registers the scheduled executor with the MeterRegistry for metrics collection.
+     * }</pre>
+     */
     @Override
     public void afterSingletonsInstantiated() {
         MeterRegistry registry = context.getBean(MeterRegistry.class);
@@ -71,12 +120,35 @@ public class MonitoredThreadPoolTaskScheduler extends ThreadPoolTaskScheduler im
         this.delegate.setDelegate(monitor(registry, scheduledExecutor, beanName));
     }
 
+    /**
+     * Stores the bean name for use as the metrics identifier and delegates to the parent implementation.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called automatically by the Spring container during bean initialization.
+     *   scheduler.setBeanName("actuatorTaskScheduler");
+     * }</pre>
+     *
+     * @param name the name of the bean in the Spring container
+     */
     @Override
     public void setBeanName(String name) {
         super.setBeanName(name);
         this.beanName = name;
     }
 
+    /**
+     * Stores the {@link ApplicationContext} reference for later retrieval of the {@link MeterRegistry}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Called automatically by the Spring container.
+     *   scheduler.setApplicationContext(applicationContext);
+     * }</pre>
+     *
+     * @param applicationContext the {@link ApplicationContext} this bean runs in
+     * @throws BeansException if thrown by application context methods
+     */
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.context = applicationContext;

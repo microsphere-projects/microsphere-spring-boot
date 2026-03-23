@@ -225,6 +225,22 @@ public abstract class BindUtils implements Utils {
         return bind(binder, propertyNamePrefix, targetType, bindListeners);
     }
 
+    /**
+     * Bind configuration properties to a target type using the provided {@link Binder} and property name prefix.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Binder binder = Binder.get(environment);
+     *   AppProperties properties = BindUtils.bind(binder, "app", AppProperties.class);
+     * }</pre>
+     *
+     * @param binder         the {@link Binder} to use, must not be {@code null}
+     * @param name           the property name prefix to use
+     * @param targetType     the target type to bind to, must not be {@code null}
+     * @param bindListeners  optional bind listeners to register for bind events
+     * @param <T>            the target type
+     * @return the bound instance or {@code null} if binding failed
+     */
     protected static <T> T bind(Binder binder, String name, Class<T> targetType, BindListener... bindListeners) {
         ListenableBindHandlerAdapter bindHandlerAdapter = new ListenableBindHandlerAdapter(ofList(bindListeners));
         Bindable<T> bindable = of(targetType);

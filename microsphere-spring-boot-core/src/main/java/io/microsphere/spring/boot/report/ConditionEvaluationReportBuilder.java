@@ -22,6 +22,18 @@ abstract class ConditionEvaluationReportBuilder {
 
     private static final Map<ConfigurableListableBeanFactory, ConditionEvaluationReport> reports = new ConcurrentHashMap<>();
 
+    /**
+     * Builds or retrieves a cached {@link ConditionEvaluationReport} for the given bean factory.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
+     *   ConditionEvaluationReport report = ConditionEvaluationReportBuilder.build(beanFactory);
+     * }</pre>
+     *
+     * @param beanFactory the {@link ConfigurableListableBeanFactory} to build the report for
+     * @return the {@link ConditionEvaluationReport} associated with the given bean factory
+     */
     static ConditionEvaluationReport build(ConfigurableListableBeanFactory beanFactory) {
         return reports.computeIfAbsent(beanFactory, ConditionEvaluationReport::get);
     }
