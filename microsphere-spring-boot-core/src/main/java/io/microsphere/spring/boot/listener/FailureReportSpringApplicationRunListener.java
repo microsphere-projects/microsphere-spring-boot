@@ -15,14 +15,14 @@ import java.io.PrintStream;
 public class FailureReportSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
     /**
-     * Construct a new {@link FailureReportSpringApplicationRunListener} for failure reporting.
-     * When the application fails to start, the failure details are printed to {@link System#err}.
+     * Construct a new {@link FailureReportSpringApplicationRunListener}.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Typically registered in META-INF/spring.factories:
-     *   // org.springframework.boot.SpringApplicationRunListener=\
-     *   //   io.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
+     *   // Typically instantiated by Spring Boot via spring.factories
+     *   // io.microsphere.spring.boot.listener.FailureReportSpringApplicationRunListener
+     *   SpringApplication app = new SpringApplication(MyApplication.class);
+     *   app.run(args);
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
@@ -32,6 +32,20 @@ public class FailureReportSpringApplicationRunListener extends SpringApplication
         super(springApplication, args);
     }
 
+    /**
+     * Handles application startup failure by printing the exception details to {@link System#err}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot when the application fails to start.
+     *   // The failure report will be printed to System.err:
+     *   // "The Spring Boot application fails to start. The causes are as follows:"
+     *   // followed by the stack trace.
+     * }</pre>
+     *
+     * @param context   the {@link ConfigurableApplicationContext}, may be {@code null}
+     * @param exception the exception that caused the failure
+     */
     @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
         PrintStream err = System.err;

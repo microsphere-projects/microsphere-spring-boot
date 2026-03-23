@@ -61,9 +61,8 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
     }
 
     /**
-     * Constructs a new {@link BannedArtifactClassLoadingListener} with the given
-     * {@link SpringApplication} and optional command-line arguments. The listener is
-     * assigned the {@link Ordered#HIGHEST_PRECEDENCE highest precedence} order.
+     * Construct a new {@link BannedArtifactClassLoadingListener} with the given application and arguments.
+     * The listener is set to {@link Ordered#HIGHEST_PRECEDENCE} to execute as early as possible.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
@@ -72,27 +71,14 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
      *       new BannedArtifactClassLoadingListener(app, args);
      * }</pre>
      *
-     * @param springApplication the Spring Boot application instance
-     * @param args              the command-line arguments
+     * @param springApplication the {@link SpringApplication} instance
+     * @param args the command line arguments
      */
     public BannedArtifactClassLoadingListener(SpringApplication springApplication, String... args) {
         super(springApplication, args);
         setOrder(HIGHEST_PRECEDENCE);
     }
 
-    /**
-     * Called when the application is starting. If the
-     * {@link #BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME banned-artifacts.enabled} system
-     * property is {@code true}, banned artifacts are detected and excluded from class loading.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   System.setProperty("microsphere.spring.boot.banned-artifacts.enabled", "true");
-     *   BannedArtifactClassLoadingListener listener =
-     *       new BannedArtifactClassLoadingListener(app, args);
-     *   listener.starting(); // triggers artifact banning
-     * }</pre>
-     */
     @Override
     public void starting() {
         if (isProcessed()) {
@@ -109,6 +95,21 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
         markProcessed();
     }
 
+    /**
+     * Check whether the current {@link SpringApplication} has already been processed
+     * by this listener, to avoid duplicate artifact banning.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   BannedArtifactClassLoadingListener listener =
+     *       new BannedArtifactClassLoadingListener(app, args);
+     *   if (!listener.isProcessed()) {
+     *       // artifacts have not been processed yet
+     *   }
+     * }</pre>
+     *
+     * @return {@code true} if the application's artifacts have already been processed
+     */
     boolean isProcessed() {
         Boolean processed = processedMap.getOrDefault(getSpringApplication(), FALSE);
         return TRUE.equals(processed);

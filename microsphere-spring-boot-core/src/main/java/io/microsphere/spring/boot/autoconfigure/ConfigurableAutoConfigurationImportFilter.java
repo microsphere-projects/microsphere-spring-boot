@@ -61,6 +61,21 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
 
     private Set<String> excludedAutoConfigurationClasses;
 
+    /**
+     * Filters the given auto-configuration classes, returning an array of booleans indicating
+     * which classes should be imported ({@code true}) and which are excluded ({@code false}).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   String[] candidates = {"com.example.FooAutoConfiguration", "com.example.BarAutoConfiguration"};
+     *   boolean[] results = filter.match(candidates, metadata);
+     *   // results[i] is false if candidate[i] is excluded
+     * }</pre>
+     *
+     * @param autoConfigurationClasses the candidate auto-configuration class names
+     * @param autoConfigurationMetadata the auto-configuration metadata
+     * @return a boolean array where {@code true} means the class is not excluded
+     */
     @Override
     public boolean[] match(String[] autoConfigurationClasses, AutoConfigurationMetadata autoConfigurationMetadata) {
         int size = autoConfigurationClasses.length;
@@ -72,11 +87,38 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         return results;
     }
 
+    /**
+     * Sets the {@link Environment} and resolves the set of excluded auto-configuration
+     * class names from the configured properties.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurableAutoConfigurationImportFilter filter =
+     *       new ConfigurableAutoConfigurationImportFilter();
+     *   filter.setEnvironment(applicationContext.getEnvironment());
+     * }</pre>
+     *
+     * @param environment the environment to read exclusion properties from
+     */
     @Override
     public void setEnvironment(Environment environment) {
         this.excludedAutoConfigurationClasses = getExcludedAutoConfigurationClasses(environment);
     }
 
+    /**
+     * Retrieves the complete set of excluded auto-configuration class names from the
+     * given {@link Environment}, combining property source values and {@link Binder} results.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Set<String> excluded =
+     *       ConfigurableAutoConfigurationImportFilter.getExcludedAutoConfigurationClasses(environment);
+     *   excluded.forEach(cls -> System.out.println("Excluded: " + cls));
+     * }</pre>
+     *
+     * @param environment the environment to read exclusion properties from
+     * @return an unmodifiable set of excluded class names, or an empty set if none are configured
+     */
     public static Set<String> getExcludedAutoConfigurationClasses(Environment environment) {
         ConfigurableEnvironment configurableEnvironment = asConfigurableEnvironment(environment);
         Set<String> allExcludedClasses = new LinkedHashSet<>();
@@ -170,21 +212,6 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
             return null;
         }
 
-        /**
-         * Adds the given auto-configuration class names to the exclusion set.
-         *
-         * <h3>Example Usage</h3>
-         * <pre>{@code
-         *   ExcludedAutoConfigurationClassPropertySource source =
-         *       ExcludedAutoConfigurationClassPropertySource.get(environment);
-         *   source.addClasses(Arrays.asList(
-         *       "com.example.FooAutoConfiguration",
-         *       "com.example.BarAutoConfiguration"
-         *   ));
-         * }</pre>
-         *
-         * @param classNames the auto-configuration class names to exclude
-         */
         public void addClasses(Iterable<String> classNames) {
             Set<String> allClassNames = this.source;
             classNames.forEach(allClassNames::add);
@@ -201,23 +228,22 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         }
     }
 
-    /**
-     * Checks whether the given auto-configuration class name is in the exclusion set.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurableAutoConfigurationImportFilter filter = new ConfigurableAutoConfigurationImportFilter();
-     *   filter.setEnvironment(environment);
-     *   boolean excluded = filter.isExcluded("com.example.FooAutoConfiguration");
-     * }</pre>
-     *
-     * @param autoConfigurationClassName the fully qualified class name to check
-     * @return {@code true} if the class is excluded, {@code false} otherwise
-     */
     boolean isExcluded(String autoConfigurationClassName) {
         return hasText(autoConfigurationClassName) && excludedAutoConfigurationClasses.contains(autoConfigurationClassName);
     }
 
+    /**
+     * Returns the order of this filter. Uses {@link Ordered#HIGHEST_PRECEDENCE} + 99 to
+     * ensure it runs early in the auto-configuration import filtering chain.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   int order = filter.getOrder();
+     *   // returns Ordered.HIGHEST_PRECEDENCE + 99
+     * }</pre>
+     *
+     * @return the order value
+     */
     @Override
     public int getOrder() {
         return HIGHEST_PRECEDENCE + 99;

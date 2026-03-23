@@ -34,24 +34,54 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
 public class LoggingOnceApplicationPreparedEventListener extends OnceApplicationPreparedEventListener {
 
     /**
-     * Constructs a new logging listener with the lowest precedence order.
+     * Constructs a new {@code LoggingOnceApplicationPreparedEventListener} with the
+     * lowest precedence order.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   LoggingOnceApplicationPreparedEventListener listener =
      *       new LoggingOnceApplicationPreparedEventListener();
-     *   // listener is configured with LOWEST_PRECEDENCE order
      * }</pre>
      */
     public LoggingOnceApplicationPreparedEventListener() {
         super.setOrder(LOWEST_PRECEDENCE);
     }
 
+    /**
+     * Logs the application-prepared event details for the given context using
+     * {@code SpringApplicationUtils#log}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is invoked by the framework when the ApplicationPreparedEvent fires:
+     *   listener.onApplicationEvent(springApplication, args, context);
+     * }</pre>
+     *
+     * @param springApplication the Spring application instance
+     * @param args              the command-line arguments
+     * @param context           the configurable application context
+     */
     @Override
     protected void onApplicationEvent(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
         log(springApplication, args, context, "onApplicationPreparedEvent");
     }
 
+    /**
+     * Determines whether this listener should be ignored based on the configured
+     * logging level. Returns {@code true} when the logging level equals the default
+     * (effectively disabling logging output).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean ignored = listener.isIgnored(springApplication, args, context);
+     *   // returns true when the logging level is at the default level
+     * }</pre>
+     *
+     * @param springApplication the Spring application instance
+     * @param args              the command-line arguments
+     * @param context           the configurable application context
+     * @return {@code true} if the event should be ignored, {@code false} otherwise
+     */
     @Override
     protected boolean isIgnored(SpringApplication springApplication, String[] args, ConfigurableApplicationContext context) {
         String level = getLoggingLevel(context);

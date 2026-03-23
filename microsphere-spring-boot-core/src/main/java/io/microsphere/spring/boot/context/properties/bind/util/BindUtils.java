@@ -226,22 +226,20 @@ public abstract class BindUtils implements Utils {
     }
 
     /**
-     * Binds configuration properties from the given {@link Binder} to an instance of the specified type,
-     * using the provided property name prefix and optional {@link BindListener}s.
+     * Bind configuration properties to a target type using the provided {@link Binder} and property name prefix.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertySource source = new MapConfigurationPropertySource(properties);
-     *   Binder binder = new Binder(source);
-     *   ServerProperties serverProps = bind(binder, "server", ServerProperties.class);
+     *   Binder binder = Binder.get(environment);
+     *   AppProperties properties = BindUtils.bind(binder, "app", AppProperties.class);
      * }</pre>
      *
-     * @param binder        the {@link Binder} to use for binding
-     * @param name          the property name prefix
-     * @param targetType    the target type to bind to
-     * @param bindListeners optional {@link BindListener}s to notify during binding
-     * @param <T>           the target type
-     * @return the bound object, or {@code null} if no properties matched
+     * @param binder         the {@link Binder} to use, must not be {@code null}
+     * @param name           the property name prefix to use
+     * @param targetType     the target type to bind to, must not be {@code null}
+     * @param bindListeners  optional bind listeners to register for bind events
+     * @param <T>            the target type
+     * @return the bound instance or {@code null} if binding failed
      */
     protected static <T> T bind(Binder binder, String name, Class<T> targetType, BindListener... bindListeners) {
         ListenableBindHandlerAdapter bindHandlerAdapter = new ListenableBindHandlerAdapter(ofList(bindListeners));

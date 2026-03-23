@@ -13,16 +13,15 @@ public class ArtifactsCollisionException extends RuntimeException {
     private final Set<String> artifacts;
 
     /**
-     * Construct a new {@link ArtifactsCollisionException} with the specified message and set of colliding artifacts.
+     * Construct a new {@link ArtifactsCollisionException} with the given message and set of colliding artifacts.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   Set<String> artifacts = new LinkedHashSet<>();
-     *   artifacts.add("com.example:my-lib");
+     *   Set<String> artifacts = Set.of("com.example:lib-a", "com.example:lib-b");
      *   throw new ArtifactsCollisionException("Duplicate artifacts found", artifacts);
      * }</pre>
      *
-     * @param message the detail message describing the collision
+     * @param message   the detail message describing the collision
      * @param artifacts the set of colliding artifact identifiers
      */
     public ArtifactsCollisionException(String message, Set<String> artifacts) {

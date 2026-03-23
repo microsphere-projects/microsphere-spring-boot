@@ -64,6 +64,21 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
 
     private boolean bound = false;
 
+    /**
+     * Handles the start of a binding operation. During initial binding, initializes the
+     * {@link ConfigurationPropertiesBeanContext} for the target bean.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   listener.onStart(ConfigurationPropertyName.of("app"),
+     *       Bindable.of(MyProps.class), context);
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     */
     @Override
     public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
         if (isBound()) {
@@ -72,6 +87,22 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         }
     }
 
+    /**
+     * Handles a successful binding operation. After initial binding is complete, detects property
+     * changes and publishes {@link ConfigurationPropertiesBeanPropertyChangedEvent}s.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   listener.onSuccess(ConfigurationPropertyName.of("app.name"),
+     *       Bindable.of(String.class), context, "newValue");
+     * }</pre>
+     *
+     * @param name    the configuration property name
+     * @param target  the bindable target
+     * @param context the bind context
+     * @param result  the bound result value
+     */
     @Override
     public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         if (isBound()) {
@@ -82,17 +113,17 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     }
 
     /**
-     * Initializes the {@link ConfigurationPropertiesBeanContext} for the bean being bound,
-     * capturing the initial property values before binding proceeds.
+     * Initializes a {@link ConfigurationPropertiesBeanContext} for the given
+     * {@link ConfigurationProperties @ConfigurationProperties} bean if at root binding depth.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Called internally during binding lifecycle
-     *   ConfigurationPropertyName name = ConfigurationPropertyName.of("server");
-     *   listener.initConfigurationPropertiesBeanContext(name, target, context);
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   listener.initConfigurationPropertiesBeanContext(
+     *       ConfigurationPropertyName.of("app"), Bindable.of(MyProps.class), context);
      * }</pre>
      *
-     * @param name    the configuration property name being bound
+     * @param name    the configuration property name
      * @param target  the bindable target
      * @param context the bind context
      */
@@ -118,20 +149,21 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     }
 
     /**
-     * Sets a property on the {@link ConfigurationPropertiesBeanContext}, triggering a
-     * {@link ConfigurationPropertiesBeanPropertyChangedEvent} if the value has changed.
+     * Sets a property on the {@link ConfigurationPropertiesBeanContext} when a bound property
+     * change is detected. Publishes an event if the value has changed.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Called internally when a bound property value is successfully resolved
-     *   ConfigurationPropertyName name = ConfigurationPropertyName.of("server.port");
-     *   listener.setConfigurationPropertiesBeanProperty(name, target, context, 8080);
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   listener.setConfigurationPropertiesBeanProperty(
+     *       ConfigurationPropertyName.of("app.name"),
+     *       Bindable.of(String.class), context, "newValue");
      * }</pre>
      *
      * @param name    the configuration property name
      * @param target  the bindable target
      * @param context the bind context
-     * @param result  the bound property value
+     * @param result  the new property value
      */
     void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         ConfigurationProperty property = context.getConfigurationProperty();
@@ -142,6 +174,21 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         }
     }
 
+    /**
+     * Post-processes the bean factory to initialize the internal map of
+     * {@link ConfigurationPropertiesBeanContext} instances for all
+     * {@link ConfigurationProperties @ConfigurationProperties} beans.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener =
+     *       new EventPublishingConfigurationPropertiesBeanPropertyChangedListener();
+     *   listener.postProcessBeanFactory(beanFactory);
+     * }</pre>
+     *
+     * @param beanFactory the bean factory to post-process
+     * @throws BeansException if an error occurs
+     */
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         initConfigurationPropertiesBeanContexts(beanFactory);
@@ -153,6 +200,20 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         this.beanContexts = new HashMap<>(beanCount);
     }
 
+    /**
+     * Sets the {@link ApplicationContext}, which must be a {@link ConfigurableApplicationContext},
+     * for publishing property change events.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener =
+     *       new EventPublishingConfigurationPropertiesBeanPropertyChangedListener();
+     *   listener.setApplicationContext(applicationContext);
+     * }</pre>
+     *
+     * @param context the application context, must be a {@link ConfigurableApplicationContext}
+     * @throws BeansException if the context is not a {@link ConfigurableApplicationContext}
+     */
     @Override
     public void setApplicationContext(ApplicationContext context) throws BeansException {
         Class<ConfigurableApplicationContext> expectedType = CONFIGURABLE_APPLICATION_CONTEXT_CLASS;
@@ -160,25 +221,35 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         this.context = expectedType.cast(context);
     }
 
+    /**
+     * Called after all singleton beans have been instantiated, marking that initial binding
+     * is complete. Subsequent binding operations will detect and publish property changes.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
+     *   // Called automatically by the Spring container
+     *   listener.afterSingletonsInstantiated();
+     *   assertTrue(listener.isBound());
+     * }</pre>
+     */
     @Override
     public void afterSingletonsInstantiated() {
         bound = true;
     }
 
     /**
-     * Returns whether all singleton beans have been instantiated and the initial binding
-     * phase is complete. When {@code true}, subsequent bind events represent runtime
-     * property changes rather than initial configuration.
+     * Returns whether the initial binding of all singleton beans has been completed.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
      *   if (listener.isBound()) {
-     *       // initial binding is complete — property changes are runtime updates
+     *       // Property changes will now be published as events
      *   }
      * }</pre>
      *
-     * @return {@code true} if the initial binding phase is complete, {@code false} otherwise
+     * @return {@code true} if initial binding is complete, {@code false} otherwise
      */
     public boolean isBound() {
         return bound;

@@ -84,18 +84,18 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Initializes this context with the actual bean instance by copying its current
-     * property values and setting up the binding property name mappings.
+     * Initializes the context by copying the bean's current property values into
+     * the internal bean wrapper and setting up property name bindings.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanContext beanContext =
-     *       new ConfigurationPropertiesBeanContext(MyConfig.class, annotation, "my.config", appContext);
-     *   MyConfig bean = appContext.getBean(MyConfig.class);
-     *   beanContext.initialize(bean);
+     *   ConfigurationPropertiesBeanContext ctx = new ConfigurationPropertiesBeanContext(
+     *       MyProps.class, annotation, "app", applicationContext);
+     *   MyProps bean = applicationContext.getBean(MyProps.class);
+     *   ctx.initialize(bean);
      * }</pre>
      *
-     * @param bean the bean instance to initialize with
+     * @param bean the bean instance to initialize from
      */
     protected void initialize(Object bean) {
         this.bean = bean;
@@ -104,17 +104,18 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Sets a property on the wrapped bean, publishing a
-     * {@link ConfigurationPropertiesBeanPropertyChangedEvent} if the value has changed.
+     * Sets a property value on the initialized bean. If the new value differs from the old value,
+     * a {@link ConfigurationPropertiesBeanPropertyChangedEvent} is published.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
      *   ConfigurationProperty property = context.getConfigurationProperty();
-     *   beanContext.setProperty(property, newValue);
+     *   ctx.setProperty(property, "newValue");
      * }</pre>
      *
      * @param property the {@link ConfigurationProperty} being set
-     * @param newValue the new property value
+     * @param newValue the new value to set
      */
     public void setProperty(ConfigurationProperty property, Object newValue) {
         ConfigurationPropertyName name = property.getName();
@@ -128,15 +129,15 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Returns the configuration properties prefix associated with this bean context.
+     * Returns the property name prefix for the {@link ConfigurationProperties @ConfigurationProperties} bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   String prefix = ctx.getPrefix(); // e.g., "server", "spring.datasource"
+     *   String prefix = ctx.getPrefix(); // e.g. "app.datasource"
      * }</pre>
      *
-     * @return the property name prefix, never {@code null}
+     * @return the configuration properties prefix, never {@code null}
      */
     @Nonnull
     public String getPrefix() {
@@ -144,12 +145,12 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Returns the class of the {@link ConfigurationProperties} bean managed by this context.
+     * Returns the class of the {@link ConfigurationProperties @ConfigurationProperties} bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   Class<?> beanClass = ctx.getBeanClass(); // e.g., ServerProperties.class
+     *   Class<?> beanClass = ctx.getBeanClass(); // e.g. MyProps.class
      * }</pre>
      *
      * @return the bean class, never {@code null}
@@ -160,16 +161,16 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Retrieves the current value of the specified property from the initialized bean.
+     * Returns the current value of the specified property from the initialized bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   Object port = ctx.getPropertyValue("port"); // e.g., 8080
+     *   Object value = ctx.getPropertyValue("name"); // e.g. "myApp"
      * }</pre>
      *
      * @param name the property name
-     * @return the property value, or {@code null} if not set
+     * @return the current property value, or {@code null} if not set
      */
     @Nullable
     public Object getPropertyValue(String name) {
@@ -177,14 +178,12 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Returns the initialized bean instance managed by this context. This is a snapshot
-     * of the bean with its initial property values set at creation time.
+     * Returns the initialized bean instance that mirrors the original bean's property values.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   Object bean = ctx.getInitializedBean();
-     *   // Use the bean to compare old vs new property values
+     *   Object initializedBean = ctx.getInitializedBean();
      * }</pre>
      *
      * @return the initialized bean instance, never {@code null}
@@ -236,20 +235,6 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    /**
-     * Converts the given value to the type of the specified property using the configured
-     * {@link ConversionService}.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   Object converted = beanContext.convertForProperty("port", "8080");
-     *   // converted is Integer 8080 if the property type is int
-     * }</pre>
-     *
-     * @param propertyName the name of the target property
-     * @param value        the value to convert
-     * @return the converted value, or the original value if conversion is not supported
-     */
     Object convertForProperty(String propertyName, Object value) {
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
@@ -259,38 +244,11 @@ class ConfigurationPropertiesBeanContext {
         return value;
     }
 
-    /**
-     * Determines whether the given {@link PropertyDescriptor} is a candidate for binding.
-     * A property is a candidate unless its read method is declared directly on {@link Object}.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(MyConfig.class, "port");
-     *   boolean candidate = ConfigurationPropertiesBeanContext.isCandidateProperty(descriptor); // true
-     * }</pre>
-     *
-     * @param descriptor the {@link PropertyDescriptor} to evaluate
-     * @return {@code true} if the property is a binding candidate, {@code false} otherwise
-     */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
-    /**
-     * Determines whether the given class is a candidate for configuration property binding.
-     * Primitives, wrappers, classes from {@code java.*} packages, and non-concrete classes are excluded.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   boolean candidate1 = ConfigurationPropertiesBeanContext.isCandidateClass(MyConfig.class); // true
-     *   boolean candidate2 = ConfigurationPropertiesBeanContext.isCandidateClass(String.class);   // false
-     *   boolean candidate3 = ConfigurationPropertiesBeanContext.isCandidateClass(int.class);      // false
-     * }</pre>
-     *
-     * @param beanClass the class to evaluate
-     * @return {@code true} if the class is a binding candidate, {@code false} otherwise
-     */
     static boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
             return false;

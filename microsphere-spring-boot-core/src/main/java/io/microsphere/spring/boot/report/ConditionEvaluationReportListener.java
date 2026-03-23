@@ -17,22 +17,35 @@ public class ConditionEvaluationReportListener implements ApplicationListener<Ap
 
     private static final Logger logger = getLogger(ConditionEvaluationReportListener.class);
 
+    /**
+     * Handles the {@link ApplicationReadyEvent} by reporting the condition evaluation results
+     * for the application context that triggered the event.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConditionEvaluationReportListener listener = new ConditionEvaluationReportListener();
+     *   // Typically invoked by the Spring event system:
+     *   listener.onApplicationEvent(applicationReadyEvent);
+     * }</pre>
+     *
+     * @param event the {@link ApplicationReadyEvent} indicating the application is ready
+     */
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         reportConditions(event.getApplicationContext());
     }
 
     /**
-     * Report condition evaluation results for the given application context.
-     * Builds the condition evaluation report messages and logs each one at info level.
+     * Reports the condition evaluation details for the given application context by building
+     * and logging condition report messages at info level.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConditionEvaluationReportListener listener = new ConditionEvaluationReportListener();
-     *   listener.reportConditions(context);
+     *   listener.reportConditions(applicationContext);
      * }</pre>
      *
-     * @param context the {@link ConfigurableApplicationContext} to report conditions for
+     * @param context the {@link ConfigurableApplicationContext} whose conditions to report
      */
     protected void reportConditions(ConfigurableApplicationContext context) {
         ConditionsReportMessageBuilder messageBuilder = new ConditionsReportMessageBuilder(context);

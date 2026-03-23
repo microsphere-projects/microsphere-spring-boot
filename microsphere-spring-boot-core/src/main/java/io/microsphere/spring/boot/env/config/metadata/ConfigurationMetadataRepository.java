@@ -53,32 +53,21 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
 
     private Map<String, List<ItemHint>> namedHints;
 
-    /**
-     * Constructs a new {@link ConfigurationMetadataRepository} backed by the given
-     * {@link ConfigurationMetadataReader}.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
-     *   ConfigurationMetadataRepository repository = new ConfigurationMetadataRepository(reader);
-     * }</pre>
-     *
-     * @param configurationMetadataReader the reader used to load {@link ConfigurationMetadata}
-     */
     public ConfigurationMetadataRepository(ConfigurationMetadataReader configurationMetadataReader) {
         this.configurationMetadataReader = configurationMetadataReader;
     }
 
     /**
-     * Returns the names of all configuration property groups.
+     * Returns the set of all configuration property group names.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   Set<String> groups = repository.getPropertyGroups();
-     *   // e.g. ["server", "spring.datasource"]
+     *   ConfigurationMetadataRepository repository = // obtain instance
+     *   Set<String> groupNames = repository.getPropertyGroups();
+     *   groupNames.forEach(name -> System.out.println("Group: " + name));
      * }</pre>
      *
-     * @return an unmodifiable {@link Set} of group names
+     * @return a non-null set of property group names
      */
     @NonNull
     public Set<String> getPropertyGroups() {
@@ -86,15 +75,16 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns the names of all configuration properties.
+     * Returns the set of all configuration property names.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   Set<String> names = repository.getPropertyNames();
-     *   // e.g. ["server.port", "spring.datasource.url"]
+     *   ConfigurationMetadataRepository repository = // obtain instance
+     *   Set<String> propertyNames = repository.getPropertyNames();
+     *   propertyNames.forEach(name -> System.out.println("Property: " + name));
      * }</pre>
      *
-     * @return an unmodifiable {@link Set} of property names
+     * @return a non-null set of property names
      */
     @NonNull
     public Set<String> getPropertyNames() {
@@ -102,15 +92,16 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns all configuration property group {@link ItemMetadata} entries.
+     * Returns all configuration metadata group items.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurationMetadataRepository repository = // obtain instance
      *   Collection<ItemMetadata> groups = repository.getGroups();
-     *   groups.forEach(g -> System.out.println(g.getName()));
+     *   groups.forEach(group -> System.out.println("Group type: " + group.getType()));
      * }</pre>
      *
-     * @return a {@link Collection} of group {@link ItemMetadata}
+     * @return a non-null collection of group {@link ItemMetadata}
      */
     @NonNull
     public Collection<ItemMetadata> getGroups() {
@@ -118,15 +109,16 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns all configuration property {@link ItemMetadata} entries.
+     * Returns all configuration metadata property items.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurationMetadataRepository repository = // obtain instance
      *   Collection<ItemMetadata> properties = repository.getProperties();
-     *   properties.forEach(p -> System.out.println(p.getName() + " = " + p.getType()));
+     *   properties.forEach(prop -> System.out.println(prop.getName() + " = " + prop.getDefaultValue()));
      * }</pre>
      *
-     * @return a {@link Collection} of property {@link ItemMetadata}
+     * @return a non-null collection of property {@link ItemMetadata}
      */
     @NonNull
     public Collection<ItemMetadata> getProperties() {
@@ -134,18 +126,19 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns the group {@link ItemMetadata} for the given name, or {@code null} if not found.
+     * Returns the configuration metadata group item for the given name.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ItemMetadata group = repository.getGroup("server");
+     *   ConfigurationMetadataRepository repository = // obtain instance
+     *   ItemMetadata group = repository.getGroup("spring.datasource");
      *   if (group != null) {
-     *       System.out.println(group.getType());
+     *       System.out.println("Source type: " + group.getSourceType());
      *   }
      * }</pre>
      *
-     * @param name the group name to look up
-     * @return the matching {@link ItemMetadata}, or {@code null}
+     * @param name the name of the configuration group
+     * @return the {@link ItemMetadata} for the group, or {@code null} if not found
      */
     @Nullable
     public ItemMetadata getGroup(String name) {
@@ -153,18 +146,19 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns the property {@link ItemMetadata} for the given name, or {@code null} if not found.
+     * Returns the configuration metadata property item for the given name.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurationMetadataRepository repository = // obtain instance
      *   ItemMetadata property = repository.getProperty("server.port");
      *   if (property != null) {
-     *       System.out.println(property.getDefaultValue());
+     *       System.out.println("Default: " + property.getDefaultValue());
      *   }
      * }</pre>
      *
-     * @param name the property name to look up
-     * @return the matching {@link ItemMetadata}, or {@code null}
+     * @param name the name of the configuration property
+     * @return the {@link ItemMetadata} for the property, or {@code null} if not found
      */
     @Nullable
     public ItemMetadata getProperty(String name) {
@@ -172,17 +166,17 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns the {@link ItemHint} list associated with the given name, or an empty list
-     * if no hints exist.
+     * Returns the list of {@link ItemHint} instances associated with the given property name.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   List<ItemHint> hints = repository.getHints("server.port");
-     *   hints.forEach(h -> System.out.println(h.getName()));
+     *   ConfigurationMetadataRepository repository = // obtain instance
+     *   List<ItemHint> hints = repository.getHints("spring.profiles.active");
+     *   hints.forEach(hint -> System.out.println("Hint: " + hint.getName()));
      * }</pre>
      *
-     * @param name the property or group name to look up hints for
-     * @return a list of {@link ItemHint} entries, never {@code null}
+     * @param name the name of the configuration property to get hints for
+     * @return a non-null list of {@link ItemHint} instances; empty if none exist
      */
     @NonNull
     public List<ItemHint> getHints(String name) {
@@ -190,15 +184,16 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Returns the {@link ConfigurationMetadataReader} used by this repository.
+     * Returns the underlying {@link ConfigurationMetadataReader} used to read configuration metadata.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurationMetadataRepository repository = // obtain instance
      *   ConfigurationMetadataReader reader = repository.getConfigurationMetadataReader();
      *   ConfigurationMetadata metadata = reader.read();
      * }</pre>
      *
-     * @return the underlying {@link ConfigurationMetadataReader}
+     * @return the non-null {@link ConfigurationMetadataReader}
      */
     @NonNull
     public ConfigurationMetadataReader getConfigurationMetadataReader() {
@@ -206,18 +201,20 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     /**
-     * Reads the {@link ConfigurationMetadata} via the underlying reader and initializes
-     * the internal group, property, and hint indexes. Invoked automatically by the Spring
-     * Boot {@link CommandLineRunner} lifecycle.
+     * Reads the {@link ConfigurationMetadata} and initializes the internal indexed maps
+     * for groups, properties, and hints. This override is invoked automatically as a
+     * {@link CommandLineRunner} callback after application startup.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Typically called by Spring Boot; manual invocation:
-     *   repository.run();
+     *   ConfigurationMetadataRepository repository =
+     *       new ConfigurationMetadataRepository(metadataReader);
+     *   repository.run(); // initializes the repository
+     *   Set<String> names = repository.getPropertyNames();
      * }</pre>
      *
-     * @param args command-line arguments (unused)
-     * @throws Exception if reading the metadata fails
+     * @param args the command-line arguments (not used)
+     * @throws Exception if reading the configuration metadata fails
      */
     @Override
     public void run(String... args) throws Exception {

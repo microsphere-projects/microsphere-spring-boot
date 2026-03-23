@@ -23,35 +23,34 @@ abstract class ConditionEvaluationReportBuilder {
     private static final Map<ConfigurableListableBeanFactory, ConditionEvaluationReport> reports = new ConcurrentHashMap<>();
 
     /**
-     * Build a {@link ConditionEvaluationReport} for the given {@link ConfigurableListableBeanFactory}.
-     * If a report has already been built for the given bean factory, the cached report is returned.
+     * Builds or retrieves a cached {@link ConditionEvaluationReport} for the given bean factory.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+     *   ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
      *   ConditionEvaluationReport report = ConditionEvaluationReportBuilder.build(beanFactory);
      * }</pre>
      *
      * @param beanFactory the {@link ConfigurableListableBeanFactory} to build the report for
-     * @return the {@link ConditionEvaluationReport} for the given bean factory
+     * @return the {@link ConditionEvaluationReport} associated with the given bean factory
      */
     static ConditionEvaluationReport build(ConfigurableListableBeanFactory beanFactory) {
         return reports.computeIfAbsent(beanFactory, ConditionEvaluationReport::get);
     }
 
     /**
-     * Return an unmodifiable map of all built {@link ConditionEvaluationReport} instances,
-     * keyed by the bean factory identifier.
+     * Returns an unmodifiable map of all cached {@link ConditionEvaluationReport} instances,
+     * keyed by their bean factory identifiers.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   Map<String, ConditionEvaluationReport> reports = ConditionEvaluationReportBuilder.getReportsMap();
-     *   reports.forEach((id, report) -> {
+     *   Map<String, ConditionEvaluationReport> reportsMap = ConditionEvaluationReportBuilder.getReportsMap();
+     *   reportsMap.forEach((id, report) -> {
      *       System.out.println("Context: " + id + ", Exclusions: " + report.getExclusions());
      *   });
      * }</pre>
      *
-     * @return an unmodifiable map of bean factory identifiers to their {@link ConditionEvaluationReport}
+     * @return an unmodifiable map of bean factory IDs to their {@link ConditionEvaluationReport}
      */
     static Map<String, ConditionEvaluationReport> getReportsMap() {
         Map<String, ConditionEvaluationReport> reportsMap = new LinkedHashMap<>(reports.size());
@@ -63,18 +62,19 @@ abstract class ConditionEvaluationReportBuilder {
     }
 
     /**
-     * Get the identifier for the given {@link ConfigurableListableBeanFactory}.
-     * If the bean factory is a {@link DefaultListableBeanFactory}, its serialization ID is returned;
-     * otherwise, an identity string representation is used.
+     * Resolves the identifier for the given {@link ConfigurableListableBeanFactory}.
+     * If the factory is a {@link DefaultListableBeanFactory}, its serialization ID is returned;
+     * otherwise, an identity string is generated.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+     *   ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
      *   String id = ConditionEvaluationReportBuilder.getBeanFactoryId(beanFactory);
+     *   System.out.println("BeanFactory ID: " + id);
      * }</pre>
      *
-     * @param beanFactory the {@link ConfigurableListableBeanFactory} to get the identifier for
-     * @return the identifier of the bean factory, never {@code null}
+     * @param beanFactory the {@link ConfigurableListableBeanFactory} to resolve the ID for
+     * @return the identifier string for the given bean factory, never {@code null}
      */
     @Nonnull
     static String getBeanFactoryId(ConfigurableListableBeanFactory beanFactory) {
