@@ -53,9 +53,10 @@ public class WebEndpoints {
     }
 
     /**
-     * all {@link OperationType#READ Read Opeartion} {@link WebEndpoint WebEndpoints} for Java {@link Method} without arguments
+     * Invokes all {@link OperationType#READ Read Operation} {@link WebEndpoint WebEndpoints}
+     * for Java {@link Method Methods} without arguments.
      *
-     * @return
+     * @return a map of endpoint IDs to their read operation results
      */
     @ReadOperation
     public Map<String, Object> invokeReadOperations() {

@@ -85,7 +85,7 @@ public abstract class ConfigurationPropertyUtils {
      * }</pre>
      *
      * @param name the source name
-     * @return the dashed from
+     * @return the dashed form
      * @see org.springframework.boot.context.properties.bind.BeanPropertyName
      * @see org.springframework.boot.context.properties.bind.DataObjectPropertyName#toDashedForm(String)
      */
@@ -102,7 +102,7 @@ public abstract class ConfigurationPropertyUtils {
      *
      * @param name  the source name
      * @param start the starting char
-     * @return the dashed from
+     * @return the dashed form
      * @see org.springframework.boot.context.properties.bind.BeanPropertyName
      */
     protected static String toDashedForm(String name, int start) {
