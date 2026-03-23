@@ -49,7 +49,11 @@ class ConfigurationPropertyUtilsTest {
                 assertEquals(prefix, getPrefix(name, context));
             }
         });
-        assertEquals((Integer) 12345, serverProperties.getPort());
+        assertEquals(12345, serverProperties.getPort());
+    }
+
+    @Test
+    void testGetPrefixForAlias() {
     }
 
     @Test

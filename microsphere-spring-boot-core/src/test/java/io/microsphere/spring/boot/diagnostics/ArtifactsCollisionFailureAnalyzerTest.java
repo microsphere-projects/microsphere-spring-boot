@@ -21,7 +21,6 @@ package io.microsphere.spring.boot.diagnostics;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.stereotype.Component;
 
 import static io.microsphere.collection.Sets.ofSet;
 import static io.microsphere.spring.boot.util.TestUtils.application;
@@ -34,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see ArtifactsCollisionFailureAnalyzer
  * @since 1.0.0
  */
-@Component
 class ArtifactsCollisionFailureAnalyzerTest implements CommandLineRunner {
 
     @Test

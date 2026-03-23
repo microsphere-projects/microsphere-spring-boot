@@ -34,16 +34,14 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
+import org.springframework.test.context.TestPropertySource;
 
-import static java.lang.Integer.valueOf;
-import static java.util.Locale.SIMPLIFIED_CHINESE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -55,10 +53,11 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
-}, webEnvironment = DEFINED_PORT)
+})
+@TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
-public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
+class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
@@ -85,47 +84,53 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     }
 
     @Test
-    public void testJacksonProperties() {
-        assertNull(jacksonProperties.getLocale());
+    void testJacksonProperties() {
+        assertNull(jacksonProperties.getDateFormat());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
             ConfigurationProperty configurationProperty = event.getConfigurationProperty();
             String propertyName = event.getPropertyName();
-            if ("locale".equals(propertyName)) {
+            if ("dateFormat".equals(propertyName)) {
                 assertEquals(jacksonProperties, event.getSource());
                 assertNull(event.getOldValue());
-                assertEquals(SIMPLIFIED_CHINESE, event.getNewValue());
-                assertEquals("spring.jackson.locale", configurationProperty.getName().toString());
-                assertEquals(event.getNewValue().toString(), configurationProperty.getValue());
+                assertEquals("yyyy-MM-dd HH:mm:ss", event.getNewValue());
+                assertEquals("spring.jackson.date-format", configurationProperty.getName().toString());
+                assertEquals(event.getNewValue(), configurationProperty.getValue());
             }
         });
 
-        mockPropertySource.setProperty("spring.jackson.locale", "zh_CN");
+        mockPropertySource.setProperty("spring.jackson.dateFormat", "yyyy-MM-dd HH:mm:ss");
         beanFactory.destroyBean(jacksonProperties);
-        beanFactory.initializeBean(jacksonProperties, getBeanName(jacksonProperties));
-        assertEquals(SIMPLIFIED_CHINESE, jacksonProperties.getLocale());
+        beanFactory.initializeBean(jacksonProperties, "spring.jackson-jacksonProperties");
+        assertEquals("yyyy-MM-dd HH:mm:ss", jacksonProperties.getDateFormat());
     }
 
     @Test
-    public void testServerProperties() {
+    void testServerProperties() {
         assertNull(serverProperties.getPort());
-
-        String newPortPropertyValue = "9527";
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
             ConfigurationProperty configurationProperty = event.getConfigurationProperty();
             String propertyName = event.getPropertyName();
-            if ("port".equals(propertyName)) {
+            if ("error.path".equals(propertyName)) {
                 assertEquals(serverProperties, event.getSource());
-                assertNull(event.getOldValue());
-                assertEquals(valueOf(newPortPropertyValue), event.getNewValue());
-                assertEquals(valueOf((String) configurationProperty.getValue()), event.getNewValue());
+                assertEquals("/error", event.getOldValue());
+                assertEquals("/error-page", event.getNewValue());
+                assertEquals("server.error.path", configurationProperty.getName().toString());
+                assertEquals(event.getNewValue(), configurationProperty.getValue());
+            } else if ("compression.enabled".equals(propertyName)) {
+                assertEquals(serverProperties, event.getSource());
+                assertEquals(false, event.getOldValue());
+                assertEquals(true, event.getNewValue());
+                assertEquals("server.compression.enabled", configurationProperty.getName().toString());
+                assertEquals("true", configurationProperty.getValue());
             }
         });
 
-        mockPropertySource.setProperty("server.port", newPortPropertyValue);
+        mockPropertySource.setProperty("server.error.path", "/error-page");
+        mockPropertySource.setProperty("server.compression.enabled", "true");
         beanFactory.destroyBean(serverProperties);
-        beanFactory.initializeBean(serverProperties, getBeanName(serverProperties));
+        beanFactory.initializeBean(serverProperties, "server-serverProperties");
 
     }
 
@@ -154,11 +159,5 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
         when(context.getDepth()).thenReturn(0);
 
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
-    }
-
-    private String getBeanName(Object configurationPropertiesBean) {
-        Class<?> beanClass = configurationPropertiesBean.getClass();
-        String[] beanNames = this.context.getBeanNamesForType(beanClass);
-        return beanNames[0];
     }
 }
