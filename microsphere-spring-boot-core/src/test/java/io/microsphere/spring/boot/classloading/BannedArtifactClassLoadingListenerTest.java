@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.classloading;
 
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see BannedArtifactClassLoadingListener
  * @since 1.0.0
  */
+@SpringLoggingTest
 class BannedArtifactClassLoadingListenerTest {
 
     @BeforeEach

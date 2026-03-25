@@ -19,6 +19,7 @@ package io.microsphere.spring.boot.env;
 
 
 import io.microsphere.spring.boot.util.TestUtils;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -41,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @see DefaultPropertiesApplicationListener
  * @since 1.0.0
  */
+@SpringLoggingTest
 class DefaultPropertiesApplicationListenerTest {
 
     @Test

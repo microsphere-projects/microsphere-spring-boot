@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.report;
 
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -36,6 +37,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @see ConditionEvaluationReportListener
  * @since 1.0.0
  */
+@SpringLoggingTest
 @SpringBootTest(
         classes = ConditionEvaluationReportListenerTest.class,
         webEnvironment = NONE

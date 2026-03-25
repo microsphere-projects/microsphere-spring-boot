@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.env;
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.boot.origin.OriginLookup;
@@ -42,6 +43,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see PropertySourceLoaders
  * @since 1.0.0
  */
+@SpringLoggingTest
 class PropertySourceLoadersTest {
 
     private static final PropertySourceLoaders propertySourceLoaders = new PropertySourceLoaders();
