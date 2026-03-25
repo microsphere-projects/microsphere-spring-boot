@@ -19,6 +19,7 @@ package io.microsphere.spring.boot.env.config;
 
 
 import io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer.NamedOrigin;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
@@ -50,6 +51,7 @@ import static org.springframework.boot.origin.OriginTrackedValue.of;
  * @see OriginTrackedConfigurationPropertyInitializer
  * @since 1.0.0
  */
+@SpringLoggingTest
 class OriginTrackedConfigurationPropertyInitializerTest {
 
     private ConfigurableApplicationContext context;
