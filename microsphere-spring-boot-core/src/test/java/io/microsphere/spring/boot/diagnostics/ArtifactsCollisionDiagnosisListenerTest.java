@@ -20,6 +20,7 @@ package io.microsphere.spring.boot.diagnostics;
 
 import io.microsphere.classloading.Artifact;
 import io.microsphere.classloading.MavenArtifact;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
@@ -50,6 +51,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ArtifactsCollisionDiagnosisListener
  * @since 1.0.0
  */
+@SpringLoggingTest
 class ArtifactsCollisionDiagnosisListenerTest {
 
     private MockEnvironment environment;
