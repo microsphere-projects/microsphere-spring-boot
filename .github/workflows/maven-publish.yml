@@ -17,11 +17,7 @@ on:
         description: 'The version to publish for Spring Boot 3.0+'
         required: true
         default: '${major}.${minor}.${patch}'
-
-permissions:
-  contents: write
-  workflows: write
-
+        
 jobs:
   build:
     runs-on: ubuntu-latest

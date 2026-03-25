@@ -14,10 +14,6 @@ on:
   pull_request:
     branches: [ 'main', 'dev' , 'release' ]
 
-permissions:
-  contents: write
-  workflows: write
-
 jobs:
   build:
     runs-on: ubuntu-latest
