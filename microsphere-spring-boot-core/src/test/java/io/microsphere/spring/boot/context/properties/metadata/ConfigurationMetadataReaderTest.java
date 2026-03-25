@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.context.properties.metadata;
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
@@ -34,6 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@SpringLoggingTest
 class ConfigurationMetadataReaderTest {
 
     private ConfigurationMetadataReader reader;

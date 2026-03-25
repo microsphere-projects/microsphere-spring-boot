@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.util;
 
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -46,6 +47,7 @@ import static org.junit.jupiter.api.Assertions.assertSame;
  * @see SpringApplicationUtils
  * @since 1.0.0
  */
+@SpringLoggingTest
 class SpringApplicationUtilsTest {
 
     @Test
