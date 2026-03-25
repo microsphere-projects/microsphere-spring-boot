@@ -82,15 +82,19 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
     @Override
     public void starting() {
         if (isProcessed()) {
-            logger.trace("Current application's artifacts have been processed!");
+            if (logger.isTraceEnabled()) {
+                logger.trace("Current application's artifacts have been processed!");
+            }
             return;
         }
 
         if (bannedArtifactsEnabled()) {
             banArtifacts();
         } else {
-            logger.trace("The artifacts will not be banned, caused by the JDK System property('{}') is missing or 'false'",
-                    BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifacts will not be banned, caused by the JDK System property('{}') is missing or 'false'",
+                        BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME);
+            }
         }
         markProcessed();
     }
@@ -127,8 +131,10 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
 
         SpringApplication springApplication = getSpringApplication();
 
-        logger.trace("Current SpringApplication(Main class: '{}', arguments: {}) tries to ban the artifacts!",
-                springApplication.getMainApplicationClass(), arrayToString(args));
+        if (logger.isTraceEnabled()) {
+            logger.trace("Current SpringApplication(Main class: '{}', arguments: {}) tries to ban the artifacts!",
+                    springApplication.getMainApplicationClass(), arrayToString(args));
+        }
 
         ClassLoader classLoader = springApplication.getClassLoader();
 
