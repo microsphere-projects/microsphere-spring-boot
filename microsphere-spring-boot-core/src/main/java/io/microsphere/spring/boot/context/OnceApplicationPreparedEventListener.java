@@ -94,7 +94,9 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
         String contextId = context.getId();
 
         if (isProcessed(contextId)) {
-            logger.trace("Current ApplicationContext[id : {}] has been processed!", contextId);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Current ApplicationContext[id : {}] has been processed!", contextId);
+            }
             return;
         }
 
@@ -103,7 +105,9 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
         if (isIgnored(springApplication, args, context)) {
             markProcessed(contextId);
-            logger.trace("Current ApplicationContext[id : {}] is ignored!", contextId);
+            if (logger.isTraceEnabled()) {
+                logger.trace("Current ApplicationContext[id : {}] is ignored!", contextId);
+            }
             return;
         }
 
@@ -145,7 +149,9 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
      */
     protected void markProcessed(String contextId) {
         processedContextIds.add(contextId);
-        logger.trace("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Current ApplicationContext[id : {}] was mark to be 'processed'", contextId);
+        }
     }
 
     /**

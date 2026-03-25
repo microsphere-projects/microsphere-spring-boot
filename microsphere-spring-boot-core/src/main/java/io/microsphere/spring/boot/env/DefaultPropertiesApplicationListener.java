@@ -128,7 +128,9 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                                                 ResourceLoader resourceLoader,
                                                 Map<String, Object> defaultProperties) {
         Set<String> defaultPropertiesResources = getDefaultPropertiesResources();
-        logger.trace("Start loading from SpringApplicationUtils.loadDefaultPropertiesResources() 'defaultProperties resources: {}", defaultPropertiesResources);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Start loading from SpringApplicationUtils.loadDefaultPropertiesResources() 'defaultProperties resources: {}", defaultPropertiesResources);
+        }
         loadDefaultProperties(defaultPropertiesResources, propertySourceLoaders, resourceLoader, defaultProperties);
     }
 
@@ -140,21 +142,27 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
         String processorClassName = defaultPropertiesPostProcessor.getClass().getName();
 
-        logger.trace("DefaultPropertiesPostProcessor '{}' start processing 'defaultProperties: {}", processorClassName, defaultPropertiesResources);
+        if (logger.isTraceEnabled()) {
+            logger.trace("DefaultPropertiesPostProcessor '{}' start processing 'defaultProperties: {}", processorClassName, defaultPropertiesResources);
+        }
         defaultPropertiesPostProcessor.initializeResources(defaultPropertiesResources);
 
         // load "defaultProperties"
         loadDefaultProperties(defaultPropertiesResources, propertySourceLoaders, resourceLoader, defaultProperties);
 
         defaultPropertiesPostProcessor.postProcess(defaultProperties);
-        logger.trace("DefaultPropertiesPostProcessor '{}' end processing 'defaultProperties: {}", processorClassName, defaultPropertiesResources);
+        if (logger.isTraceEnabled()) {
+            logger.trace("DefaultPropertiesPostProcessor '{}' end processing 'defaultProperties: {}", processorClassName, defaultPropertiesResources);
+        }
     }
 
     private void loadDefaultProperties(Collection<String> defaultPropertiesResources,
                                        PropertySourceLoaders propertySourceLoaders,
                                        ResourceLoader resourceLoader,
                                        Map<String, Object> defaultProperties) {
-        logger.trace("Start loading the 'defaultProperties' resource path list: {}", defaultPropertiesResources);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Start loading the 'defaultProperties' resource path list: {}", defaultPropertiesResources);
+        }
         ResourcePatternResolver resourcePatternResolver = getResourcePatternResolver(resourceLoader);
         for (String defaultPropertiesResource : defaultPropertiesResources) {
             try {
@@ -179,18 +187,24 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                 loaded = true;
             }
         }
-        logger.trace("'defaultProperties' resource [location: {}] loads into {} PropertySources , loaded : {}",
-                resourceLocation, propertySources.size(), loaded);
+        if (logger.isTraceEnabled()) {
+            logger.trace("'defaultProperties' resource [location: {}] loads into {} PropertySources , loaded : {}",
+                    resourceLocation, propertySources.size(), loaded);
+        }
     }
 
     private void merge(EnumerablePropertySource<?> propertySource, Map<String, Object> defaultProperties) {
-        logger.trace("'defaultProperties' PropertySource[{}] tries to merge!", propertySource);
+        if (logger.isTraceEnabled()) {
+            logger.trace("'defaultProperties' PropertySource[{}] tries to merge!", propertySource);
+        }
         String[] propertyNames = propertySource.getPropertyNames();
         for (String propertyName : propertyNames) {
             Object propertyValue = propertySource.getProperty(propertyName);
             Object oldPropertyValue = defaultProperties.putIfAbsent(propertyName, propertyValue);
             if (oldPropertyValue == null) {
-                logger.trace("'defaultProperties' attribute [name: {}, value: {}] added successfully!", propertyName, propertyValue);
+                if (logger.isTraceEnabled()) {
+                    logger.trace("'defaultProperties' attribute [name: {}, value: {}] added successfully!", propertyName, propertyValue);
+                }
             } else {
                 logger.warn("'defaultProperties' attribute [name: {}, old-value: {}] already exists, new-value[{}] will not be merged!",
                         propertyName, oldPropertyValue, propertyValue);
@@ -199,10 +213,12 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
     }
 
     private void logDefaultProperties(SpringApplication springApplication, Map<String, Object> defaultProperties) {
-        logger.trace("SpringApplication[sources:{}] defaultProperties:", springApplication.getSources());
-        defaultProperties.forEach((key, value) -> {
-            logger.trace("'{}' = {}", key, value);
-        });
+        if (logger.isTraceEnabled()) {
+            logger.trace("SpringApplication[sources:{}] defaultProperties:", springApplication.getSources());
+            defaultProperties.forEach((key, value) -> {
+                logger.trace("'{}' = {}", key, value);
+            });
+        }
     }
 
     /**
