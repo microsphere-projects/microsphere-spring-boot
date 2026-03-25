@@ -18,6 +18,10 @@ on:
         required: true
         default: '${major}.${minor}.${patch}'
 
+permissions:
+  contents: write
+  workflows: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
