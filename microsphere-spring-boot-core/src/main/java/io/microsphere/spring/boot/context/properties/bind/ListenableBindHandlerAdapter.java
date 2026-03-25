@@ -157,7 +157,6 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
      * @param result  the created object
      * @return the result from the parent handler
      */
-    @Override
     public Object onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
         Object returnValue = result;
         if (onCreateMethodHandle != NOT_FOUND_METHOD_HANDLE) {
