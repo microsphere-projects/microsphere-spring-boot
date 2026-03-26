@@ -79,6 +79,19 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
         setOrder(HIGHEST_PRECEDENCE);
     }
 
+    /**
+     * Called when the application is starting. If the
+     * {@link #BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME banned-artifacts.enabled} system
+     * property is {@code true}, banned artifacts are detected and excluded from class loading.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   System.setProperty("microsphere.spring.boot.banned-artifacts.enabled", "true");
+     *   BannedArtifactClassLoadingListener listener =
+     *       new BannedArtifactClassLoadingListener(app, args);
+     *   listener.starting(); // triggers artifact banning
+     * }</pre>
+     */
     @Override
     public void starting() {
         if (isProcessed()) {
