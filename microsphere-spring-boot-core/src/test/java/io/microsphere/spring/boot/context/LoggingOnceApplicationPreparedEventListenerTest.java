@@ -21,11 +21,9 @@ package io.microsphere.spring.boot.context;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 /**
  * {@link LoggingOnceApplicationPreparedEventListener} Test
@@ -52,7 +50,6 @@ class LoggingOnceApplicationPreparedEventListenerTest extends AbstractApplicatio
     }
 
     @Test
-    @Execution(SAME_THREAD)
     void testOnApplicationEventOnLoggingTrace() {
         testOnApplicationEventOnLogging("trace");
     }
