@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.context;
 
 
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -40,6 +41,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see LoggingOnceMainApplicationPreparedEventListener
  * @since 1.0.0
  */
+@SpringLoggingTest
 class LoggingOnceMainApplicationPreparedEventListenerTest extends AbstractApplicationPreparedEventTest {
 
     private LoggingOnceMainApplicationPreparedEventListener listener;

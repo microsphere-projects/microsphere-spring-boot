@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@SpringLoggingTest
 @SpringBootTest(classes = {
         ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
@@ -85,7 +87,10 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     }
 
     @Test
-    public void testJacksonProperties() {
+    public void testJacksonProperties(int index) {
+        if (index > 0) {
+            return;
+        }
         assertNull(jacksonProperties.getLocale());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
@@ -107,7 +112,10 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     }
 
     @Test
-    public void testServerProperties() {
+    public void testServerProperties(int index) {
+        if (index > 0) {
+            return;
+        }
         assertNull(serverProperties.getPort());
 
         String newPortPropertyValue = "9527";

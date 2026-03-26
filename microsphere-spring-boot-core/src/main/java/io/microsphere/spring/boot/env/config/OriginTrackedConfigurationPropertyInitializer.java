@@ -59,9 +59,9 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     private PropertySourceLoaders propertySourceLoaders;
 
     /**
-     * Initializes this instance with the given {@link ConfigurableApplicationContext},
-     * creating a {@link PropertySourceLoaders} and registering this bean into the
-     * application context's {@link BeanDefinitionRegistry}.
+     * Initializes the application context by storing references and registering this instance
+     * as a bean in the bean factory. This override sets up the {@link PropertySourceLoaders}
+     * and registers this initializer for later bean factory lifecycle callbacks.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
@@ -70,7 +70,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
      *   initializer.initialize(applicationContext);
      * }</pre>
      *
-     * @param applicationContext the application context to initialize with
+     * @param applicationContext the {@link ConfigurableApplicationContext} to initialize
      */
     @Override
     public void initialize(ConfigurableApplicationContext applicationContext) {
@@ -82,16 +82,18 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     }
 
     /**
-     * Called when the bean factory configuration is frozen. Replaces non-origin-tracked
-     * {@link PropertySource property sources} in the environment with origin-tracked equivalents.
+     * Callback invoked when the bean factory configuration is frozen. This override
+     * triggers the replacement of non-origin-tracked property sources with origin-tracked versions.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Typically invoked by the Spring container as a SmartInitializingSingleton callback:
+     *   // Typically invoked by the Spring framework lifecycle:
+     *   OriginTrackedConfigurationPropertyInitializer initializer =
+     *       new OriginTrackedConfigurationPropertyInitializer();
      *   initializer.onBeanFactoryConfigurationFrozen(beanFactory);
      * }</pre>
      *
-     * @param beanFactory the bean factory whose configuration has been frozen
+     * @param beanFactory the {@link ConfigurableListableBeanFactory} whose configuration was frozen
      */
     @Override
     public void onBeanFactoryConfigurationFrozen(ConfigurableListableBeanFactory beanFactory) {
@@ -101,11 +103,12 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     }
 
     /**
-     * Iterates over the given {@link MutablePropertySources} and replaces each candidate
-     * {@link PropertySource} (enumerable, non-origin-tracked) with an origin-tracked version.
+     * Iterates over the given {@link MutablePropertySources} and replaces eligible
+     * property sources with origin-tracked versions.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurableEnvironment environment = applicationContext.getEnvironment();
      *   MutablePropertySources propertySources = environment.getPropertySources();
      *   initializer.initializePropertySources(propertySources);
      * }</pre>
@@ -133,19 +136,19 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
     }
 
     /**
-     * Creates an origin-tracked {@link PropertySource} from the given source. If the source is a
-     * {@link ResourcePropertySource}, it is reloaded with origin tracking; otherwise, each property
-     * value is wrapped with an {@link OriginTrackedValue}.
+     * Creates an origin-tracked {@link PropertySource} from the given property source.
+     * If the source is a {@link ResourcePropertySource}, it is reloaded with origin tracking;
+     * otherwise, its properties are wrapped with {@link OriginTrackedValue}.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   PropertySource<?> original = new MapPropertySource("test", map);
+     *   PropertySource<?> original = environment.getPropertySources().get("mySource");
      *   PropertySource<?> tracked = initializer.createOriginTrackedPropertySource(original);
      * }</pre>
      *
-     * @param propertySource the original {@link PropertySource} to convert
-     * @return an origin-tracked {@link PropertySource}
-     * @throws IOException if an I/O error occurs during reload
+     * @param propertySource the {@link PropertySource} to convert
+     * @return a new origin-tracked {@link PropertySource}
+     * @throws IOException if reloading the resource fails
      */
     PropertySource createOriginTrackedPropertySource(PropertySource propertySource) throws IOException {
         if (propertySource instanceof ResourcePropertySource) {

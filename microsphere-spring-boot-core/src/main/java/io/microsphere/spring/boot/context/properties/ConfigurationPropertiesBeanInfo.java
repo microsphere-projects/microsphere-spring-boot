@@ -76,14 +76,15 @@ public class ConfigurationPropertiesBeanInfo {
     private final PropertyDescriptor[] propertyDescriptors;
 
     /**
-     * Constructs a {@link ConfigurationPropertiesBeanInfo} by resolving the
-     * {@link ConfigurationProperties} annotation from the given bean class.
+     * Constructs a {@link ConfigurationPropertiesBeanInfo} by introspecting the given bean class
+     * for its {@link ConfigurationProperties @ConfigurationProperties} annotation.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-     *   String prefix = info.getPrefix(); // e.g., "server"
+     *   @ConfigurationProperties(prefix = "app")
+     *   public class AppProperties { }
+     *
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      * }</pre>
      *
      * @param beanClass the bean class annotated with {@link ConfigurationProperties}
@@ -93,19 +94,18 @@ public class ConfigurationPropertiesBeanInfo {
     }
 
     /**
-     * Constructs a {@link ConfigurationPropertiesBeanInfo} with the given bean class and
-     * annotation, deriving the prefix from the annotation's {@code prefix} or {@code value} attribute.
+     * Constructs a {@link ConfigurationPropertiesBeanInfo} with the given bean class and annotation,
+     * deriving the prefix from the annotation's {@code prefix} or {@code value} attribute.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationProperties annotation =
-     *       ServerProperties.class.getAnnotation(ConfigurationProperties.class);
+     *   ConfigurationProperties annotation = AppProperties.class.getAnnotation(ConfigurationProperties.class);
      *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class, annotation);
+     *       new ConfigurationPropertiesBeanInfo(AppProperties.class, annotation);
      * }</pre>
      *
      * @param beanClass  the bean class
-     * @param annotation the {@link ConfigurationProperties} annotation instance
+     * @param annotation the {@link ConfigurationProperties} annotation
      */
     public ConfigurationPropertiesBeanInfo(Class<?> beanClass, ConfigurationProperties annotation) {
         this(beanClass, annotation, hasText(annotation.prefix()) ? annotation.prefix() : annotation.value());
@@ -132,56 +132,53 @@ public class ConfigurationPropertiesBeanInfo {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-     *   Class<?> cls = info.getBeanClass(); // ServerProperties.class
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
+     *   Class<?> beanClass = info.getBeanClass(); // AppProperties.class
      * }</pre>
      *
-     * @return the bean class
+     * @return the bean class, never {@code null}
      */
     public Class<?> getBeanClass() {
         return beanClass;
     }
 
     /**
-     * Returns the {@link ConfigurationProperties} annotation associated with this info.
+     * Returns the {@link ConfigurationProperties} annotation of the bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      *   ConfigurationProperties annotation = info.getAnnotation();
+     *   String prefix = annotation.prefix();
      * }</pre>
      *
-     * @return the {@link ConfigurationProperties} annotation
+     * @return the {@link ConfigurationProperties} annotation, never {@code null}
      */
     public ConfigurationProperties getAnnotation() {
         return annotation;
     }
 
     /**
-     * Returns the configuration property prefix derived from the annotation.
+     * Returns the property name prefix for this configuration properties bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-     *   String prefix = info.getPrefix(); // "server"
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
+     *   String prefix = info.getPrefix(); // e.g. "app"
      * }</pre>
      *
-     * @return the property name prefix
+     * @return the prefix, never {@code null}
      */
     public String getPrefix() {
         return prefix;
     }
 
     /**
-     * Returns the list of {@link PropertyDescriptor}s for the bean class.
+     * Returns all {@link PropertyDescriptor}s of the bean class.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      *   List<PropertyDescriptor> descriptors = info.getPropertyDescriptors();
      *   descriptors.forEach(d -> System.out.println(d.getName()));
      * }</pre>
@@ -197,32 +194,29 @@ public class ConfigurationPropertiesBeanInfo {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-     *   PropertyDescriptor descriptor = info.getPropertyDescriptor("port");
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
+     *   PropertyDescriptor descriptor = info.getPropertyDescriptor("name");
      * }</pre>
      *
      * @param name the property name
-     * @return the matching {@link PropertyDescriptor}, or {@code null} if not found
+     * @return the {@link PropertyDescriptor}, or {@code null} if not found
      */
     public PropertyDescriptor getPropertyDescriptor(String name) {
         return BeanUtils.getPropertyDescriptor(beanClass, name);
     }
 
     /**
-     * Compares this object with another for equality based on bean class and prefix.
+     * Compares this instance with the specified object for equality based on bean class and prefix.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info1 =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-     *   ConfigurationPropertiesBeanInfo info2 =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
+     *   ConfigurationPropertiesBeanInfo info1 = new ConfigurationPropertiesBeanInfo(AppProperties.class);
+     *   ConfigurationPropertiesBeanInfo info2 = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      *   boolean equal = info1.equals(info2); // true
      * }</pre>
      *
      * @param o the object to compare with
-     * @return {@code true} if the objects are equal, {@code false} otherwise
+     * @return {@code true} if equal, {@code false} otherwise
      */
     @Override
     public boolean equals(Object o) {
@@ -246,8 +240,7 @@ public class ConfigurationPropertiesBeanInfo {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      *   int hash = info.hashCode();
      * }</pre>
      *
@@ -259,15 +252,12 @@ public class ConfigurationPropertiesBeanInfo {
     }
 
     /**
-     * Returns a string representation including the bean class, annotation, prefix,
-     * and property descriptors.
+     * Returns a string representation including bean class, annotation, prefix, and property descriptors.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ConfigurationPropertiesBeanInfo info =
-     *       new ConfigurationPropertiesBeanInfo(ServerProperties.class);
+     *   ConfigurationPropertiesBeanInfo info = new ConfigurationPropertiesBeanInfo(AppProperties.class);
      *   System.out.println(info.toString());
-     *   // ConfigurationPropertiesBeanInfo{beanClass=..., prefix='server', ...}
      * }</pre>
      *
      * @return a string representation of this object

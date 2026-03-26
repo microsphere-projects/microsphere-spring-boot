@@ -39,8 +39,7 @@ public class ConfigurationMetadataEndpoint {
     private final ConfigurationMetadataRepository configurationMetadataRepository;
 
     /**
-     * Constructs a {@link ConfigurationMetadataEndpoint} backed by the given
-     * {@link ConfigurationMetadataRepository}.
+     * Constructs a new {@link ConfigurationMetadataEndpoint} with the given {@link ConfigurationMetadataRepository}.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
@@ -48,25 +47,23 @@ public class ConfigurationMetadataEndpoint {
      *   ConfigurationMetadataEndpoint endpoint = new ConfigurationMetadataEndpoint(repository);
      * }</pre>
      *
-     * @param configurationMetadataRepository the repository providing configuration metadata
+     * @param configurationMetadataRepository the {@link ConfigurationMetadataRepository} to use
      */
     public ConfigurationMetadataEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
         this.configurationMetadataRepository = configurationMetadataRepository;
     }
 
     /**
-     * Returns a {@link ConfigurationMetadataDescriptor} containing the groups and
-     * properties from the {@link ConfigurationMetadataRepository}.
+     * Returns the {@link ConfigurationMetadataDescriptor} containing all configuration metadata
+     * groups and properties.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationMetadataEndpoint endpoint = new ConfigurationMetadataEndpoint(repository);
-     *   ConfigurationMetadataDescriptor metadata = endpoint.getConfigurationMetadata();
-     *   Collection<ItemMetadata> groups = metadata.getGroups();
-     *   Collection<ItemMetadata> properties = metadata.getProperties();
+     *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
      * }</pre>
      *
-     * @return a descriptor containing configuration metadata groups and properties
+     * @return a {@link ConfigurationMetadataDescriptor} with the aggregated metadata
      */
     @ReadOperation
     public ConfigurationMetadataDescriptor getConfigurationMetadata() {
@@ -86,32 +83,30 @@ public class ConfigurationMetadataEndpoint {
         private Collection<ItemMetadata> properties;
 
         /**
-         * Returns the collection of configuration metadata groups.
+         * Returns the collection of group {@link ItemMetadata} entries.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
          *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
          *   Collection<ItemMetadata> groups = descriptor.getGroups();
-         *   groups.forEach(group -> System.out.println(group.getName()));
          * }</pre>
          *
-         * @return the collection of {@link ItemMetadata} representing groups
+         * @return a {@link Collection} of group {@link ItemMetadata}
          */
         public Collection<ItemMetadata> getGroups() {
             return groups;
         }
 
         /**
-         * Returns the collection of configuration metadata properties.
+         * Returns the collection of property {@link ItemMetadata} entries.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
          *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
          *   Collection<ItemMetadata> properties = descriptor.getProperties();
-         *   properties.forEach(prop -> System.out.println(prop.getName()));
          * }</pre>
          *
-         * @return the collection of {@link ItemMetadata} representing properties
+         * @return a {@link Collection} of property {@link ItemMetadata}
          */
         public Collection<ItemMetadata> getProperties() {
             return properties;

@@ -42,32 +42,31 @@ public class ConditionsReportMessageBuilder {
     private final ConfigurableApplicationContext context;
 
     /**
-     * Construct a new {@link ConditionsReportMessageBuilder} for the given application context.
+     * Constructs a new {@link ConditionsReportMessageBuilder} with the given application context.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
+     *   ConfigurableApplicationContext context = SpringApplication.run(MyApp.class, args);
      *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
-     *   List<String> messages = builder.build();
      * }</pre>
      *
-     * @param context the {@link ConfigurableApplicationContext} to build the report from
+     * @param context the {@link ConfigurableApplicationContext} used for building condition reports
      */
     public ConditionsReportMessageBuilder(ConfigurableApplicationContext context) {
         this.context = context;
     }
 
     /**
-     * Build the condition evaluation report messages for all registered bean factories.
-     * Each message contains the condition details for a single application context.
+     * Builds a list of condition evaluation report messages, one per application context.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
-     *   List<String> reportMessages = builder.build();
-     *   reportMessages.forEach(System.out::println);
+     *   List<String> messages = builder.build();
+     *   messages.forEach(System.out::println);
      * }</pre>
      *
-     * @return a list of formatted condition evaluation report messages
+     * @return a list of formatted report message strings
      */
     List<String> build() {
         Map<String, ConditionEvaluationReport> reportsMap = getReportsMap();
@@ -77,19 +76,19 @@ public class ConditionsReportMessageBuilder {
     }
 
     /**
-     * Build a single condition evaluation report message for the given context identifier and report.
-     * The message includes the title, exclusions, unconditional classes, and condition outcomes.
+     * Builds a single condition evaluation report message for the given context ID and report.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConditionsReportMessageBuilder builder = new ConditionsReportMessageBuilder(context);
+     *   ConditionEvaluationReport report = ConditionEvaluationReport.get(beanFactory);
      *   String message = builder.buildSingle("myContext", report);
      *   System.out.println(message);
      * }</pre>
      *
-     * @param id the application context identifier
+     * @param id     the identifier of the application context
      * @param report the {@link ConditionEvaluationReport} to format
-     * @return the formatted report message
+     * @return the formatted report message string
      */
     String buildSingle(String id, ConditionEvaluationReport report) {
         StringBuilder reportMessage = new StringBuilder(lineSeparator());

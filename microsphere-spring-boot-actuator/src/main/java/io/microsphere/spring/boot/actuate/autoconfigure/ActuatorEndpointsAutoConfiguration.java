@@ -49,15 +49,11 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     private ClassLoader classLoader;
 
     /**
-     * Creates an {@link ArtifactsEndpoint} bean using the auto-detected bean class loader.
+     * Creates an {@link ArtifactsEndpoint} bean using the current class loader.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Auto-configured; access the endpoint via actuator:
-     *   // GET /actuator/artifacts
-     *
-     *   @Autowired
-     *   private ArtifactsEndpoint artifactsEndpoint;
+     *   // Auto-configured as a Spring bean; access via actuator endpoint "/actuator/artifacts".
      * }</pre>
      *
      * @return a new {@link ArtifactsEndpoint} instance
@@ -70,18 +66,14 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     }
 
     /**
-     * Creates a {@link WebEndpoints} bean that aggregates all available web endpoints.
+     * Creates a {@link WebEndpoints} bean that aggregates all web endpoint read operations.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Auto-configured in web applications; access via actuator:
-     *   // GET /actuator/webEndpoints
-     *
-     *   @Autowired
-     *   private WebEndpoints webEndpoints;
+     *   // Auto-configured as a Spring bean; access via actuator endpoint "/actuator/webEndpoints".
      * }</pre>
      *
-     * @param webEndpointsSupplier the supplier of web endpoint instances
+     * @param webEndpointsSupplier the supplier of {@link org.springframework.boot.actuate.endpoint.web.ExposableWebEndpoint} instances
      * @return a new {@link WebEndpoints} instance
      */
     @Bean
@@ -92,17 +84,26 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         return new WebEndpoints(webEndpointsSupplier);
     }
 
+    /**
+     * Configuration class that registers configuration-processor-related beans when the
+     * Spring Boot Configuration Processor is present on the classpath.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // Automatically imported by ActuatorEndpointsAutoConfiguration when
+     *   // spring-boot-configuration-processor is on the classpath.
+     * }</pre>
+     */
     @ConditionalOnConfigurationProcessorPresent
     static class ConfigurationProcessorConfiguration {
 
         /**
-         * Creates a {@link ConfigurationMetadataReader} bean for reading Spring Boot
-         * configuration metadata JSON files.
+         * Creates a {@link ConfigurationMetadataReader} bean for reading configuration metadata.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
-         *   @Autowired
-         *   private ConfigurationMetadataReader configurationMetadataReader;
+         *   // Auto-configured; typically injected into ConfigurationMetadataRepository.
+         *   ConfigurationMetadataReader reader = configurationMetadataReader();
          * }</pre>
          *
          * @return a new {@link ConfigurationMetadataReader} instance
@@ -114,16 +115,15 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         }
 
         /**
-         * Creates a {@link ConfigurationMetadataRepository} bean backed by the given
-         * {@link ConfigurationMetadataReader}.
+         * Creates a {@link ConfigurationMetadataRepository} bean backed by the given reader.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
-         *   @Autowired
-         *   private ConfigurationMetadataRepository configurationMetadataRepository;
+         *   // Auto-configured; provides metadata for configuration endpoints.
+         *   ConfigurationMetadataRepository repo = configurationMetadataRepository(reader);
          * }</pre>
          *
-         * @param configurationMetadataReader the reader used to load configuration metadata
+         * @param configurationMetadataReader the {@link ConfigurationMetadataReader} to use
          * @return a new {@link ConfigurationMetadataRepository} instance
          */
         @Bean
@@ -133,16 +133,14 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         }
 
         /**
-         * Creates a {@link ConfigurationMetadataEndpoint} bean exposing configuration metadata
-         * via the actuator.
+         * Creates a {@link ConfigurationMetadataEndpoint} bean exposing metadata at an actuator endpoint.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
-         *   // Access the endpoint via actuator:
-         *   // GET /actuator/configMetadata
+         *   // Auto-configured; access via actuator endpoint "/actuator/configMetadata".
          * }</pre>
          *
-         * @param configurationMetadataRepository the repository providing configuration metadata
+         * @param configurationMetadataRepository the {@link ConfigurationMetadataRepository} to use
          * @return a new {@link ConfigurationMetadataEndpoint} instance
          */
         @Bean
@@ -153,16 +151,15 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
         }
 
         /**
-         * Creates a {@link ConfigurationPropertiesEndpoint} bean exposing configuration
-         * properties via the actuator.
+         * Creates a {@link ConfigurationPropertiesEndpoint} bean exposing configuration properties
+         * at an actuator endpoint.
          *
          * <h3>Example Usage</h3>
          * <pre>{@code
-         *   // Access the endpoint via actuator:
-         *   // GET /actuator/configProperties
+         *   // Auto-configured; access via actuator endpoint "/actuator/configProperties".
          * }</pre>
          *
-         * @param configurationMetadataRepository the repository providing configuration metadata
+         * @param configurationMetadataRepository the {@link ConfigurationMetadataRepository} to use
          * @return a new {@link ConfigurationPropertiesEndpoint} instance
          */
         @Bean
@@ -174,16 +171,15 @@ public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware 
     }
 
     /**
-     * Sets the bean {@link ClassLoader} used for artifact detection in
-     * the {@link ArtifactsEndpoint}.
+     * Stores the bean {@link ClassLoader} for use when creating class-loader-aware endpoint beans.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   // Automatically called by the Spring container for BeanClassLoaderAware beans.
-     *   // No manual invocation is needed when using Spring's lifecycle management.
+     *   // Called automatically by the Spring container.
+     *   config.setBeanClassLoader(Thread.currentThread().getContextClassLoader());
      * }</pre>
      *
-     * @param classLoader the class loader provided by the Spring container
+     * @param classLoader the {@link ClassLoader} to set
      */
     @Override
     public void setBeanClassLoader(ClassLoader classLoader) {

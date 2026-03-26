@@ -27,8 +27,8 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   public class MyRunListener extends SpringApplicationRunListenerAdapter {
-     *       public MyRunListener(SpringApplication application, String[] args) {
-     *           super(application, args);
+     *       public MyRunListener(SpringApplication app, String[] args) {
+     *           super(app, args);
      *       }
      *   }
      * }</pre>
@@ -43,31 +43,31 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
     }
 
     /**
-     * Called when the application is starting, with the {@link ConfigurableBootstrapContext} available.
+     * Called when the application is starting up with a {@link ConfigurableBootstrapContext}.
      * Subclasses may override this method to perform custom logic during the starting phase.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void starting(ConfigurableBootstrapContext bootstrapContext) {
-     *       // perform custom initialization during application starting
+     *       System.out.println("Application is starting with bootstrap context");
      *   }
      * }</pre>
      *
-     * @param bootstrapContext the bootstrap context
+     * @param bootstrapContext the {@link ConfigurableBootstrapContext}
      */
     public void starting(ConfigurableBootstrapContext bootstrapContext) {
     }
 
     /**
-     * Called when the application is starting, without a bootstrap context.
+     * Called when the application is starting up (legacy callback without bootstrap context).
      * Subclasses may override this method to perform custom logic during the starting phase.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void starting() {
-     *       // perform custom initialization during application starting
+     *       System.out.println("Application is starting");
      *   }
      * }</pre>
      */
@@ -82,7 +82,7 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
      * <pre>{@code
      *   @Override
      *   public void environmentPrepared(ConfigurableEnvironment environment) {
-     *       // customize environment properties before context creation
+     *       environment.getPropertySources().addLast(myPropertySource);
      *   }
      * }</pre>
      *
@@ -92,87 +92,99 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
     }
 
     /**
-     * {@inheritDoc}
+     * Called when the {@link ConfigurableApplicationContext} has been prepared but before bean definitions are loaded.
+     * Subclasses may override this method to perform custom logic after context preparation.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void contextPrepared(ConfigurableApplicationContext context) {
-     *       // perform logic after the application context has been prepared
+     *       System.out.println("Context prepared: " + context.getId());
      *   }
      * }</pre>
+     *
+     * @param context the prepared {@link ConfigurableApplicationContext}
      */
-    @Override
     public void contextPrepared(ConfigurableApplicationContext context) {
     }
 
     /**
-     * {@inheritDoc}
+     * Called when the {@link ConfigurableApplicationContext} has been loaded with bean definitions
+     * but not yet refreshed.
+     * Subclasses may override this method to perform custom logic after context loading.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void contextLoaded(ConfigurableApplicationContext context) {
-     *       // perform logic after the application context has been loaded
+     *       System.out.println("Context loaded: " + context.getId());
      *   }
      * }</pre>
+     *
+     * @param context the loaded {@link ConfigurableApplicationContext}
      */
-    @Override
     public void contextLoaded(ConfigurableApplicationContext context) {
     }
 
     /**
-     * {@inheritDoc}
+     * Called when the application context has been refreshed and started.
+     * Subclasses may override this method to perform custom logic after the context is started.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void started(ConfigurableApplicationContext context) {
-     *       // perform logic after the application context has been started
+     *       System.out.println("Application started: " + context.getId());
      *   }
      * }</pre>
+     *
+     * @param context the started {@link ConfigurableApplicationContext}
      */
-    @Override
     public void started(ConfigurableApplicationContext context) {
     }
 
     /**
-     * {@inheritDoc}
+     * Called when the application is fully running.
+     * Subclasses may override this method to perform custom logic when the application is ready.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void running(ConfigurableApplicationContext context) {
-     *       // perform logic when the application is running
+     *       System.out.println("Application running: " + context.getId());
      *   }
      * }</pre>
+     *
+     * @param context the running {@link ConfigurableApplicationContext}
      */
-    @Override
     public void running(ConfigurableApplicationContext context) {
     }
 
     /**
-     * {@inheritDoc}
+     * Called when the application has failed to start.
+     * Subclasses may override this method to handle startup failures.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   @Override
      *   public void failed(ConfigurableApplicationContext context, Throwable exception) {
-     *       // handle application startup failure
-     *       exception.printStackTrace();
+     *       System.err.println("Application failed: " + exception.getMessage());
      *   }
      * }</pre>
+     *
+     * @param context   the {@link ConfigurableApplicationContext}, may be {@code null}
+     * @param exception the exception that caused the failure
      */
-    @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
     }
 
     /**
-     * Return the {@link SpringApplication} instance associated with this listener.
+     * Return the underlying {@link SpringApplication} instance.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   SpringApplication app = listener.getSpringApplication();
+     *   Class<?> mainClass = app.getMainApplicationClass();
      * }</pre>
      *
      * @return the {@link SpringApplication} instance
@@ -187,6 +199,9 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   String[] args = listener.getArgs();
+     *   for (String arg : args) {
+     *       System.out.println("Argument: " + arg);
+     *   }
      * }</pre>
      *
      * @return the command line arguments
@@ -209,6 +224,17 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
         this.order = order;
     }
 
+    /**
+     * Return the order of this listener. Lower values have higher priority.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   int order = listener.getOrder();
+     *   System.out.println("Listener order: " + order);
+     * }</pre>
+     *
+     * @return the order value
+     */
     @Override
     public final int getOrder() {
         return order;

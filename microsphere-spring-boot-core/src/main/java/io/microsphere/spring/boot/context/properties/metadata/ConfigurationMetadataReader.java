@@ -53,17 +53,18 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
     private ResourcePatternResolver resourcePatternResolver;
 
     /**
-     * Reads and merges all {@code spring-configuration-metadata.json} and
-     * {@code additional-spring-configuration-metadata.json} resources found on the classpath.
+     * Reads and merges all Spring Boot configuration metadata from classpath resources,
+     * including both standard and additional metadata files.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
      *   ConfigurationMetadata metadata = reader.read();
-     *   metadata.getItems().forEach(item -> System.out.println(item.getName()));
+     *   metadata.getItems().forEach(item ->
+     *       System.out.println(item.getName() + " = " + item.getDefaultValue()));
      * }</pre>
      *
-     * @return the merged {@link ConfigurationMetadata}
+     * @return a merged {@link ConfigurationMetadata} instance containing all discovered metadata
      */
     public ConfigurationMetadata read() {
         ConfigurationMetadata metadata = new ConfigurationMetadata();
@@ -100,7 +101,7 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
-     *   reader.setResourceLoader(new DefaultResourceLoader());
+     *   reader.setResourceLoader(applicationContext);
      * }</pre>
      *
      * @param resourceLoader the {@link ResourceLoader} to use
@@ -115,18 +116,18 @@ public class ConfigurationMetadataReader implements ResourceLoaderAware {
     }
 
     /**
-     * Returns the {@link ResourcePatternResolver} used to locate metadata resources.
+     * Returns the {@link ResourcePatternResolver} used to locate configuration metadata resources.
      * If none has been set via {@link #setResourceLoader(ResourceLoader)}, a default
-     * {@link PathMatchingResourcePatternResolver} is returned.
+     * {@link PathMatchingResourcePatternResolver} is created and returned.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
      *   ResourcePatternResolver resolver = reader.getResourcePatternResolver();
-     *   Resource[] resources = resolver.getResources(ConfigurationMetadataReader.METADATA_PATH);
+     *   Resource[] resources = resolver.getResources("classpath*:/META-INF/*.json");
      * }</pre>
      *
-     * @return the current {@link ResourcePatternResolver}, never {@code null}
+     * @return the {@link ResourcePatternResolver}, never {@code null}
      */
     public ResourcePatternResolver getResourcePatternResolver() {
         ResourcePatternResolver resourcePatternResolver = this.resourcePatternResolver;

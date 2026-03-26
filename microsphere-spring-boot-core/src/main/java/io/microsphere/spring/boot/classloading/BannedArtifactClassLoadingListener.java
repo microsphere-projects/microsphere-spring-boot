@@ -61,9 +61,8 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
     }
 
     /**
-     * Constructs a new {@link BannedArtifactClassLoadingListener} with the given
-     * {@link SpringApplication} and optional command-line arguments. The listener is
-     * assigned the {@link Ordered#HIGHEST_PRECEDENCE highest precedence} order.
+     * Construct a new {@link BannedArtifactClassLoadingListener} with the given application and arguments.
+     * The listener is set to {@link Ordered#HIGHEST_PRECEDENCE} to execute as early as possible.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
@@ -72,8 +71,8 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
      *       new BannedArtifactClassLoadingListener(app, args);
      * }</pre>
      *
-     * @param springApplication the Spring Boot application instance
-     * @param args              the command-line arguments
+     * @param springApplication the {@link SpringApplication} instance
+     * @param args the command line arguments
      */
     public BannedArtifactClassLoadingListener(SpringApplication springApplication, String... args) {
         super(springApplication, args);
@@ -96,19 +95,38 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
     @Override
     public void starting() {
         if (isProcessed()) {
-            logger.trace("Current application's artifacts have been processed!");
+            if (logger.isTraceEnabled()) {
+                logger.trace("Current application's artifacts have been processed!");
+            }
             return;
         }
 
         if (bannedArtifactsEnabled()) {
             banArtifacts();
         } else {
-            logger.trace("The artifacts will not be banned, caused by the JDK System property('{}') is missing or 'false'",
-                    BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME);
+            if (logger.isTraceEnabled()) {
+                logger.trace("The artifacts will not be banned, caused by the JDK System property('{}') is missing or 'false'",
+                        BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME);
+            }
         }
         markProcessed();
     }
 
+    /**
+     * Check whether the current {@link SpringApplication} has already been processed
+     * by this listener, to avoid duplicate artifact banning.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   BannedArtifactClassLoadingListener listener =
+     *       new BannedArtifactClassLoadingListener(app, args);
+     *   if (!listener.isProcessed()) {
+     *       // artifacts have not been processed yet
+     *   }
+     * }</pre>
+     *
+     * @return {@code true} if the application's artifacts have already been processed
+     */
     boolean isProcessed() {
         Boolean processed = processedMap.getOrDefault(getSpringApplication(), FALSE);
         return TRUE.equals(processed);
@@ -126,8 +144,10 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
 
         SpringApplication springApplication = getSpringApplication();
 
-        logger.trace("Current SpringApplication(Main class: '{}', arguments: {}) tries to ban the artifacts!",
-                springApplication.getMainApplicationClass(), arrayToString(args));
+        if (logger.isTraceEnabled()) {
+            logger.trace("Current SpringApplication(Main class: '{}', arguments: {}) tries to ban the artifacts!",
+                    springApplication.getMainApplicationClass(), arrayToString(args));
+        }
 
         ClassLoader classLoader = springApplication.getClassLoader();
 

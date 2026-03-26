@@ -39,37 +39,23 @@ public class WebEndpoints {
     private final WebEndpointsSupplier webEndpointsSupplier;
 
     /**
-     * Constructs a {@link WebEndpoints} aggregation backed by the given
-     * {@link WebEndpointsSupplier}.
+     * Constructs a new {@link WebEndpoints} aggregation endpoint with the given {@link WebEndpointsSupplier}.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   WebEndpointsSupplier supplier = applicationContext.getBean(WebEndpointsSupplier.class);
-     *   WebEndpoints webEndpoints = new WebEndpoints(supplier);
+     *   WebEndpoints webEndpoints = new WebEndpoints(webEndpointsSupplier);
      * }</pre>
      *
-     * @param webEndpointsSupplier the supplier of {@link ExposableWebEndpoint} instances
+     * @param webEndpointsSupplier the supplier providing the collection of {@link ExposableWebEndpoint} instances
      */
     public WebEndpoints(WebEndpointsSupplier webEndpointsSupplier) {
         this.webEndpointsSupplier = webEndpointsSupplier;
     }
 
     /**
-     * Invokes all {@link OperationType#READ Read Operation} {@link WebEndpoint WebEndpoints} for Java {@link Method}
-     * without arguments and returns the aggregated results.
+     * all {@link OperationType#READ Read Opeartion} {@link WebEndpoint WebEndpoints} for Java {@link Method} without arguments
      *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   // Access via actuator HTTP endpoint:
-     *   // GET /actuator/webEndpoints
-     *   //
-     *   // Programmatic usage:
-     *   WebEndpoints webEndpoints = new WebEndpoints(webEndpointsSupplier);
-     *   Map<String, Object> results = webEndpoints.invokeReadOperations();
-     *   results.forEach((id, result) -> System.out.println(id + " = " + result));
-     * }</pre>
-     *
-     * @return a {@link Map} of read operation IDs to their results
+     * @return
      */
     @ReadOperation
     public Map<String, Object> invokeReadOperations() {
@@ -110,13 +96,10 @@ public class WebEndpoints {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   ExposableWebEndpoint webEndpoint = // obtain endpoint
-     *   if (WebEndpoints.isExposableWebEndpoint(webEndpoint)) {
-     *       DiscoveredEndpoint discovered = (DiscoveredEndpoint) webEndpoint;
-     *   }
+     *   boolean exposable = WebEndpoints.isExposableWebEndpoint(webEndpoint);
      * }</pre>
      *
-     * @param webEndpoint the web endpoint to check
+     * @param webEndpoint the {@link ExposableWebEndpoint} to check
      * @return {@code true} if the endpoint is a {@link DiscoveredEndpoint}, {@code false} otherwise
      */
     static boolean isExposableWebEndpoint(ExposableWebEndpoint webEndpoint) {
@@ -125,17 +108,14 @@ public class WebEndpoints {
 
     /**
      * Determines whether the given {@link WebOperation} is a candidate for read invocation,
-     * i.e., it is a {@link OperationType#READ READ} operation with no parameters.
+     * i.e., it is a discovered {@link ReadOperation} with no parameters.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   WebOperation operation = // obtain from ExposableWebEndpoint
-     *   if (WebEndpoints.isReadWebOperationCandidate(operation)) {
-     *       Object result = operation.invoke(context);
-     *   }
+     *   boolean candidate = WebEndpoints.isReadWebOperationCandidate(webOperation);
      * }</pre>
      *
-     * @param webOperation the web operation to check
+     * @param webOperation the {@link WebOperation} to evaluate
      * @return {@code true} if the operation is a parameterless read operation, {@code false} otherwise
      */
     static boolean isReadWebOperationCandidate(WebOperation webOperation) {

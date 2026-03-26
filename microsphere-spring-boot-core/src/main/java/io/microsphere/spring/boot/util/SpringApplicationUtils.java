@@ -78,12 +78,13 @@ public abstract class SpringApplicationUtils implements Utils {
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
-     *   SpringApplication app = new SpringApplication(MyApp.class);
-     *   ResourceLoader loader = SpringApplicationUtils.getResourceLoader(app);
+     *   SpringApplication app = new SpringApplication(MyApplication.class);
+     *   ResourceLoader resourceLoader = SpringApplicationUtils.getResourceLoader(app);
+     *   Resource resource = resourceLoader.getResource("classpath:application.properties");
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @return the {@link ResourceLoader} associated with the given {@link SpringApplication}, never {@code null}
+     * @return the {@link ResourceLoader} associated with the application, never {@code null}
      */
     public static ResourceLoader getResourceLoader(SpringApplication springApplication) {
         ResourceLoader resourceLoader = springApplication.getResourceLoader();

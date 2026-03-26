@@ -23,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Set;
 
 import static io.microsphere.collection.Sets.ofSet;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * {@link ArtifactsCollisionException} Test
@@ -39,7 +39,7 @@ class ArtifactsCollisionExceptionTest {
     void testGetArtifacts() {
         Set<String> artifacts = ofSet("a", "b", "c");
         ArtifactsCollisionException exception = new ArtifactsCollisionException("For testing", artifacts);
-        assertTrue(exception instanceof RuntimeException);
+        assertInstanceOf(RuntimeException.class, exception);
         assertSame(artifacts, exception.getArtifacts());
     }
 }
