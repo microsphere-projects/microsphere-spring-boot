@@ -79,6 +79,16 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
 
     private int order;
 
+    /**
+     * Constructs a new {@link DefaultPropertiesApplicationListener} with the
+     * {@link #DEFAULT_ORDER default order}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   DefaultPropertiesApplicationListener listener = new DefaultPropertiesApplicationListener();
+     *   listener.onApplicationEvent(event);
+     * }</pre>
+     */
     public DefaultPropertiesApplicationListener() {
         this.setOrder(DEFAULT_ORDER);
     }

@@ -235,6 +235,20 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
+    /**
+     * Converts the given value to the type of the specified property using the configured
+     * {@link ConversionService}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Object converted = beanContext.convertForProperty("port", "8080");
+     *   // converted is Integer 8080 if the property type is int
+     * }</pre>
+     *
+     * @param propertyName the name of the target property
+     * @param value        the value to convert
+     * @return the converted value, or the original value if conversion is not supported
+     */
     Object convertForProperty(String propertyName, Object value) {
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
@@ -244,11 +258,38 @@ class ConfigurationPropertiesBeanContext {
         return value;
     }
 
+    /**
+     * Determines whether the given {@link PropertyDescriptor} is a candidate for binding.
+     * A property is a candidate unless its read method is declared directly on {@link Object}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   PropertyDescriptor descriptor = BeanUtils.getPropertyDescriptor(MyConfig.class, "port");
+     *   boolean candidate = ConfigurationPropertiesBeanContext.isCandidateProperty(descriptor); // true
+     * }</pre>
+     *
+     * @param descriptor the {@link PropertyDescriptor} to evaluate
+     * @return {@code true} if the property is a binding candidate, {@code false} otherwise
+     */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
         return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
     }
 
+    /**
+     * Determines whether the given class is a candidate for configuration property binding.
+     * Primitives, wrappers, classes from {@code java.*} packages, and non-concrete classes are excluded.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   boolean candidate1 = ConfigurationPropertiesBeanContext.isCandidateClass(MyConfig.class); // true
+     *   boolean candidate2 = ConfigurationPropertiesBeanContext.isCandidateClass(String.class);   // false
+     *   boolean candidate3 = ConfigurationPropertiesBeanContext.isCandidateClass(int.class);      // false
+     * }</pre>
+     *
+     * @param beanClass the class to evaluate
+     * @return {@code true} if the class is a binding candidate, {@code false} otherwise
+     */
     static boolean isCandidateClass(Class<?> beanClass) {
         if (isPrimitiveOrWrapper(beanClass)) {
             return false;
