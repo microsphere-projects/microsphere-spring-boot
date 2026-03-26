@@ -53,6 +53,18 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
 
     private Map<String, List<ItemHint>> namedHints;
 
+    /**
+     * Constructs a new {@link ConfigurationMetadataRepository} backed by the given
+     * {@link ConfigurationMetadataReader}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationMetadataReader reader = new ConfigurationMetadataReader();
+     *   ConfigurationMetadataRepository repository = new ConfigurationMetadataRepository(reader);
+     * }</pre>
+     *
+     * @param configurationMetadataReader the reader used to load {@link ConfigurationMetadata}
+     */
     public ConfigurationMetadataRepository(ConfigurationMetadataReader configurationMetadataReader) {
         this.configurationMetadataReader = configurationMetadataReader;
     }
