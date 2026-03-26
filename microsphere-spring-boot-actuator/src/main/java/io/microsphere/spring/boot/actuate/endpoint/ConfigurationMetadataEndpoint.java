@@ -38,10 +38,33 @@ public class ConfigurationMetadataEndpoint {
 
     private final ConfigurationMetadataRepository configurationMetadataRepository;
 
+    /**
+     * Constructs a new {@link ConfigurationMetadataEndpoint} with the given {@link ConfigurationMetadataRepository}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationMetadataRepository repository = new ConfigurationMetadataRepository(reader);
+     *   ConfigurationMetadataEndpoint endpoint = new ConfigurationMetadataEndpoint(repository);
+     * }</pre>
+     *
+     * @param configurationMetadataRepository the {@link ConfigurationMetadataRepository} to use
+     */
     public ConfigurationMetadataEndpoint(ConfigurationMetadataRepository configurationMetadataRepository) {
         this.configurationMetadataRepository = configurationMetadataRepository;
     }
 
+    /**
+     * Returns the {@link ConfigurationMetadataDescriptor} containing all configuration metadata
+     * groups and properties.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationMetadataEndpoint endpoint = new ConfigurationMetadataEndpoint(repository);
+     *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
+     * }</pre>
+     *
+     * @return a {@link ConfigurationMetadataDescriptor} with the aggregated metadata
+     */
     @ReadOperation
     public ConfigurationMetadataDescriptor getConfigurationMetadata() {
         ConfigurationMetadataDescriptor configurationMetadata = new ConfigurationMetadataDescriptor();
@@ -59,10 +82,32 @@ public class ConfigurationMetadataEndpoint {
 
         private Collection<ItemMetadata> properties;
 
+        /**
+         * Returns the collection of group {@link ItemMetadata} entries.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
+         *   Collection<ItemMetadata> groups = descriptor.getGroups();
+         * }</pre>
+         *
+         * @return a {@link Collection} of group {@link ItemMetadata}
+         */
         public Collection<ItemMetadata> getGroups() {
             return groups;
         }
 
+        /**
+         * Returns the collection of property {@link ItemMetadata} entries.
+         *
+         * <h3>Example Usage</h3>
+         * <pre>{@code
+         *   ConfigurationMetadataDescriptor descriptor = endpoint.getConfigurationMetadata();
+         *   Collection<ItemMetadata> properties = descriptor.getProperties();
+         * }</pre>
+         *
+         * @return a {@link Collection} of property {@link ItemMetadata}
+         */
         public Collection<ItemMetadata> getProperties() {
             return properties;
         }

@@ -71,6 +71,20 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
     )
     public static final String ENABLED_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "artifacts-collision.enabled";
 
+    /**
+     * Handles the {@link ApplicationContextInitializedEvent} by diagnosing artifact collisions
+     * if the feature is enabled via the {@link #ENABLED_PROPERTY_NAME} property.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot when the context is initialized.
+     *   // Enable diagnosis in application.properties:
+     *   // microsphere.spring.boot.artifacts-collision.enabled=true
+     * }</pre>
+     *
+     * @param event the {@link ApplicationContextInitializedEvent}
+     * @throws ArtifactsCollisionException if artifact collisions are detected
+     */
     @Override
     public void onApplicationEvent(ApplicationContextInitializedEvent event) throws ArtifactsCollisionException {
         if (isEnabled(event)) {
@@ -97,6 +111,21 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
         }
     }
 
+    /**
+     * Diagnose artifact collisions by scanning the given {@link ClassLoader} for duplicate artifacts.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactsCollisionDiagnosisListener listener = new ArtifactsCollisionDiagnosisListener();
+     *   Set<String> collisions = listener.diagnose(Thread.currentThread().getContextClassLoader());
+     *   if (!collisions.isEmpty()) {
+     *       System.err.println("Collisions found: " + collisions);
+     *   }
+     * }</pre>
+     *
+     * @param classLoader the {@link ClassLoader} to scan for artifacts
+     * @return a set of colliding artifact identifiers (e.g., "groupId:artifactId")
+     */
     protected Set<String> diagnose(ClassLoader classLoader) {
         ArtifactDetector detector = new ArtifactDetector(classLoader);
         List<Artifact> artifacts = detector.detect(false);
@@ -113,6 +142,21 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
         return artifactsCollisionMap.keySet();
     }
 
+    /**
+     * Build a map of colliding artifacts from the given list. An artifact is considered colliding
+     * if another artifact with the same identifier (groupId:artifactId) already exists in the list.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ArtifactDetector detector = new ArtifactDetector(classLoader);
+     *   List<Artifact> artifacts = detector.detect(false);
+     *   Map<String, Artifact> collisionMap = listener.getArtifactsCollisionMap(artifacts);
+     *   collisionMap.forEach((id, artifact) -> System.err.println("Collision: " + id));
+     * }</pre>
+     *
+     * @param artifacts the list of detected {@link Artifact} instances
+     * @return a map of colliding artifact identifiers to their {@link Artifact} instances
+     */
     Map<String, Artifact> getArtifactsCollisionMap(List<Artifact> artifacts) {
         int size = size(artifacts);
         Map<String, Artifact> artifactsCollisionMap = newLinkedHashMap(size);

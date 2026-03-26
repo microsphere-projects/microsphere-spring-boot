@@ -34,11 +34,41 @@ public class ConfigurationPropertiesBeanPropertyChangedEvent<T> extends BeanProp
 
     private final ConfigurationProperty configurationProperty;
 
+    /**
+     * Constructs a new event indicating that a configuration property bound to a
+     * {@link ConfigurationProperties @ConfigurationProperties} bean has changed.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationProperty configProp = ...; // from BindContext
+     *   ConfigurationPropertiesBeanPropertyChangedEvent<MyProps> event =
+     *       new ConfigurationPropertiesBeanPropertyChangedEvent<>(
+     *           myPropsBean, "name", "oldName", "newName", configProp);
+     * }</pre>
+     *
+     * @param bean                    the bean whose property changed
+     * @param propertyName            the name of the changed property
+     * @param oldValue                the previous value of the property
+     * @param newValue                the new value of the property
+     * @param configurationProperty   the {@link ConfigurationProperty} that triggered the change
+     */
     public ConfigurationPropertiesBeanPropertyChangedEvent(Object bean, String propertyName, Object oldValue, Object newValue, ConfigurationProperty configurationProperty) {
         super(bean, propertyName, oldValue, newValue);
         this.configurationProperty = configurationProperty;
     }
 
+    /**
+     * Returns the {@link ConfigurationProperty} associated with the property change.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanPropertyChangedEvent<?> event = ...;
+     *   ConfigurationProperty property = event.getConfigurationProperty();
+     *   System.out.println("Changed property source: " + property.getOrigin());
+     * }</pre>
+     *
+     * @return the {@link ConfigurationProperty} that triggered the change
+     */
     public ConfigurationProperty getConfigurationProperty() {
         return configurationProperty;
     }

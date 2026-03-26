@@ -71,6 +71,21 @@ public abstract class SpringApplicationUtils implements Utils {
         return unmodifiableSet(defaultPropertiesResources);
     }
 
+    /**
+     * Get the {@link ResourceLoader} from the given {@link SpringApplication}.
+     * If the {@link SpringApplication} does not have a {@link ResourceLoader}, a {@link DefaultResourceLoader}
+     * will be created using the application's {@link ClassLoader}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringApplication app = new SpringApplication(MyApplication.class);
+     *   ResourceLoader resourceLoader = SpringApplicationUtils.getResourceLoader(app);
+     *   Resource resource = resourceLoader.getResource("classpath:application.properties");
+     * }</pre>
+     *
+     * @param springApplication the {@link SpringApplication} instance
+     * @return the {@link ResourceLoader} associated with the application, never {@code null}
+     */
     public static ResourceLoader getResourceLoader(SpringApplication springApplication) {
         ResourceLoader resourceLoader = springApplication.getResourceLoader();
         if (resourceLoader == null) {

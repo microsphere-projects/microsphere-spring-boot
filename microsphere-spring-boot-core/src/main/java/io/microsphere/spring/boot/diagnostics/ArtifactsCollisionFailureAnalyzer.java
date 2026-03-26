@@ -16,6 +16,22 @@ import static java.lang.System.lineSeparator;
  */
 public class ArtifactsCollisionFailureAnalyzer extends AbstractFailureAnalyzer<ArtifactsCollisionException> {
 
+    /**
+     * Analyzes the given {@link ArtifactsCollisionException} and produces a {@link FailureAnalysis}
+     * containing the collision message and a recommended action to resolve it.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // This method is called automatically by Spring Boot's failure analysis mechanism.
+     *   // Register the analyzer in META-INF/spring.factories:
+     *   // org.springframework.boot.diagnostics.FailureAnalyzer=\
+     *   //   io.microsphere.spring.boot.diagnostics.ArtifactsCollisionFailureAnalyzer
+     * }</pre>
+     *
+     * @param rootFailure the root cause {@link Throwable}
+     * @param cause       the {@link ArtifactsCollisionException} to analyze
+     * @return a {@link FailureAnalysis} describing the problem and suggested action
+     */
     @Override
     protected FailureAnalysis analyze(Throwable rootFailure, ArtifactsCollisionException cause) {
         return new FailureAnalysis(cause.getMessage(), buildAction(cause), cause);
