@@ -20,6 +20,7 @@ import io.microsphere.spring.boot.context.properties.ListenableConfigurationProp
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -39,6 +40,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
@@ -59,6 +61,7 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
 @TestPropertySource(properties = {"server.error.path=/error.jsp"})
 @EnableAutoConfiguration
 @EnableConfigurationProperties
+@Execution(SAME_THREAD)
 class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
