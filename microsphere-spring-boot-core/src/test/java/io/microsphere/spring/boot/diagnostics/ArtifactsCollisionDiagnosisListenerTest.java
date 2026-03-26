@@ -23,6 +23,7 @@ import io.microsphere.classloading.MavenArtifact;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationContextInitializedEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -43,6 +44,7 @@ import static io.microsphere.util.StringUtils.EMPTY_STRING_ARRAY;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 /**
  * {@link ArtifactsCollisionDiagnosisListener} Test
@@ -52,6 +54,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @SpringLoggingTest
+@Execution(SAME_THREAD)
 class ArtifactsCollisionDiagnosisListenerTest {
 
     private MockEnvironment environment;
