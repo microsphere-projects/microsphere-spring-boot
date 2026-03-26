@@ -20,7 +20,6 @@ package io.microsphere.spring.boot.util;
 
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Execution;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
@@ -40,7 +39,6 @@ import static io.microsphere.spring.boot.util.TestUtils.application;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.parallel.ExecutionMode.SAME_THREAD;
 
 /**
  * {@link SpringApplicationUtils} Test
@@ -68,7 +66,6 @@ class SpringApplicationUtilsTest {
     }
 
     @Test
-    @Execution(SAME_THREAD)
     void testGetDefaultPropertiesResources(int index) {
         if (index > 0) {
             return;
