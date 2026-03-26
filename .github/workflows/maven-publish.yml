@@ -50,7 +50,6 @@ jobs:
           --file pom.xml
           -Drevision=${{ inputs.revision }}
           -Dgpg.skip=true
-          -Djunit.jupiter.execution.parallel.enabled=false
           deploy
           --activate-profiles publish,ci
         env:
