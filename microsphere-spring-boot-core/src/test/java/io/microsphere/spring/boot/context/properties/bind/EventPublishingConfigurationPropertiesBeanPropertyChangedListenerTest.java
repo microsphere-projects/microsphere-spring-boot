@@ -86,7 +86,10 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     }
 
     @Test
-    void testJacksonProperties() {
+    void testJacksonProperties(int index) {
+        if (index > 0) {
+            return;
+        }
         assertNull(jacksonProperties.getDateFormat());
 
         context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {

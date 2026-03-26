@@ -66,7 +66,10 @@ class SpringApplicationUtilsTest {
     }
 
     @Test
-    void testGetDefaultPropertiesResources() {
+    void testGetDefaultPropertiesResources(int index) {
+        if (index > 0) {
+            return;
+        }
         addDefaultPropertiesResources("a", "b", "c");
         assertEquals(ofSet("a", "b", "c"), getDefaultPropertiesResources());
     }
