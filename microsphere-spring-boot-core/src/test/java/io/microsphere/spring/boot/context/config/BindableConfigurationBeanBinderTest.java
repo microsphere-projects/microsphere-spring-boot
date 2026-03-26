@@ -30,6 +30,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Map;
 
+import static io.microsphere.spring.boot.SpringBootVersion.CURRENT;
+import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_2_2;
 import static io.microsphere.spring.core.env.PropertySourcesUtils.getSubProperties;
 import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -73,7 +75,9 @@ class BindableConfigurationBeanBinderTest {
         beanBinder.bind(properties, true, false, user);
         assertUser(user);
 
-        assertThrows(BindException.class, () -> beanBinder.bind(properties, false, true, user));
+        if (CURRENT.ge(SPRING_BOOT_2_2)) {
+            assertThrows(BindException.class, () -> beanBinder.bind(properties, false, true, user));
+        }
 
         assertThrows(BindException.class, () -> beanBinder.bind(properties, false, false, user));
     }
