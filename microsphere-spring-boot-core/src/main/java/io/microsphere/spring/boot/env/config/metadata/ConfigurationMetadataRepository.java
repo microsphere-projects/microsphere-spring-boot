@@ -21,8 +21,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.configurationprocessor.metadata.ItemHint;
 import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
