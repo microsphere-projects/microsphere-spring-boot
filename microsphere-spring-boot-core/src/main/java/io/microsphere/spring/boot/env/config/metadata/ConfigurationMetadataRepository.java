@@ -16,13 +16,13 @@
  */
 package io.microsphere.spring.boot.env.config.metadata;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
 import io.microsphere.spring.boot.context.properties.metadata.ConfigurationMetadataReader;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata;
 import org.springframework.boot.configurationprocessor.metadata.ItemHint;
 import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -81,7 +81,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      *
      * @return a non-null set of property group names
      */
-    @NonNull
+    @Nonnull
     public Set<String> getPropertyGroups() {
         return this.namedGroups.keySet();
     }
@@ -98,7 +98,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      *
      * @return a non-null set of property names
      */
-    @NonNull
+    @Nonnull
     public Set<String> getPropertyNames() {
         return this.namedProperties.keySet();
     }
@@ -115,7 +115,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      *
      * @return a non-null collection of group {@link ItemMetadata}
      */
-    @NonNull
+    @Nonnull
     public Collection<ItemMetadata> getGroups() {
         return this.namedGroups.values();
     }
@@ -132,7 +132,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      *
      * @return a non-null collection of property {@link ItemMetadata}
      */
-    @NonNull
+    @Nonnull
     public Collection<ItemMetadata> getProperties() {
         return this.namedProperties.values();
     }
@@ -190,7 +190,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      * @param name the name of the configuration property to get hints for
      * @return a non-null list of {@link ItemHint} instances; empty if none exist
      */
-    @NonNull
+    @Nonnull
     public List<ItemHint> getHints(String name) {
         return this.namedHints.getOrDefault(name, emptyList());
     }
@@ -207,7 +207,7 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
      *
      * @return the non-null {@link ConfigurationMetadataReader}
      */
-    @NonNull
+    @Nonnull
     public ConfigurationMetadataReader getConfigurationMetadataReader() {
         return configurationMetadataReader;
     }
