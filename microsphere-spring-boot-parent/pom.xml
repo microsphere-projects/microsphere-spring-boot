@@ -20,10 +20,9 @@
 
     <properties>
         <microsphere-spring.version>0.1.8</microsphere-spring.version>
-        <spring-boot.version>2.7.18</spring-boot.version>
         <jolokia.version>1.7.2</jolokia.version>
         <!-- Testing -->
-        <junit-jupiter.version>6.0.3</junit-jupiter.version>
+        <junit-jupiter.version>5.14.3</junit-jupiter.version>
     </properties>
 
     <dependencyManagement>
@@ -102,13 +101,14 @@
         </profile>
 
         <profile>
-            <id>java8-16</id>
+            <id>spring-boot-2.7</id>
             <activation>
-                <jdk>[1.8,17)</jdk>
+                <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <junit-jupiter.version>5.14.3</junit-jupiter.version>
+                <spring-boot.version>2.7.18</spring-boot.version>
             </properties>
         </profile>
+
     </profiles>
 </project>
