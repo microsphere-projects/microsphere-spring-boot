@@ -19,19 +19,18 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-bom.version>0.1.4</microsphere-bom.version>
         <microsphere-spring.version>0.2.8</microsphere-spring.version>
         <jolokia.version>2.5.1</jolokia.version>
+        <junit-jupiter.version>6.0.3</junit-jupiter.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-
-            <!-- Microsphere Testing BOM -->
+            <!-- JUnit Jupiter -->
             <dependency>
-                <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-testing-bom</artifactId>
-                <version>${microsphere-bom.version}</version>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-jupiter.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
