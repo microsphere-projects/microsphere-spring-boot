@@ -27,10 +27,10 @@
     <dependencyManagement>
         <dependencies>
 
-            <!-- Microsphere all BOM -->
+            <!-- Microsphere Testing BOM -->
             <dependency>
                 <groupId>io.github.microsphere-projects</groupId>
-                <artifactId>microsphere-all-bom</artifactId>
+                <artifactId>microsphere-testing-bom</artifactId>
                 <version>${microsphere-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
