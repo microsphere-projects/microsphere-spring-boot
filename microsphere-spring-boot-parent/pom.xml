@@ -110,16 +110,16 @@
 
         <profile>
             <id>spring-boot-3.5</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
-                <spring-boot.version>3.5.12</spring-boot.version>
+                <spring-boot.version>3.5.13</spring-boot.version>
             </properties>
         </profile>
 
         <profile>
             <id>spring-boot-4.0</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <spring-boot.version>4.0.5</spring-boot.version>
             </properties>
