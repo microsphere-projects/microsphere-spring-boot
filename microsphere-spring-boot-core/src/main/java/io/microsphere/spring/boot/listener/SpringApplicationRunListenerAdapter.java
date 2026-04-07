@@ -3,6 +3,8 @@ package io.microsphere.spring.boot.listener;
 import org.springframework.boot.ConfigurableBootstrapContext;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
+import org.springframework.boot.context.event.SpringApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
@@ -12,7 +14,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
+ * @deprecated since the Spring Boot 4.0, use the {@link ApplicationListener} for {@link SpringApplicationEvent}
  */
+@Deprecated(since = "Spring Boot 4.0", forRemoval = true)
 public abstract class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
 
     protected final SpringApplication springApplication;
@@ -34,7 +38,7 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public SpringApplicationRunListenerAdapter(SpringApplication springApplication, String[] args) {
         this.springApplication = springApplication;
