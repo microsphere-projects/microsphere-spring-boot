@@ -36,7 +36,7 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  * @since 1.0.0
  * @deprecated
  */
-@Deprecated(since = "Spring Boot 4.0", forRemoval = true)
+@Deprecated(since = "0.2.9", forRemoval = true)
 public class LoggingSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
     /**
