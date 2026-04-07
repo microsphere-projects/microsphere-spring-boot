@@ -57,8 +57,8 @@ class SpringBootVersionTest {
         testVersionRange(SPRING_BOOT_3_3, 0, 13);
         // Spring Boot Framework 3.4 -> [3.4.0, 3.4.13]
         testVersionRange(SPRING_BOOT_3_4, 0, 13);
-        // Spring Boot Framework 3.5 -> [3.5.0, 3.5.12]
-        testVersionRange(SPRING_BOOT_3_5, 0, 12);
+        // Spring Boot Framework 3.5 -> [3.5.0, 3.5.13]
+        testVersionRange(SPRING_BOOT_3_5, 0, 13);
         // Spring Boot Framework 4.0 -> [4.0.0, 4.0.5]
         testVersionRange(SPRING_BOOT_4_0, 0, 5);
     }
