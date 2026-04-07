@@ -51,13 +51,14 @@
     </scm>
 
     <properties>
-        <revision>0.2.8-SNAPSHOT</revision>
+        <revision>0.2.9-SNAPSHOT</revision>
         <java.version>17</java.version>
     </properties>
 
     <modules>
         <module>microsphere-spring-boot-parent</module>
         <module>microsphere-spring-boot-dependencies</module>
+        <module>microsphere-spring-boot-compatible</module>
         <module>microsphere-spring-boot-core</module>
         <module>microsphere-spring-boot-actuator</module>
     </modules>
