@@ -104,9 +104,6 @@
     <profiles>
         <profile>
             <id>spring-boot-4.0</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <dependencies>
                 <!-- Compatible -->
                 <dependency>
