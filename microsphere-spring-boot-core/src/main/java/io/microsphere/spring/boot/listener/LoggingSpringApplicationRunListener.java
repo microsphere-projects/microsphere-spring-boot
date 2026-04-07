@@ -34,7 +34,9 @@ import static io.microsphere.spring.boot.util.SpringApplicationUtils.log;
  * @see SpringApplicationRunListener
  * @see SpringApplicationUtils
  * @since 1.0.0
+ * @deprecated
  */
+@Deprecated(since = "Spring Boot 4.0", forRemoval = true)
 public class LoggingSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
     /**
@@ -49,7 +51,7 @@ public class LoggingSpringApplicationRunListener extends SpringApplicationRunLis
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public LoggingSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);

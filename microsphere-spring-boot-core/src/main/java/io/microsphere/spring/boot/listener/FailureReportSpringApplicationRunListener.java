@@ -11,7 +11,9 @@ import java.io.PrintStream;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
+ * @deprecated
  */
+@Deprecated(since = "Spring Boot 4.0", forRemoval = true)
 public class FailureReportSpringApplicationRunListener extends SpringApplicationRunListenerAdapter {
 
     /**
@@ -26,7 +28,7 @@ public class FailureReportSpringApplicationRunListener extends SpringApplication
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public FailureReportSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);
