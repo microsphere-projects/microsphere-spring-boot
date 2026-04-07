@@ -14,9 +14,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
- * @deprecated since the Spring Boot 4.0, use the {@link ApplicationListener} for {@link SpringApplicationEvent}
+ * @deprecated since 0.2.9, use the {@link ApplicationListener} for {@link SpringApplicationEvent}
  */
-@Deprecated(since = "Spring Boot 4.0", forRemoval = true)
+@Deprecated(since = "0.2.9", forRemoval = true)
 public abstract class SpringApplicationRunListenerAdapter implements SpringApplicationRunListener, Ordered {
 
     protected final SpringApplication springApplication;
