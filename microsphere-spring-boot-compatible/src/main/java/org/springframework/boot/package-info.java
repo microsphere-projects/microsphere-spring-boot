@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 /**
- * The classes in this package or sub-packages are forked from the Spring Boot 2.7.x(latest),
+ * The classes in this package or sub-packages are forked from the Spring Boot 3.5.x,
  * which will be used to be compatible with the lower versions of Spring Boot.
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
