@@ -219,6 +219,8 @@ public enum SpringBootVersion {
     SPRING_BOOT_4_0_3,
 
     SPRING_BOOT_4_0_4,
+    
+    SPRING_BOOT_4_0_5,
 
     CURRENT(of(org.springframework.boot.SpringBootVersion.getVersion()));
 
