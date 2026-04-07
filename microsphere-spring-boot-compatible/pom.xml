@@ -46,6 +46,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Servlet -->
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -57,22 +64,15 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <configuration>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
-
-
-    <profiles>
-        <profile>
-            <id>spring-boot-2.1</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.springframework</groupId>
-                    <artifactId>spring-core</artifactId>
-                    <version>5.2.25.RELEASE</version>
-                    <optional>true</optional>
-                </dependency>
-            </dependencies>
-        </profile>
-    </profiles>
 
 </project>
