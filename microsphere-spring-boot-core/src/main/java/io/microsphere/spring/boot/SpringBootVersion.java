@@ -208,6 +208,8 @@ public enum SpringBootVersion {
 
     SPRING_BOOT_3_5_12,
 
+    SPRING_BOOT_3_5_13,
+
     SPRING_BOOT_4_0,
 
     SPRING_BOOT_4_0_0,
