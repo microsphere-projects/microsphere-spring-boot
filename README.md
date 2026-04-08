@@ -59,10 +59,10 @@ pom.xml:
 
 `${microsphere-spring-boot.version}` has two branches:
 
-| **Branches** | **Purpose**                               | **Latest Version** |
-|--------------|-------------------------------------------|--------------------|
-| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x | 0.2.9              |
-| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x | 0.1.9              |
+| **Branches** | **Purpose**                                      | **Latest Version** |
+|--------------|--------------------------------------------------|--------------------|
+| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x, 4.0.x | 0.2.10             |
+| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x        | 0.1.10             |
 
 Then add the specific modules you need:
 
