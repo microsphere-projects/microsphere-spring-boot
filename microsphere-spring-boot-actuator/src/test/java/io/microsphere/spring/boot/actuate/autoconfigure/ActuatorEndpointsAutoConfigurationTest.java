@@ -3,21 +3,22 @@ package io.microsphere.spring.boot.actuate.autoconfigure;
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationPropertiesEndpoint;
-import io.microsphere.spring.boot.actuate.endpoint.ConfigurationPropertiesEndpoint.ConfigurationPropertiesDescriptor;
 import io.microsphere.spring.boot.actuate.endpoint.WebEndpoints;
+import org.junit.jupiter.api.ClassOrderer.OrderAnnotation;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestClassOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.test.context.TestPropertySource;
 
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.springframework.boot.WebApplicationType.SERVLET;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 /**
@@ -27,61 +28,99 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
  * @see ActuatorEndpointsAutoConfiguration
  * @since 1.0.0
  */
-@SpringBootTest(
-        webEnvironment = RANDOM_PORT,
-        classes = {
-                ActuatorEndpointsAutoConfigurationTest.class,
-        },
-        properties = {
-                "management.endpoint.loggers.enabled=false"
-        }
-)
-@PropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
-@TestPropertySource(value = "classpath:META-INF/config/default/endpoints.properties")
-@EnableAutoConfiguration
+@TestClassOrder(OrderAnnotation.class)
 class ActuatorEndpointsAutoConfigurationTest {
 
-    @Autowired
-    private ArtifactsEndpoint artifactsEndpoint;
+    @Order(1)
+    @Nested
+    @DisplayName("test on defaults configuration")
+    @SpringBootTest(
+            webEnvironment = RANDOM_PORT,
+            classes = {
+                    ActuatorEndpointsAutoConfigurationTest.class,
+            },
+            properties = {
+                    "management.endpoint.loggers.enabled=false"
+            }
+    )
+    @EnableAutoConfiguration
+    class Defaults {
 
-    @Autowired
-    private WebEndpoints webEndpoints;
+        @Autowired
+        private ArtifactsEndpoint artifactsEndpoint;
 
-    @Autowired
-    private ConfigurationMetadataEndpoint configurationMetadataEndpoint;
+        @Autowired
+        private WebEndpoints webEndpoints;
 
-    @Autowired
-    private ConfigurationPropertiesEndpoint configurationPropertiesEndpoint;
+        @Autowired
+        private ConfigurationMetadataEndpoint configurationMetadataEndpoint;
 
-    @Test
-    void testArtifactsEndpoint() {
-        assertFalse(artifactsEndpoint.getArtifactMetaInfoList().isEmpty());
+        @Autowired
+        private ConfigurationPropertiesEndpoint configurationPropertiesEndpoint;
+
+        @Test
+        void testArtifactsEndpoint() {
+            assertFalse(artifactsEndpoint.getArtifactMetaInfoList().isEmpty());
+        }
+
+        @Test
+        void testInvokeReadOperations() {
+            Map<String, Object> aggregatedResults = webEndpoints.invokeReadOperations();
+            assertFalse(aggregatedResults.isEmpty());
+        }
+
+        @Test
+        void testGetConfigurationMetadata() {
+            ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
+            assertFalse(configurationMetadata.getGroups().isEmpty());
+            assertFalse(configurationMetadata.getProperties().isEmpty());
+        }
+
+        @Test
+        void testGetConfigurationProperties() {
+            ConfigurationPropertiesEndpoint.ConfigurationPropertiesDescriptor descriptor = configurationPropertiesEndpoint.getConfigurationProperties();
+            assertNotNull(descriptor);
+            assertFalse(descriptor.getConfigurationProperties().isEmpty());
+        }
     }
 
-    @Test
-    void testInvokeReadOperations() {
-        Map<String, Object> aggregatedResults = webEndpoints.invokeReadOperations();
-        assertFalse(aggregatedResults.isEmpty());
-    }
+    @Order(2)
+    @Nested
+    @DisplayName("test on disabled configuration")
+    @SpringBootTest(
+            webEnvironment = RANDOM_PORT,
+            classes = {
+                    ActuatorEndpointsAutoConfigurationTest.class,
+            },
+            properties = {
+                    "management.endpoint.artifacts.enabled=false",
+                    "management.endpoint.webEndpoints.enabled=false",
+                    "management.endpoint.configMetadata.enabled=false",
+                    "management.endpoint.configProperties.enabled=false"
+            }
+    )
+    @EnableAutoConfiguration
+    class Disalbed {
 
-    @Test
-    void testGetConfigurationMetadata() {
-        ConfigurationMetadataEndpoint.ConfigurationMetadataDescriptor configurationMetadata = configurationMetadataEndpoint.getConfigurationMetadata();
-        assertFalse(configurationMetadata.getGroups().isEmpty());
-        assertFalse(configurationMetadata.getProperties().isEmpty());
-    }
+        @Autowired(required = false)
+        private ArtifactsEndpoint artifactsEndpoint;
 
-    @Test
-    void testGetConfigurationProperties() {
-        ConfigurationPropertiesDescriptor descriptor = configurationPropertiesEndpoint.getConfigurationProperties();
-        assertNotNull(descriptor);
-        assertFalse(descriptor.getConfigurationProperties().isEmpty());
-    }
+        @Autowired(required = false)
+        private WebEndpoints webEndpoints;
 
-    public static void main(String[] args) {
-        new SpringApplicationBuilder(ActuatorEndpointsAutoConfigurationTest.class)
-                .web(SERVLET)
-                .run(args);
+        @Autowired(required = false)
+        private ConfigurationMetadataEndpoint configurationMetadataEndpoint;
+
+        @Autowired(required = false)
+        private ConfigurationPropertiesEndpoint configurationPropertiesEndpoint;
+
+        @Test
+        void test() {
+            assertNull(this.artifactsEndpoint);
+            assertNull(this.webEndpoints);
+            assertNull(this.configurationMetadataEndpoint);
+            assertNull(this.configurationPropertiesEndpoint);
+        }
     }
 
 }
