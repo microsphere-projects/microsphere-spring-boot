@@ -16,11 +16,13 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.microsphere.annotation.ConfigurationProperty;
 import io.microsphere.spring.boot.actuate.MonitoredThreadPoolTaskScheduler;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
@@ -101,6 +103,7 @@ public class ActuatorAutoConfiguration {
      * @param threadNamePrefix the prefix for thread names created by the scheduler
      * @return a configured {@link ThreadPoolTaskScheduler} instance
      */
+    @ConditionalOnBean(MeterRegistry.class)
     @Bean(name = ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME, destroyMethod = "shutdown")
     public ThreadPoolTaskScheduler actuatorTaskScheduler(
             @Value(TASK_SCHEDULER_POOL_SIZE_VALUE_EXPRESSION) int poolSize,
