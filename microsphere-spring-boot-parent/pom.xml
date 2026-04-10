@@ -53,11 +53,19 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
-    <profiles>
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
+    <profiles>
         <profile>
             <id>spring-boot-2.1</id>
             <properties>
@@ -109,6 +117,5 @@
                 <spring-boot.version>2.7.18</spring-boot.version>
             </properties>
         </profile>
-
     </profiles>
 </project>
