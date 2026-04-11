@@ -8,9 +8,12 @@
 
 name: Maven Build
 
+permissions:
+  contents: read
+
 on:
   push:
-    branches: [ 'main', 'dev' ]
+    branches: [ 'main' , 'dev' ]
   pull_request:
     branches: [ 'main', 'dev' , 'release' ]
 
