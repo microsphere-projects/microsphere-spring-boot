@@ -9,7 +9,6 @@
 ![Maven](https://img.shields.io/maven-central/v/io.github.microsphere-projects/microsphere-spring-boot.svg)
 ![License](https://img.shields.io/github/license/microsphere-projects/microsphere-spring-boot.svg)
 
-
 Microsphere Spring Boot is a collection of libraries that extends Spring Boot's capabilities with additional features
 focused on configuration management, application diagnostics, and enhanced monitoring. The project is structured as a
 multi-module Maven project that follows Spring Boot's conventions while providing value-added functionality.
@@ -41,6 +40,7 @@ The easiest way to get started is by adding the Microsphere Spring Boot BOM (Bil
 pom.xml:
 
 ```xml
+
 <dependencyManagement>
     <dependencies>
         ...
@@ -61,12 +61,13 @@ pom.xml:
 
 | **Branches** | **Purpose**                                      | **Latest Version** |
 |--------------|--------------------------------------------------|--------------------|
-| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x, 4.0.x | 0.2.10             |
-| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x        | 0.1.10             |
+| **0.2.x**    | Compatible with Spring Boot 3.0.x - 3.5.x, 4.0.x | 0.2.11             |
+| **0.1.x**    | Compatible with Spring Boot 2.0.x - 2.7.x        | 0.1.11             |
 
 Then add the specific modules you need:
 
 ```xml
+
 <dependencies>
     <!-- Microsphere Spring Boot Core -->
     <dependency>
@@ -131,7 +132,8 @@ We welcome your contributions! Please read [Code of Conduct](./CODE_OF_CONDUCT.m
 
 ## Reporting Issues
 
-* Before you log a bug, please search the [issues](https://github.com/microsphere-projects/microsphere-spring-boot/issues)
+* Before you log a bug, please search
+  the [issues](https://github.com/microsphere-projects/microsphere-spring-boot/issues)
   to see if someone has already reported the problem.
 * If the issue doesn't already
   exist, [create a new issue](https://github.com/microsphere-projects/microsphere-spring-boot/issues/new).
