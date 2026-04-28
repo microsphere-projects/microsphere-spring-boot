@@ -19,7 +19,7 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-spring.version>0.1.13</microsphere-spring.version>
+        <microsphere-spring.version>0.1.14</microsphere-spring.version>
         <jolokia.version>1.7.2</jolokia.version>
         <!-- Testing -->
         <junit-jupiter.version>5.14.3</junit-jupiter.version>
@@ -27,14 +27,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- JUnit BOM -->
-            <dependency>
-                <groupId>org.junit</groupId>
-                <artifactId>junit-bom</artifactId>
-                <version>${junit-jupiter.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
 
             <!-- Spring Boot Dependencies -->
             <dependency>
@@ -53,6 +45,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
