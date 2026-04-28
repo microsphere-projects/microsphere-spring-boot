@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.junit.jupiter.api.ClassOrderer.OrderAnnotation;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,6 +32,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 
 import static io.microsphere.spring.boot.actuate.autoconfigure.ActuatorAutoConfiguration.ACTUATOR_TASK_SCHEDULER_SERVICE_BEAN_NAME;
 import static io.microsphere.spring.boot.actuate.autoconfigure.ActuatorAutoConfiguration.DEFAULT_TASK_SCHEDULER_POOL_SIZE;
+import static io.microsphere.spring.boot.actuate.autoconfigure.ActuatorAutoConfiguration.METER_REGISTRY_CLASS_NAME;
 import static io.microsphere.spring.boot.actuate.autoconfigure.ActuatorAutoConfiguration.TASK_SCHEDULER_POOL_SIZE_PROPERTY_NAME;
 import static io.microsphere.spring.boot.actuate.autoconfigure.ActuatorAutoConfiguration.TASK_SCHEDULER_THREAD_NAME_PREFIX_PROPERTY_NAME;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -53,6 +55,9 @@ class ActuatorAutoConfigurationTest {
         assertEquals("1", DEFAULT_TASK_SCHEDULER_POOL_SIZE);
         assertEquals("microsphere.spring.boot.actuator.task-scheduler.pool-size", TASK_SCHEDULER_POOL_SIZE_PROPERTY_NAME);
         assertEquals("microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix", TASK_SCHEDULER_THREAD_NAME_PREFIX_PROPERTY_NAME);
+        assertEquals("io.micrometer.core.instrument.MeterRegistry", METER_REGISTRY_CLASS_NAME);
+        // test for strong type check
+        assertEquals(MeterRegistry.class.getName(), METER_REGISTRY_CLASS_NAME);
     }
 
     @Order(1)
@@ -61,7 +66,8 @@ class ActuatorAutoConfigurationTest {
     @SpringBootTest(
             webEnvironment = NONE,
             classes = {
-                    MeterRegistryPresent.class
+                    MeterRegistryPresent.class,
+                    ActuatorAutoConfigurationTest.class
             }, properties = {
             "microsphere.spring.boot.actuator.task-scheduler.pool-size=2",
             "microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix=my-prefix",
@@ -104,7 +110,8 @@ class ActuatorAutoConfigurationTest {
     @SpringBootTest(
             webEnvironment = NONE,
             classes = {
-                    MeterRegistryAbsent.class
+                    MeterRegistryAbsent.class,
+                    ActuatorAutoConfigurationTest.class
             }, properties = {
             // Spring Boot [2.x,3.x]
             "microsphere.autoconfigure.exclude[0]=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration",

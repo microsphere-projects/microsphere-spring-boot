@@ -19,7 +19,7 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-spring.version>0.1.9</microsphere-spring.version>
+        <microsphere-spring.version>0.1.14</microsphere-spring.version>
         <jolokia.version>1.7.2</jolokia.version>
         <!-- Testing -->
         <junit-jupiter.version>5.14.3</junit-jupiter.version>
@@ -57,7 +57,6 @@
     </dependencyManagement>
 
     <profiles>
-
         <profile>
             <id>spring-boot-2.1</id>
             <properties>
@@ -109,6 +108,5 @@
                 <spring-boot.version>2.7.18</spring-boot.version>
             </properties>
         </profile>
-
     </profiles>
 </project>
