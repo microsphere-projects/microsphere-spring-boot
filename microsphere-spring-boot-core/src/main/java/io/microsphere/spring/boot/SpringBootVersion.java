@@ -25,6 +25,7 @@ import io.microsphere.util.Version;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.constants.SymbolConstants.UNDER_SCORE_CHAR;
 import static io.microsphere.util.Version.of;
+import static io.microsphere.util.Version.ofVersion;
 
 /**
  * The enumeration for the released Spring Boot versions since 3.0
@@ -221,11 +222,10 @@ public enum SpringBootVersion {
     SPRING_BOOT_4_0_3,
 
     SPRING_BOOT_4_0_4,
-    
+
     SPRING_BOOT_4_0_5,
 
-    CURRENT(of(org.springframework.boot.SpringBootVersion.getVersion()));
-
+    CURRENT(ofVersion(org.springframework.boot.SpringBootVersion.class));
 
     private final Version version;
 
