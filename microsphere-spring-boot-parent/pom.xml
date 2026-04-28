@@ -28,6 +28,15 @@
     <dependencyManagement>
         <dependencies>
 
+            <!-- JUnit Jupiter -->
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit-jupiter.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!-- Jolokia -->
             <dependency>
                 <groupId>org.jolokia</groupId>
@@ -55,6 +64,14 @@
 
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>spring-milestone</id>
+            <name>Spring Portfolio Milestone Repository</name>
+            <url>https://repo.spring.io/milestone</url>
+        </repository>
+    </repositories>
 
     <profiles>
         <profile>
