@@ -112,7 +112,7 @@ class SpringApplicationUtilsTest {
 
     void testGetLoggingLevel(String level) {
         MockEnvironment environment = new MockEnvironment();
-        environment.setProperty(MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME, level);
+        environment.withProperty(MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME, level);
         assertEquals(level, getLoggingLevel(environment));
     }
 

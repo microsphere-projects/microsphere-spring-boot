@@ -66,7 +66,8 @@ class ActuatorAutoConfigurationTest {
     @SpringBootTest(
             webEnvironment = NONE,
             classes = {
-                    MeterRegistryPresent.class
+                    MeterRegistryPresent.class,
+                    ActuatorAutoConfigurationTest.class
             }, properties = {
             "microsphere.spring.boot.actuator.task-scheduler.pool-size=2",
             "microsphere.spring.boot.actuator.task-scheduler.thread-name-prefix=my-prefix",
@@ -109,7 +110,8 @@ class ActuatorAutoConfigurationTest {
     @SpringBootTest(
             webEnvironment = NONE,
             classes = {
-                    MeterRegistryAbsent.class
+                    MeterRegistryAbsent.class,
+                    ActuatorAutoConfigurationTest.class
             }, properties = {
             // Spring Boot [2.x,3.x]
             "microsphere.autoconfigure.exclude[0]=org.springframework.boot.actuate.autoconfigure.metrics.MetricsAutoConfiguration",
