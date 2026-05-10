@@ -22,12 +22,13 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
- * {@link AutoRegistrationBeanInitializer} Test
+ * {@link AutoRegistrationBeanInitializer} Test for disabled
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see AutoRegistrationBeanInitializer
@@ -36,14 +37,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @SpringJUnitConfig(
         initializers = AutoRegistrationBeanInitializer.class
 )
-class AutoRegistrationBeanInitializerTest {
+@TestPropertySource(
+        properties = "microsphere.spring.beans.auto-registered=false"
+)
+class DisabledAutoRegistrationBeanInitializerTest {
 
     @Autowired
     private ConfigurableApplicationContext context;
 
     @Test
-    @DisplayName("Enable AutoRegistrationBeanInitializer Test")
+    @DisplayName("Disalbed AutoRegistrationBeanInitializer Test")
     void test() {
-        assertTrue(context.containsBean("testAutoRegistrationBean"));
+        assertFalse(context.containsBean("testAutoRegistrationBean"));
     }
 }
