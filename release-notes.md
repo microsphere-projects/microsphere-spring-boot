@@ -34,4 +34,28 @@
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.10...0.1.11
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.10...0.1.11## v0.1.12
+
+# Release Notes: Version 0.1.12
+
+## New Features
+- **AutoRegistration Enhancements**: Introduced `AutoRegistrationBean` initializer with corresponding tests. ([db49543](https://github.com/your-repo/commit/db49543))
+
+## Test Improvements
+- Split `AutoRegistration` tests into separate classes for better modularity. ([1eed80a](https://github.com/your-repo/commit/1eed80a))
+
+## Dependency Updates
+- Upgraded `microsphere-spring` to version 0.1.15. ([183602a](https://github.com/your-repo/commit/183602a))
+
+## Documentation
+- Updated branch version information in the README. ([9b2393d](https://github.com/your-repo/commit/9b2393d))
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` as part of workflow adjustments. ([96146df](https://github.com/your-repo/commit/96146df))
+- Updated patch version post-0.1.11 release. ([5238bb0](https://github.com/your-repo/commit/5238bb0))
+
+---
+
+For a detailed list of changes, refer to the [Full Changelog](#).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.11...0.1.12
