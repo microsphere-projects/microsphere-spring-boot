@@ -36,4 +36,27 @@
 
 For a detailed list of changes, please refer to the [Full Changelog](https://example.com).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.10...0.2.11
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.10...0.2.11## v0.2.12
+
+# Release Notes - Version 0.2.12
+
+## 🆕 New Features
+- Added `AutoRegistrationBeanInitializer` and corresponding tests. ([5b54aac](#))
+- Parameterized `ApplicationContextInitializer` for enhanced configurability. ([4ec4d1c](#))
+
+## 📚 Documentation
+- Updated `README` with the latest branch versions. ([ab0b788](#))
+
+## 📦 Dependency Updates
+- Upgraded `microsphere-spring` to version `0.2.15`. ([e8d171c](#))
+- Bumped `org.jolokia:jolokia-core` from `2.5.1` to `2.6.0`. ([00b2af3](#))
+
+## 🔨 Build and Workflow Enhancements
+- Merged `main` into `release` branch for improved branch synchronization. ([1c0f927](#), [5d0db80](#), [3d2eb69](#))
+- Bumped version to prepare for next development cycle. ([78e7efa](#))
+
+---
+
+Thank you for using our project!
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.11...0.2.12
