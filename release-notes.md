@@ -59,4 +59,23 @@ For a detailed list of changes, please refer to the [Full Changelog](https://exa
 
 Thank you for using our project!
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.11...0.2.12
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.11...0.2.12## v0.2.13
+
+# Release Notes: Version 0.2.13
+
+## Dependency Updates
+- Updated `org.junit:junit-bom` from `6.0.3` to `6.1.0`. ([#112](https://github.com/microsphere-projects/microsphere/pull/112))
+- Bumped `microsphere-spring.version` to `0.2.16`.
+- Updated parent version to `0.2.9`.
+
+## Build and Workflow Enhancements
+- Added Maven server credentials to the workflow.
+- Adjusted Maven workflows and ensured the addition of EOF newline for consistency.
+
+## Documentations
+- Updated README files to reflect changes in branch versions.
+
+## Other Changes
+- Routine merges between `main` and `release` branches.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.12...0.2.13
