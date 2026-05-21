@@ -58,4 +58,28 @@
 
 For a detailed list of changes, refer to the [Full Changelog](#).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.11...0.1.12
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.11...0.1.12## v0.1.13
+
+# Release Notes for Version 0.1.13
+
+## Dependency Updates
+- Updated `microsphere-spring.version` to `0.1.16`. [d267d74]
+- Upgraded JUnit Jupiter to `5.14.4`. [ff56177]
+- Bumped parent POM version to `0.2.9`. [aa161ae]
+
+## Build and Workflow Enhancements
+- Removed `max-parallel` from Maven build workflow. [b696c6f]
+- Adjusted Maven workflow commands, caching, and server credentials settings. [04e68e4]
+- Added Maven server credentials to the publish workflow. [7f5bada]
+- Corrected Java matrix variable casing in CI. [aa463e3]
+
+## Documentation
+- Updated branch latest versions in `README`. [a5041cf]
+
+## Other Changes
+- Merged `release-1.x` into `dev-1.x`. [64ad557]
+- Bumped version to next patch after publishing `0.1.12`. [b79c823]
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.12...0.1.13
