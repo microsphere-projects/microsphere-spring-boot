@@ -19,10 +19,10 @@
     <description>Microsphere Spring Boot Parent</description>
 
     <properties>
-        <microsphere-spring.version>0.1.15</microsphere-spring.version>
+        <microsphere-spring.version>0.1.16</microsphere-spring.version>
         <jolokia.version>1.7.2</jolokia.version>
         <!-- Testing -->
-        <junit-jupiter.version>5.14.3</junit-jupiter.version>
+        <junit-jupiter.version>5.14.4</junit-jupiter.version>
     </properties>
 
     <dependencyManagement>
