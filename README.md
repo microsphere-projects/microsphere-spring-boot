@@ -19,16 +19,16 @@ multi-module Maven project that follows Spring Boot's conventions while providin
 - [Why the Project is Useful](#why-the-project-is-useful)
 - [Modules](#modules)
 - [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Add the BOM](#add-the-bom)
-  - [Add Module Dependencies](#add-module-dependencies)
+    - [Prerequisites](#prerequisites)
+    - [Add the BOM](#add-the-bom)
+    - [Add Module Dependencies](#add-module-dependencies)
 - [Usage](#usage)
-  - [Default Properties](#default-properties)
-  - [Excluding Auto-Configurations](#excluding-auto-configurations)
-  - [Configuration Properties Binding Listeners](#configuration-properties-binding-listeners)
-  - [Actuator Endpoints](#actuator-endpoints)
-  - [Monitored Task Scheduler](#monitored-task-scheduler)
-  - [Classpath Artifact Detection](#classpath-artifact-detection)
+    - [Default Properties](#default-properties)
+    - [Excluding Auto-Configurations](#excluding-auto-configurations)
+    - [Configuration Properties Binding Listeners](#configuration-properties-binding-listeners)
+    - [Actuator Endpoints](#actuator-endpoints)
+    - [Monitored Task Scheduler](#monitored-task-scheduler)
+    - [Classpath Artifact Detection](#classpath-artifact-detection)
 - [Building from Source](#building-from-source)
 - [Getting Help](#getting-help)
 - [Contributing](#contributing)
@@ -56,34 +56,34 @@ Microsphere Spring Boot provides production-ready enhancements for Spring Boot a
 
 ## Why the Project is Useful
 
-| Benefit | Detail |
-|---|---|
-| **Opinionated defaults** | Sensible, overridable defaults (graceful shutdown, disabled noisy filters) reduce boilerplate in every application. |
-| **Observable configuration** | Know immediately when any `@ConfigurationProperties` value changes at runtime via `BindListener`. |
-| **Richer actuator surface** | Four extra endpoints (`/actuator/microsphere/*`) expose the runtime state that Spring Boot's built-in endpoints don't cover. |
-| **Safe auto-configuration exclusions** | `microsphere.autoconfigure.exclude` merges all sources; the standard `spring.autoconfigure.exclude` replaces them. |
-| **Scheduling metrics** | `MonitoredThreadPoolTaskScheduler` instruments every scheduled task with Micrometer counters and timers at zero config. |
-| **Dependency health** | Banned-artifact and collision detection catches classpath problems at startup rather than at runtime. |
-| **Long Spring Boot lifecycle** | Supports Spring Boot 2.0 – 4.x across two maintained release lines (`0.1.x` for Boot 2, `0.2.x` for Boot 3/4). |
+| Benefit                                | Detail                                                                                                                       |
+|----------------------------------------|------------------------------------------------------------------------------------------------------------------------------|
+| **Opinionated defaults**               | Sensible, overridable defaults (graceful shutdown, disabled noisy filters) reduce boilerplate in every application.          |
+| **Observable configuration**           | Know immediately when any `@ConfigurationProperties` value changes at runtime via `BindListener`.                            |
+| **Richer actuator surface**            | Four extra endpoints (`/actuator/microsphere/*`) expose the runtime state that Spring Boot's built-in endpoints don't cover. |
+| **Safe auto-configuration exclusions** | `microsphere.autoconfigure.exclude` merges all sources; the standard `spring.autoconfigure.exclude` replaces them.           |
+| **Scheduling metrics**                 | `MonitoredThreadPoolTaskScheduler` instruments every scheduled task with Micrometer counters and timers at zero config.      |
+| **Dependency health**                  | Banned-artifact and collision detection catches classpath problems at startup rather than at runtime.                        |
+| **Long Spring Boot lifecycle**         | Supports Spring Boot 2.0 – 4.x across two maintained release lines (`0.1.x` for Boot 2, `0.2.x` for Boot 3/4).               |
 
 ## Modules
 
-| **Module** | **Artifact ID** | **Purpose** |
-|---|---|---|
-| **microsphere-spring-boot-parent** | `microsphere-spring-boot-parent` | Parent POM: build plugins, Java 17 baseline, Spring Boot version profiles |
-| **microsphere-spring-boot-dependencies** | `microsphere-spring-boot-dependencies` | BOM — import this to manage all module versions |
-| **microsphere-spring-boot-compatible** | `microsphere-spring-boot-compatible` | Compatibility shims for running across Spring Boot 2.x – 4.x (not published to Maven Central) |
-| **microsphere-spring-boot-core** | `microsphere-spring-boot-core` | Core features: default properties, auto-configuration filter, bind listeners, diagnostics |
-| **microsphere-spring-boot-actuator** | `microsphere-spring-boot-actuator` | Actuator extensions: custom endpoints, monitored scheduler, opinionated endpoint defaults |
+| **Module**                               | **Artifact ID**                        | **Purpose**                                                                                   |
+|------------------------------------------|----------------------------------------|-----------------------------------------------------------------------------------------------|
+| **microsphere-spring-boot-parent**       | `microsphere-spring-boot-parent`       | Parent POM: build plugins, Java 17 baseline, Spring Boot version profiles                     |
+| **microsphere-spring-boot-dependencies** | `microsphere-spring-boot-dependencies` | BOM — import this to manage all module versions                                               |
+| **microsphere-spring-boot-compatible**   | `microsphere-spring-boot-compatible`   | Compatibility shims for running across Spring Boot 2.x – 4.x (not published to Maven Central) |
+| **microsphere-spring-boot-core**         | `microsphere-spring-boot-core`         | Core features: default properties, auto-configuration filter, bind listeners, diagnostics     |
+| **microsphere-spring-boot-actuator**     | `microsphere-spring-boot-actuator`     | Actuator extensions: custom endpoints, monitored scheduler, opinionated endpoint defaults     |
 
 ## Getting Started
 
 ### Prerequisites
 
-| Requirement | Version |
-|---|---|
-| Java | 17+ |
-| Maven | 3.9+ (or use the included `mvnw` wrapper) |
+| Requirement | Version                                                             |
+|-------------|---------------------------------------------------------------------|
+| Java        | 17+                                                                 |
+| Maven       | 3.9+ (or use the included `mvnw` wrapper)                           |
 | Spring Boot | 3.0.x – 3.5.x, 4.0.x (`main` branch) / 2.0.x – 2.7.x (`1.x` branch) |
 
 ### Add the BOM
@@ -91,6 +91,7 @@ Microsphere Spring Boot provides production-ready enhancements for Spring Boot a
 Import the Microsphere Spring Boot BOM into your `pom.xml` so all module versions are managed for you:
 
 ```xml
+
 <dependencyManagement>
     <dependencies>
         <!-- Microsphere Spring Boot BOM -->
@@ -108,15 +109,16 @@ Import the Microsphere Spring Boot BOM into your `pom.xml` so all module version
 Choose the version that matches your Spring Boot generation:
 
 | Branch | Spring Boot Compatibility | Latest Version |
-|---|---|---|
-| `main` | 3.0.x – 3.5.x, 4.0.x | `0.2.13` |
-| `1.x` | 2.0.x – 2.7.x | `0.1.13` |
+|--------|---------------------------|----------------|
+| `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.13`       |
+| `1.x`  | 2.0.x – 2.7.x             | `0.1.13`       |
 
 ### Add Module Dependencies
 
 After importing the BOM, add only the modules you need — no version required:
 
 ```xml
+
 <dependencies>
     <!-- Core features: default properties, auto-config filter, bind listeners, diagnostics -->
     <dependency>
@@ -143,7 +145,6 @@ The built-in `core.properties` enables graceful shutdown and disables several no
 # Graceful shutdown (built into core.properties)
 server.shutdown=graceful
 spring.lifecycle.timeout-per-shutdown-phase=60s
-
 # Disabled by default
 spring.mvc.hiddenmethod.filter.enabled=false
 spring.mvc.formcontent.filter.enabled=false
@@ -202,12 +203,12 @@ A `ConfigurationPropertiesBeanPropertyChangedEvent` is also published to the Spr
 
 `microsphere-spring-boot-actuator` registers four additional actuator endpoints (all enabled by default):
 
-| Endpoint | Default Path | Description |
-|---|---|---|
-| `artifacts` | `/actuator/microsphere/artifacts` | Lists all JAR artifacts detected on the classpath |
-| `webEndpoints` | `/actuator/microsphere/web/endpoints` | Lists all registered Spring MVC / WebFlux actuator endpoint mappings |
-| `configMetadata` | `/actuator/microsphere/config/metadata` | Exposes Spring Boot configuration metadata (`spring-configuration-metadata.json`) |
-| `configProperties` | `/actuator/microsphere/config/properties` | Exposes all currently bound `@ConfigurationProperties` values |
+| Endpoint           | Default Path                              | Description                                                                       |
+|--------------------|-------------------------------------------|-----------------------------------------------------------------------------------|
+| `artifacts`        | `/actuator/microsphere/artifacts`         | Lists all JAR artifacts detected on the classpath                                 |
+| `webEndpoints`     | `/actuator/microsphere/web/endpoints`     | Lists all registered Spring MVC / WebFlux actuator endpoint mappings              |
+| `configMetadata`   | `/actuator/microsphere/config/metadata`   | Exposes Spring Boot configuration metadata (`spring-configuration-metadata.json`) |
+| `configProperties` | `/actuator/microsphere/config/properties` | Exposes all currently bound `@ConfigurationProperties` values                     |
 
 The module also ships with an opinionated `endpoints.properties` default that enables only the most-used standard
 endpoints (`health`, `info`, `env`, `loggers`, `metrics`, `mappings`, `prometheus`, `jolokia`) and configures
@@ -280,19 +281,20 @@ cd microsphere-spring-boot
 
 ## Getting Help
 
-| Resource | Link |
-|---|---|
-| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot |
-| **User Guide (ZRead)** | https://zread.ai/microsphere-projects/microsphere-spring-boot |
-| **GitHub Wiki** | https://github.com/microsphere-projects/microsphere-spring-boot/wiki |
-| **JavaDoc — core** | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-core |
-| **JavaDoc — actuator** | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-actuator |
-| **Issue Tracker** | https://github.com/microsphere-projects/microsphere-spring-boot/issues |
+| Resource                  | Link                                                                                   |
+|---------------------------|----------------------------------------------------------------------------------------|
+| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot                      |
+| **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot                          |
+| **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki                   |
+| **JavaDoc — core**        | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-core     |
+| **JavaDoc — actuator**    | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-actuator |
+| **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues                 |
 
 **Reporting a bug:**
 
 1. Search [existing issues](https://github.com/microsphere-projects/microsphere-spring-boot/issues) first.
-2. If the issue does not exist, [open a new issue](https://github.com/microsphere-projects/microsphere-spring-boot/issues/new).
+2. If the issue does not
+   exist, [open a new issue](https://github.com/microsphere-projects/microsphere-spring-boot/issues/new).
 3. Include the Spring Boot version, Microsphere Spring Boot version, a minimal reproducer, and any relevant logs.
 
 ## Contributing
@@ -307,8 +309,8 @@ Contributions of all kinds are welcome — bug fixes, documentation improvements
 
 ## Maintainers
 
-| Name | GitHub | Email |
-|---|---|---|
+| Name     | GitHub                                       | Email                |
+|----------|----------------------------------------------|----------------------|
 | Mercy Ma | [@mercyblitz](https://github.com/mercyblitz) | mercyblitz@gmail.com |
 
 The project is maintained under the [Microsphere Projects](https://github.com/microsphere-projects) organisation.
