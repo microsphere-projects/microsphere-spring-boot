@@ -78,4 +78,27 @@ Thank you for using our project!
 ## Other Changes
 - Routine merges between `main` and `release` branches.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.12...0.2.13
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.12...0.2.13## v0.2.14
+
+# Release Notes - Version 0.2.14
+
+## New Features
+- **README Enhancements**: Added a comprehensive README with a TOC, feature documentation, and usage examples. (#114, 439c750)
+- **.github Templates**: Added AI prompt templates to the repository. (b370c07)
+
+## Documentation
+- Updated version numbers in README.md. (0eeb0ff)  
+- Formatted README markdown tables and lists for improved readability. (b2e30fb)  
+- Revised branch names in README table for clarity. (d6a566f)  
+
+## Dependency Updates
+- **microsphere-spring**: Bumped dependency version to `0.2.17`. (fbc1937)  
+- **microsphere-spring**: Bumped dependency version to `0.2.18`. (479e08b)
+
+## Build and Workflow Enhancements
+- Merged changes from `main` into `release` branch and vice versa. ([skip ci], multiple commits)  
+- Bumped version to `0.2.14` after publishing `0.2.13`. (c72aba2)
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.13...0.2.14
