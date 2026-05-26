@@ -285,9 +285,8 @@ cd microsphere-spring-boot
 |---------------------------|----------------------------------------------------------------------------------------|
 | **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot                      |
 | **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot                          |
+| **User Guide (Github)**   | [User Guide](./user-guide.md)                                                          |
 | **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki                   |
-| **JavaDoc — core**        | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-core     |
-| **JavaDoc — actuator**    | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-actuator |
 | **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues                 |
 
 **Reporting a bug:**
