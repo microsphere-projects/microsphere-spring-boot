@@ -250,9 +250,12 @@ class ConfigurationPropertiesBeanContext {
      * @return the converted value, or the original value if conversion is not supported
      */
     Object convertForProperty(String propertyName, Object value) {
+        if (value == null) {
+            return null;
+        }
         Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
         ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
-        if (conversionService.canConvert(value.getClass(), propertyType)) {
+        if (conversionService != null && conversionService.canConvert(value.getClass(), propertyType)) {
             return conversionService.convert(value, propertyType);
         }
         return value;

@@ -58,7 +58,7 @@ class AutoRegistrationBeanInitializerTest {
     @TestPropertySource(
             properties = "microsphere.spring.beans.auto-registered=false"
     )
-    @DisplayName("Disalbed AutoRegistrationBeanInitializer Test")
+    @DisplayName("Disabled AutoRegistrationBeanInitializer Test")
     class DisabledTest {
 
         @Autowired

@@ -219,7 +219,10 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
 
         static ExcludedAutoConfigurationClassPropertySource get(Environment environment) {
             MutablePropertySources propertySources = getPropertySources(environment);
-            ExcludedAutoConfigurationClassPropertySource propertySource = (ExcludedAutoConfigurationClassPropertySource) propertySources.get(NAME);
+            PropertySource<?> source = propertySources.get(NAME);
+            ExcludedAutoConfigurationClassPropertySource propertySource =
+                    source instanceof ExcludedAutoConfigurationClassPropertySource
+                            ? (ExcludedAutoConfigurationClassPropertySource) source : null;
             if (propertySource == null) {
                 propertySource = new ExcludedAutoConfigurationClassPropertySource();
                 propertySources.addFirst(propertySource);

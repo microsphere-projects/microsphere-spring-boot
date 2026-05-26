@@ -856,7 +856,7 @@ public class ServerProperties {
              * Maximum capacity of the thread pool's backing queue. This setting only has
              * an effect if the value is greater than 0.
              */
-            private int maxQueueCapacity = 2147483647;
+            private int maxQueueCapacity = Integer.MAX_VALUE;
 
             public int getMax() {
                 return this.max;

@@ -131,7 +131,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         if (isConfigurationPropertiesBean(context)) {
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             Supplier<?> value = target.getValue();
-            Object bean = value.get();
+            Object bean = value != null ? value.get() : null;
             if (bean != null) {
                 if (logger.isTraceEnabled()) {
                     logger.trace("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'", name, target.getType(), context.getDepth(), bean);
