@@ -82,4 +82,25 @@ For a detailed list of changes, refer to the [Full Changelog](#).
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.12...0.1.13
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.12...0.1.13## v0.1.14
+
+# Release Notes - Version 0.1.14
+
+## Documentation
+- Revamped README with expanded documentation and reorganized structure for better clarity. ([74451ee](#), [e6803c8](#))
+- Updated branch information and enhanced GitHub prompts in README. ([947722c](#), [6df99d2](#))
+- Listed and bumped latest version numbers in README. ([47016bc](#))
+
+## Dependency Updates
+- Upgraded `microsphere-spring` version to 0.1.17 and 0.1.18. ([741761c](#), [0d75a73](#))
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` for synchronization. ([c0f8305](#))
+- Bumped version to prepare for the next patch release post 0.1.13. ([f42f4a5](#))
+
+## Other Changes
+- Minor structural and branch updates. ([774871a](#), [12eabb7](#))
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.13...0.1.14
