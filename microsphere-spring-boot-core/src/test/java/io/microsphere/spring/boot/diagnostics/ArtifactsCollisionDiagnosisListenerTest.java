@@ -98,9 +98,10 @@ class ArtifactsCollisionDiagnosisListenerTest {
     @Test
     void testGetArtifactsCollisionMap() {
         List<Artifact> artifacts = createArtifacts();
-        Map<String, Artifact> artifactsCollisionMap = this.listener.getArtifactsCollisionMap(artifacts);
+        Map<String, List<Artifact>> artifactsCollisionMap = this.listener.getArtifactsCollisionMap(artifacts);
         assertEquals(1, artifactsCollisionMap.size());
         assertTrue(artifactsCollisionMap.containsKey("test-artifact"));
+        assertEquals(2, artifactsCollisionMap.get("test-artifact").size());
     }
 
     private List<Artifact> createArtifacts() {

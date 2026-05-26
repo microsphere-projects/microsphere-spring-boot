@@ -12,6 +12,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.ResourceLoader;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +21,6 @@ import java.util.StringJoiner;
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.collection.CollectionUtils.size;
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
-import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
@@ -130,12 +130,14 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
         ArtifactDetector detector = new ArtifactDetector(classLoader);
         List<Artifact> artifacts = detector.detect(false);
         //  Artifacts conflict Map
-        Map<String, Artifact> artifactsCollisionMap = getArtifactsCollisionMap(artifacts);
+        Map<String, List<Artifact>> artifactsCollisionMap = getArtifactsCollisionMap(artifacts);
         if (!artifactsCollisionMap.isEmpty()) {
             StringJoiner stringJoiner = new StringJoiner(LINE_SEPARATOR, "-\t", "");
             logger.error("Artifacts collision detected:");
-            for (Artifact artifact : artifactsCollisionMap.values()) {
-                stringJoiner.add(artifact.toString());
+            for (List<Artifact> collidingArtifacts : artifactsCollisionMap.values()) {
+                for (Artifact artifact : collidingArtifacts) {
+                    stringJoiner.add(artifact.toString());
+                }
             }
             logger.error(stringJoiner.toString());
         }
@@ -145,27 +147,33 @@ public class ArtifactsCollisionDiagnosisListener implements ApplicationListener<
     /**
      * Build a map of colliding artifacts from the given list. An artifact is considered colliding
      * if another artifact with the same identifier (groupId:artifactId) already exists in the list.
+     * All occurrences of a collision (both first and subsequent duplicates) are tracked.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ArtifactDetector detector = new ArtifactDetector(classLoader);
      *   List<Artifact> artifacts = detector.detect(false);
-     *   Map<String, Artifact> collisionMap = listener.getArtifactsCollisionMap(artifacts);
-     *   collisionMap.forEach((id, artifact) -> System.err.println("Collision: " + id));
+     *   Map<String, List<Artifact>> collisionMap = listener.getArtifactsCollisionMap(artifacts);
+     *   collisionMap.forEach((id, artifacts) -> System.err.println("Collision: " + id + " -> " + artifacts));
      * }</pre>
      *
      * @param artifacts the list of detected {@link Artifact} instances
-     * @return a map of colliding artifact identifiers to their {@link Artifact} instances
+     * @return a map of colliding artifact identifiers to all their colliding {@link Artifact} instances
      */
-    Map<String, Artifact> getArtifactsCollisionMap(List<Artifact> artifacts) {
+    Map<String, List<Artifact>> getArtifactsCollisionMap(List<Artifact> artifacts) {
         int size = size(artifacts);
-        Map<String, Artifact> artifactsCollisionMap = newLinkedHashMap(size);
-        Set<String> ids = newLinkedHashSet(size);
+        Map<String, Artifact> seenArtifacts = newLinkedHashMap(size);
+        Map<String, List<Artifact>> artifactsCollisionMap = newLinkedHashMap(size);
         for (int i = 0; i < size; i++) {
             Artifact artifact = artifacts.get(i);
             String id = buildId(artifact);
-            if (!ids.add(id)) {
-                artifactsCollisionMap.put(id, artifact);
+            Artifact firstSeen = seenArtifacts.putIfAbsent(id, artifact);
+            if (firstSeen != null) {
+                artifactsCollisionMap.computeIfAbsent(id, k -> {
+                    List<Artifact> list = new ArrayList<>();
+                    list.add(firstSeen);
+                    return list;
+                }).add(artifact);
             }
         }
         return artifactsCollisionMap;

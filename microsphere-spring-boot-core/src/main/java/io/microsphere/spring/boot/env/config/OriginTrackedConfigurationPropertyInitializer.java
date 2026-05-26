@@ -121,7 +121,9 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
                 String name = propertySource.getName();
                 try {
                     PropertySource originTrackedPropertySource = createOriginTrackedPropertySource(propertySource);
-                    propertySources.replace(name, originTrackedPropertySource);
+                    if (originTrackedPropertySource != null) {
+                        propertySources.replace(name, originTrackedPropertySource);
+                    }
                 } catch (IOException e) {
                     logger.error("Failed to create the origin tracked PropertySource[name : '{}', class : '{}']",
                             name, propertySource.getClass().getName());

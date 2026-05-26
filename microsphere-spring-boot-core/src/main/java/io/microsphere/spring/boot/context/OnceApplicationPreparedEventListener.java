@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.context.event.ApplicationPreparedEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.Ordered;
 
 import java.util.Map;
@@ -112,6 +113,12 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
         }
 
         markProcessed(contextId);
+
+        context.addApplicationListener(event -> {
+            if (event instanceof ContextClosedEvent && context == ((ContextClosedEvent) event).getApplicationContext()) {
+                processedContextIds.remove(contextId);
+            }
+        });
 
         onApplicationEvent(springApplication, args, context);
 

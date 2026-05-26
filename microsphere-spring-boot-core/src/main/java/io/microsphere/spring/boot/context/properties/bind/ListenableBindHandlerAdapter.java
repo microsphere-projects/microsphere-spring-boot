@@ -164,7 +164,9 @@ public class ListenableBindHandlerAdapter extends AbstractBindHandler {
     @Override
     public Object onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) throws Exception {
         try {
-            return super.onFailure(name, target, context, error);
+            Object result = super.onFailure(name, target, context, error);
+            bindHandlers.onFailure(name, target, context, error);
+            return result;
         } catch (Exception e) {
             bindHandlers.onFailure(name, target, context, error);
             throw e;
