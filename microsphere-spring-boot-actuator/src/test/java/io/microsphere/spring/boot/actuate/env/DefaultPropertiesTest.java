@@ -70,7 +70,6 @@ class DefaultPropertiesTest {
         assertProperty("management.endpoint.logfile.enabled", "false");
         assertProperty("management.endpoint.prometheus.enabled", "true");
 
-
     }
 
     private void assertProperty(String propertyName, String expectedValue) {

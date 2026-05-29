@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.diagnostics;
 
-
 import io.microsphere.classloading.Artifact;
 import io.microsphere.classloading.MavenArtifact;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;

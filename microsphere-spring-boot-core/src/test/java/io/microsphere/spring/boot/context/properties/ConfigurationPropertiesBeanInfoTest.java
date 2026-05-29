@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.context.properties;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
