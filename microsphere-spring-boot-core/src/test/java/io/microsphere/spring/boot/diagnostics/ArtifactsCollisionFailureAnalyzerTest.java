@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.diagnostics;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

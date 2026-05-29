@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.env.config;
 
-
 import io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer.NamedOrigin;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;

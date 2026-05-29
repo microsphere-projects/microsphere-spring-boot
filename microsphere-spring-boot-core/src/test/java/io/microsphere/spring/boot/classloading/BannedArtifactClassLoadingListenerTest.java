@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.classloading;
 
-
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
