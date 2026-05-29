@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.actuate.constants;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.spring.boot.actuate.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_ACTUATOR_PROPERTY_NAME_PREFIX;
