@@ -34,7 +34,6 @@ import org.springframework.core.env.PropertySource;
 import org.springframework.core.io.support.ResourcePropertySource;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
