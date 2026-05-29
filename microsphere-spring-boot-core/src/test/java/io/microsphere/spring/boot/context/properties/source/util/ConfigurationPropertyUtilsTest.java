@@ -53,10 +53,6 @@ class ConfigurationPropertyUtilsTest {
     }
 
     @Test
-    void testGetPrefixForAlias() {
-    }
-
-    @Test
     void testToDashedForm() {
         assertEquals("my-name", toDashedForm("my-name"));
         assertEquals("my-name", toDashedForm("myName"));
