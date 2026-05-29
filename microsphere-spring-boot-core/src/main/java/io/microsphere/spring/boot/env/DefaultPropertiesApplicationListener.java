@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getDefaultPropertiesResources;
 import static io.microsphere.spring.boot.util.SpringApplicationUtils.getResourceLoader;
@@ -147,7 +148,7 @@ public class DefaultPropertiesApplicationListener implements ApplicationListener
                                               PropertySourceLoaders propertySourceLoaders,
                                               ResourceLoader resourceLoader,
                                               Map<String, Object> defaultProperties) {
-        Set<String> defaultPropertiesResources = new LinkedHashSet<>();
+        Set<String> defaultPropertiesResources = newLinkedHashSet();
 
         String processorClassName = defaultPropertiesPostProcessor.getClass().getName();
 

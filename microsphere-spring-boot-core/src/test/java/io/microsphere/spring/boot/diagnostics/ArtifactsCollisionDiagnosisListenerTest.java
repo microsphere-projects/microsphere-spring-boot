@@ -34,6 +34,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static io.microsphere.classloading.Artifact.create;
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionDiagnosisListener.ENABLED_PROPERTY_NAME;
 import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionResourceResolver.disable;
 import static io.microsphere.spring.boot.diagnostics.ArtifactsCollisionResourceResolver.enable;
@@ -103,7 +104,7 @@ class ArtifactsCollisionDiagnosisListenerTest {
     }
 
     private List<Artifact> createArtifacts() {
-        List<Artifact> artifacts = new ArrayList<>(3);
+        List<Artifact> artifacts = newArrayList(3);
         artifacts.add(create("test-artifact"));
         artifacts.add(create("test-artifact"));
         artifacts.add(MavenArtifact.create("test-group", "test-artifact"));

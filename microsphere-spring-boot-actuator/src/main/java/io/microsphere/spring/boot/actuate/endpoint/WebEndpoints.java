@@ -19,6 +19,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static java.util.Collections.emptyMap;
 import static org.springframework.boot.actuate.endpoint.OperationType.READ;
 import static org.springframework.boot.actuate.endpoint.SecurityContext.NONE;
@@ -61,7 +62,7 @@ public class WebEndpoints {
     public Map<String, Object> invokeReadOperations() {
         Collection<ExposableWebEndpoint> webEndpoints = this.webEndpointsSupplier.getEndpoints();
 
-        Map<String, Object> readWebOperationResults = new HashMap<>(webEndpoints.size());
+        Map<String, Object> readWebOperationResults = newHashMap(webEndpoints.size());
 
         InvocationContext context = createInvocationContext();
 

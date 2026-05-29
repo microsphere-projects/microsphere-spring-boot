@@ -33,6 +33,7 @@ import java.util.List;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 
 /**
@@ -133,7 +134,7 @@ public class ConfigurationPropertiesEndpoint {
      */
     public static class ConfigurationPropertiesDescriptor implements OperationResponseBody {
 
-        private final List<ConfigurationProperty> configurationProperties = new LinkedList<>();
+        private final List<ConfigurationProperty> configurationProperties = newLinkedList();
 
         /**
          * Returns the accumulated list of {@link ConfigurationProperty} instances.
