@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.report;
 
-
 import org.junit.jupiter.api.Test;
 
 import static io.microsphere.spring.boot.report.ConditionEvaluationReportBuilder.getBeanFactoryId;

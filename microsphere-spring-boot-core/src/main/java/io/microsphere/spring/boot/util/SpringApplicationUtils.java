@@ -140,7 +140,7 @@ public abstract class SpringApplicationUtils implements Utils {
     public static void log(SpringApplication springApplication, String[] args, @Nullable ConfigurableApplicationContext context,
                            String pattern, Object... patternArgs) {
         String messagePattern = """
-                SpringApplication: 
+                SpringApplication:
                     main class : '{}' ,
                     web type : '{}' ,
                     sources : {} ,
@@ -149,7 +149,7 @@ public abstract class SpringApplicationUtils implements Utils {
                     initializers : {} ,
                     listeners : {},
                     args : {},
-                    context id : '{}', 
+                    context id : '{}',
                     log : {}
                 """;
 

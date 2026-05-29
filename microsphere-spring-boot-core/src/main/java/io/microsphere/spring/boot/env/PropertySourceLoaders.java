@@ -36,7 +36,6 @@ import static io.microsphere.util.StringUtils.substringBetween;
 import static org.springframework.core.io.support.SpringFactoriesLoader.loadFactories;
 import static org.springframework.util.StringUtils.hasText;
 
-
 /**
  * The composite class of {@link PropertySourceLoader} with utilities features
  * <p>

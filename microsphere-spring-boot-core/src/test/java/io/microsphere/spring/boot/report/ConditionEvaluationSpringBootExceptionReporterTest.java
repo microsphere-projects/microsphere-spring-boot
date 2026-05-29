@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.report;
 
-
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;

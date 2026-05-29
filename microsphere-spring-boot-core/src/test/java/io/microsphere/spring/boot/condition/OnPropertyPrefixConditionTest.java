@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.condition;
 
-
 import io.microsphere.spring.test.context.annotation.TestConditionContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

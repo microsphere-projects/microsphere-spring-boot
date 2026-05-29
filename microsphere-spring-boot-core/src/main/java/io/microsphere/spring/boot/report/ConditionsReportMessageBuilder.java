@@ -135,7 +135,6 @@ public class ConditionsReportMessageBuilder {
         }
     }
 
-
     private String combineOutcomesMessage(ConditionEvaluationReport.ConditionAndOutcomes conditionAndOutcomes) {
         StringBuilder outcomesMessageBuilder = new StringBuilder();
         boolean matched = conditionAndOutcomes.isFullMatch();

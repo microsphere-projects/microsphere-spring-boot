@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.listener;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.ConfigurableBootstrapContext;
