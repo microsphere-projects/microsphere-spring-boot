@@ -101,4 +101,32 @@ Thank you for using our project!
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.13...0.2.14
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.13...0.2.14## v0.2.15
+
+# Release Notes for v0.2.15
+
+## New Features
+- Added [user-guide.md](./user-guide.md) with comprehensive module and class explanations. (#119)
+
+## Documentation
+- Updated README to include GitHub user guide link. (#f651995)
+- Enhanced README with updated JavaDoc links to the user guide. (#5ce9a5f)
+
+## Code Quality Improvements
+- Removed empty test method `testGetPrefixForAlias`. (#a1bb99d)
+- Cleaned up trailing whitespace and consolidated blank lines. (#1aeaf6d)
+- Removed unused `java.util` imports. (#c625c71)
+- Utilized collection factory helpers for cleaner code. (#bb0b20c)
+
+## Dependency Updates
+- Bumped `microsphere-spring.version` to `0.2.19`. (#b621c0f)
+- Updated parent POM version to `0.3.0`. (#520b60c)
+
+## Build and Workflow Enhancements
+- Merged `main` branch into `release` multiple times for CI alignment. [skip ci]
+
+---
+
+For a detailed list of changes, view the [Full Changelog](https://github.com/microsphere-projects/microsphere/compare/v0.2.14...v0.2.15).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.14...0.2.15
