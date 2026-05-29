@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
@@ -201,7 +202,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     private void initConfigurationPropertiesBeanContexts(ConfigurableListableBeanFactory beanFactory) {
         String[] beanNames = beanFactory.getBeanNamesForAnnotation(CONFIGURATION_PROPERTIES_CLASS);
         int beanCount = beanNames.length;
-        this.beanContexts = new HashMap<>(beanCount);
+        this.beanContexts = newHashMap(beanCount);
     }
 
     /**

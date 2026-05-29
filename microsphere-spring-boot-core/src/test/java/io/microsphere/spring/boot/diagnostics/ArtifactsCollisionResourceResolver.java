@@ -26,6 +26,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.net.URLUtils.resolveArchiveFile;
 import static io.microsphere.util.ClassLoaderUtils.getClassResource;
@@ -47,7 +48,7 @@ public class ArtifactsCollisionResourceResolver implements ArtifactResourceResol
     private static List<ArtifactResourceResolver> resolvers;
 
     static {
-        resolvers = new ArrayList<>();
+        resolvers = newArrayList();
         for (ArtifactResourceResolver resolver : loadServices(ArtifactResourceResolver.class)) {
             if (resolver instanceof ArtifactsCollisionResourceResolver) {
                 continue;
