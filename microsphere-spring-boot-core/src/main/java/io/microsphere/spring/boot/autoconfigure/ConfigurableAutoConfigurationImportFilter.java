@@ -11,10 +11,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.spring.core.env.EnvironmentUtils.asConfigurableEnvironment;
 import static io.microsphere.util.ArrayUtils.EMPTY_STRING_ARRAY;
 import static io.microsphere.util.ArrayUtils.combine;
@@ -121,7 +121,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
      */
     public static Set<String> getExcludedAutoConfigurationClasses(Environment environment) {
         ConfigurableEnvironment configurableEnvironment = asConfigurableEnvironment(environment);
-        Set<String> allExcludedClasses = new LinkedHashSet<>();
+        Set<String> allExcludedClasses = newLinkedHashSet();
         addExcludedAutoConfigurationClasses(environment, getExcludedAutoConfigurationClasses(configurableEnvironment), allExcludedClasses);
         addExcludedAutoConfigurationClasses(environment, getExcludedAutoConfigurationClassesFromBinder(configurableEnvironment), allExcludedClasses);
         return allExcludedClasses.isEmpty() ? emptySet() : unmodifiableSet(allExcludedClasses);
@@ -136,7 +136,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
     }
 
     private static String[] getExcludedAutoConfigurationClasses(ConfigurableEnvironment environment) {
-        Set<String> excludedClasses = new LinkedHashSet<>();
+        Set<String> excludedClasses = newLinkedHashSet();
         MutablePropertySources propertySources = environment.getPropertySources();
         for (PropertySource propertySource : propertySources) {
             Object property = propertySource.getProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
@@ -201,7 +201,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         private static final String NAME = AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME;
 
         private ExcludedAutoConfigurationClassPropertySource() {
-            super(NAME, new LinkedHashSet<>());
+            super(NAME, newLinkedHashSet());
         }
 
         @Override

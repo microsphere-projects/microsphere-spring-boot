@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.PrintStream;
+import static java.lang.System.err;
 
 /**
  * {@link SpringApplicationRunListener} Failure Report
@@ -26,7 +26,7 @@ public class FailureReportSpringApplicationRunListener extends SpringApplication
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public FailureReportSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);
@@ -48,7 +48,6 @@ public class FailureReportSpringApplicationRunListener extends SpringApplication
      */
     @Override
     public void failed(ConfigurableApplicationContext context, Throwable exception) {
-        PrintStream err = System.err;
         err.print("The Spring Boot application fails to start. The causes are as follows:");
         exception.printStackTrace(err);
     }

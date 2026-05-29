@@ -103,4 +103,27 @@ For a detailed list of changes, refer to the [Full Changelog](#).
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.13...0.1.14
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.13...0.1.14## v0.1.15
+
+# Release Notes - Version 0.1.15  
+
+## New Features  
+- Added user guide and updated README to enhance documentation. ([bda80e1](#))  
+
+## Bug Fixes  
+- Resolved duplicated line separators in the codebase. ([780c3a9](#))  
+- Improved Java source code formatting for better readability and maintainability. ([567e68e](#))  
+
+## Dependency Updates  
+- Upgraded `microsphere-spring` to version **0.1.19**. ([7a6bf7a](#))  
+- Updated parent POM to version **0.3.0**. ([007c496](#))  
+
+## Other Changes  
+- Utilized collection factory helpers and implemented minor fixes. ([d7f8357](#))  
+- Updated README to reflect the latest versions **0.2.15** and **0.1.15**. ([b2ad9d4](#))  
+
+---
+
+**Full Changelog:** [View commits](#)  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.14...0.1.15

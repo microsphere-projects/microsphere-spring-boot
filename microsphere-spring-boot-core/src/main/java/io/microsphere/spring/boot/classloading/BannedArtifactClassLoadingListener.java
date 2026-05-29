@@ -9,10 +9,10 @@ import org.springframework.boot.context.event.ApplicationStartingEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.core.Ordered;
 
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import static io.microsphere.annotation.ConfigurationProperty.SYSTEM_PROPERTIES_SOURCE;
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
 import static io.microsphere.util.ArrayUtils.arrayToString;
@@ -54,7 +54,7 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
     )
     public static final String BANNED_ARTIFACTS_ENABLED_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX + "banned-artifacts.enabled";
 
-    private static final ConcurrentMap<SpringApplication, Boolean> processedMap = new ConcurrentHashMap<>();
+    private static final ConcurrentMap<SpringApplication, Boolean> processedMap = newConcurrentHashMap();
 
     static {
         addShutdownHookCallback(processedMap::clear);

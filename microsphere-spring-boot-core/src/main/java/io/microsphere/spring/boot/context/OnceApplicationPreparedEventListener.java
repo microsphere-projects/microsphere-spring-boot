@@ -9,9 +9,9 @@ import org.springframework.core.Ordered;
 
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 
 /**
@@ -45,7 +45,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
  **/
 public abstract class OnceApplicationPreparedEventListener implements ApplicationListener<ApplicationPreparedEvent>, Ordered {
 
-    private static Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = new ConcurrentHashMap<>();
+    private static Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = newConcurrentHashMap();
 
     protected final Logger logger = getLogger(getClass());
 

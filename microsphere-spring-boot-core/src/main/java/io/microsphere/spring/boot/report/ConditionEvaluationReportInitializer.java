@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @since 1.0.0
  */
-public class ConditionEvaluationReportInitializer implements ApplicationContextInitializer {
+public class ConditionEvaluationReportInitializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
 
     /**
      * Initializes the {@link ConditionEvaluationReport} by registering a
