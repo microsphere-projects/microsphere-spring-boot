@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.context.properties.bind.util;
 
-
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

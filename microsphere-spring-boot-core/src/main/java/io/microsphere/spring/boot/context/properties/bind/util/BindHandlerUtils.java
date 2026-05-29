@@ -71,7 +71,6 @@ public abstract class BindHandlerUtils implements Utils {
         return handler;
     }
 
-
     private BindHandlerUtils() {
     }
 }
