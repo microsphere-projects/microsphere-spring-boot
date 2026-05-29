@@ -37,6 +37,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.beans.factory.support.BeanRegistrar.registerBean;
 import static org.springframework.boot.origin.OriginTrackedValue.of;
@@ -158,7 +159,7 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
         EnumerablePropertySource enumerablePropertySource = (EnumerablePropertySource) propertySource;
         String[] propertyNames = enumerablePropertySource.getPropertyNames();
         int size = propertyNames.length;
-        Map<String, Object> source = new LinkedHashMap<>(size);
+        Map<String, Object> source = newLinkedHashMap(size);
         for (int i = 0; i < size; i++) {
             String propertyName = propertyNames[i];
             Object propertyValue = enumerablePropertySource.getProperty(propertyName);

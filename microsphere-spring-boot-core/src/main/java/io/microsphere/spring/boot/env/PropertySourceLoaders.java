@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.util.ClassLoaderUtils.getDefaultClassLoader;
 import static io.microsphere.util.StringUtils.substringBetween;
@@ -157,7 +158,7 @@ public class PropertySourceLoaders implements PropertySourceLoader {
      */
     @Override
     public List<PropertySource<?>> load(String name, Resource resource) throws IOException {
-        List<PropertySource<?>> propertySources = new LinkedList<>();
+        List<PropertySource<?>> propertySources = newLinkedList();
         URL url = resource.getURL();
         for (PropertySourceLoader loader : loaders) {
             if (supports(loader, url)) {
