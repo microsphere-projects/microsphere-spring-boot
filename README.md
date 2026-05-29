@@ -110,8 +110,8 @@ Choose the version that matches your Spring Boot generation:
 
 | Branch | Spring Boot Compatibility | Latest Version |
 |--------|---------------------------|----------------|
-| `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.14`       |
-| `1.x`  | 2.0.x – 2.7.x             | `0.1.14`       |
+| `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.15`       |
+| `1.x`  | 2.0.x – 2.7.x             | `0.1.15`        |
 
 ### Add Module Dependencies
 
@@ -220,8 +220,8 @@ Replace `ThreadPoolTaskScheduler` with `MonitoredThreadPoolTaskScheduler` to get
 (task count, execution time) for every scheduled task:
 
 ```java
-import io.micrometer.core.instrument.MeterRegistry;
 import io.microsphere.spring.boot.actuate.MonitoredThreadPoolTaskScheduler;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -285,9 +285,8 @@ cd microsphere-spring-boot
 |---------------------------|----------------------------------------------------------------------------------------|
 | **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot                      |
 | **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot                          |
+| **User Guide (Github)**   | [User Guide](./user-guide.md)                                                          |
 | **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki                   |
-| **JavaDoc — core**        | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-core     |
-| **JavaDoc — actuator**    | https://javadoc.io/doc/io.github.microsphere-projects/microsphere-spring-boot-actuator |
 | **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues                 |
 
 **Reporting a bug:**

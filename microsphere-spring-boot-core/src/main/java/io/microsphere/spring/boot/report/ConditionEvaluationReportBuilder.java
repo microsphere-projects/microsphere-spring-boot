@@ -5,10 +5,10 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionEvaluationReport;
 
-import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
+import static io.microsphere.collection.MapUtils.newConcurrentHashMap;
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static java.util.Collections.unmodifiableMap;
 import static org.springframework.util.ObjectUtils.identityToString;
 
@@ -20,7 +20,7 @@ import static org.springframework.util.ObjectUtils.identityToString;
  */
 abstract class ConditionEvaluationReportBuilder {
 
-    private static final Map<ConfigurableListableBeanFactory, ConditionEvaluationReport> reports = new ConcurrentHashMap<>();
+    private static final Map<ConfigurableListableBeanFactory, ConditionEvaluationReport> reports = newConcurrentHashMap();
 
     /**
      * Builds or retrieves a cached {@link ConditionEvaluationReport} for the given bean factory.
@@ -53,7 +53,7 @@ abstract class ConditionEvaluationReportBuilder {
      * @return an unmodifiable map of bean factory IDs to their {@link ConditionEvaluationReport}
      */
     static Map<String, ConditionEvaluationReport> getReportsMap() {
-        Map<String, ConditionEvaluationReport> reportsMap = new LinkedHashMap<>(reports.size());
+        Map<String, ConditionEvaluationReport> reportsMap = newLinkedHashMap(reports.size());
         reports.forEach((beanFactory, report) -> {
             String id = getBeanFactoryId(beanFactory);
             reportsMap.put(id, report);

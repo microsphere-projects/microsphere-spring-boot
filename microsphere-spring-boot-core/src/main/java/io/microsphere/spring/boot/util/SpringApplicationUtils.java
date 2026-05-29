@@ -10,9 +10,9 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static io.microsphere.collection.SetUtils.newLinkedHashSet;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.constants.PropertyConstants.DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL;
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME;
@@ -34,7 +34,7 @@ public abstract class SpringApplicationUtils implements Utils {
 
     private static final Logger logger = getLogger(SpringApplicationUtils.class);
 
-    private static final Set<String> defaultPropertiesResources = new LinkedHashSet<>();
+    private static final Set<String> defaultPropertiesResources = newLinkedHashSet();
 
     static {
         addShutdownHookCallback(defaultPropertiesResources::clear);

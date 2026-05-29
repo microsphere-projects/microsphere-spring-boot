@@ -28,10 +28,10 @@ import org.springframework.core.convert.ConversionService;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -211,7 +211,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private void initBinding(Object bean) {
-        Map<String, String> bindingPropertyNames = new HashMap<>();
+        Map<String, String> bindingPropertyNames = newHashMap();
         String prefix = getPrefix();
         initBinding(bean.getClass(), prefix, bindingPropertyNames, null);
         this.bindingPropertyNames = bindingPropertyNames;

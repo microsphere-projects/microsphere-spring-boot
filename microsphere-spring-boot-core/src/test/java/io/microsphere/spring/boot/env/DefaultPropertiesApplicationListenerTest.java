@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.env;
 
-
 import io.microsphere.spring.boot.util.TestUtils;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;

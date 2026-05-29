@@ -27,11 +27,11 @@ import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.ListUtils.newLinkedList;
 import static io.microsphere.metadata.ConfigurationPropertyLoader.loadAll;
 
 /**
@@ -119,7 +119,6 @@ public class ConfigurationPropertiesEndpoint {
         return configurationProperty;
     }
 
-
     /**
      * Descriptor class that holds a collection of {@link ConfigurationProperty} instances for actuator endpoint
      * serialization.
@@ -133,7 +132,7 @@ public class ConfigurationPropertiesEndpoint {
      */
     public static class ConfigurationPropertiesDescriptor {
 
-        private final List<ConfigurationProperty> configurationProperties = new LinkedList<>();
+        private final List<ConfigurationProperty> configurationProperties = newLinkedList();
 
         /**
          * Returns the accumulated list of {@link ConfigurationProperty} instances.

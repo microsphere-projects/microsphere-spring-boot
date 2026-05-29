@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.constants;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySources;
 

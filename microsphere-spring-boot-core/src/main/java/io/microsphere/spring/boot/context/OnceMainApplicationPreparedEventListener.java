@@ -10,7 +10,6 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import static org.springframework.util.ClassUtils.isPresent;
 
-
 /**
  * Once execution {@link ApplicationPreparedEvent} {@link ApplicationListener} for Main {@link ApplicationContext}.
  * <p>

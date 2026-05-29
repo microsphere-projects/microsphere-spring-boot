@@ -25,12 +25,12 @@ import org.springframework.boot.configurationprocessor.metadata.ItemHint;
 import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
 
 import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static io.microsphere.collection.ListUtils.newLinkedList;
+import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static java.util.Collections.emptyList;
 import static org.springframework.boot.configurationprocessor.metadata.ItemMetadata.ItemType.GROUP;
 import static org.springframework.boot.configurationprocessor.metadata.ItemMetadata.ItemType.PROPERTY;
@@ -251,16 +251,16 @@ public class ConfigurationMetadataRepository implements CommandLineRunner {
     }
 
     private void initNamedHints(List<ItemHint> items) {
-        Map<String, List<ItemHint>> namedHints = new LinkedHashMap<>(items.size());
+        Map<String, List<ItemHint>> namedHints = newLinkedHashMap(items.size());
         items.stream().forEach(itemHint -> {
-            List<ItemHint> itemHints = namedHints.computeIfAbsent(itemHint.getName(), i -> new LinkedList<>());
+            List<ItemHint> itemHints = namedHints.computeIfAbsent(itemHint.getName(), i -> newLinkedList());
             itemHints.add(itemHint);
         });
         this.namedHints = namedHints;
     }
 
     private Map<String, ItemMetadata> createNamedItems(List<ItemMetadata> items, ItemMetadata.ItemType itemType) {
-        Map<String, ItemMetadata> namedItems = new LinkedHashMap<>(items.size());
+        Map<String, ItemMetadata> namedItems = newLinkedHashMap(items.size());
         items.stream().filter(item -> item.isOfItemType(itemType)).forEach(item -> {
             namedItems.put(item.getName(), item);
         });
