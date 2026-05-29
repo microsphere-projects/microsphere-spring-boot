@@ -11,7 +11,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;

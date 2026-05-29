@@ -33,7 +33,6 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.ResourcePropertySource;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
