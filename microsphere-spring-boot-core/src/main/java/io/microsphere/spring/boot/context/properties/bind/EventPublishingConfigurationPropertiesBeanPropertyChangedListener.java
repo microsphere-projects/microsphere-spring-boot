@@ -30,7 +30,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 

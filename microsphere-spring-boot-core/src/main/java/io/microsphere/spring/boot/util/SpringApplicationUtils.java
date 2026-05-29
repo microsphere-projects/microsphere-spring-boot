@@ -10,7 +10,6 @@ import org.springframework.core.env.PropertySources;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;

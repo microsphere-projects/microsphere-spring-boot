@@ -28,7 +28,6 @@ import org.springframework.boot.configurationprocessor.metadata.ItemMetadata;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
