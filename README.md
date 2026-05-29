@@ -220,8 +220,8 @@ Replace `ThreadPoolTaskScheduler` with `MonitoredThreadPoolTaskScheduler` to get
 (task count, execution time) for every scheduled task:
 
 ```java
-import io.micrometer.core.instrument.MeterRegistry;
 import io.microsphere.spring.boot.actuate.MonitoredThreadPoolTaskScheduler;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -49,7 +49,7 @@ public class LoggingSpringApplicationRunListener extends SpringApplicationRunLis
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public LoggingSpringApplicationRunListener(SpringApplication springApplication, String[] args) {
         super(springApplication, args);

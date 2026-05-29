@@ -34,7 +34,7 @@ public abstract class SpringApplicationRunListenerAdapter implements SpringAppli
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public SpringApplicationRunListenerAdapter(SpringApplication springApplication, String[] args) {
         this.springApplication = springApplication;

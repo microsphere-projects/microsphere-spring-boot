@@ -33,9 +33,9 @@ import org.springframework.core.io.support.EncodedResource;
 import org.springframework.core.io.support.ResourcePropertySource;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
+import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.spring.boot.util.TestUtils.application;
 import static java.nio.charset.Charset.defaultCharset;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -97,7 +97,7 @@ class OriginTrackedConfigurationPropertyInitializerTest {
     @Test
     void testCreateOriginTrackedPropertySource() throws IOException {
         String propertySourceName = "mockPropertySource";
-        Map<String, Object> source = new HashMap<>();
+        Map<String, Object> source = newHashMap();
         MapPropertySource propertySource = new MapPropertySource(propertySourceName, source);
         String propertyName = "test-name";
         Object propertyValue = new Object();
