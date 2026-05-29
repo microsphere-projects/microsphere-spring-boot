@@ -119,7 +119,6 @@ public class ConfigurationPropertiesEndpoint {
         return configurationProperty;
     }
 
-
     /**
      * Descriptor class that holds a collection of {@link ConfigurationProperty} instances for actuator endpoint
      * serialization.

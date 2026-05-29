@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.actuate.endpoint;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.endpoint.annotation.AbstractDiscoveredOperation;
 import org.springframework.boot.actuate.endpoint.annotation.DiscoveredEndpoint;
@@ -89,7 +88,6 @@ class WebEndpointsTest {
     void testIsReadWebOperationCandidateOnNull() {
         assertFalse(isReadWebOperationCandidate(null));
     }
-
 
     interface WebEndpoint extends ExposableWebEndpoint, DiscoveredEndpoint<WebOperation> {
     }

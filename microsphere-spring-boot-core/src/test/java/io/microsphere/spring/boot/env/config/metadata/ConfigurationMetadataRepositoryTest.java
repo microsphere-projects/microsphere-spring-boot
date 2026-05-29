@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.env.config.metadata;
 
-
 import io.microsphere.spring.boot.context.properties.metadata.ConfigurationMetadataReader;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,6 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-
 
 /**
  * {@link ConfigurationMetadataRepository} Test

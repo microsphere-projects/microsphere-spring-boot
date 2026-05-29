@@ -17,7 +17,6 @@
 
 package io.microsphere.spring.boot.context.properties.bind.util;
 
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.context.properties.bind.handler.IgnoreErrorsBindHandler;
 import org.springframework.boot.context.properties.bind.handler.NoUnboundElementsBindHandler;
