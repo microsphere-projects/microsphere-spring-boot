@@ -126,4 +126,28 @@ For a detailed list of changes, refer to the [Full Changelog](#).
 
 **Full Changelog:** [View commits](#)  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.14...0.1.15
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.14...0.1.15## v0.1.16
+
+# Release Notes - Version 0.1.16
+
+## Dependency Updates
+- **microsphere-spring** version updated to `0.1.20`. [aaa5160]
+
+## Bug Fixes
+- Fixed table formatting issues in the `README`. [63b4148]
+
+## Documentation
+- Removed `Maintainers` section from the `README`. [a1ebd6d]
+
+## Code Quality Improvements
+- Normalized formatting and improved Javadoc spacing across the codebase. [2ea9dbc]
+- Removed trailing newlines from all 113 Java source files for consistency. [750e25c]
+
+## Other Changes
+- Updated version references in `README` to `0.2.16` and `0.1.16`. [be16d1e]
+
+---
+
+For the complete list of changes, refer to the [Full Changelog](https://github.com/mercyblitz/microsphere-spring-boot/compare/0.1.15...0.1.16).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.15...0.1.16
