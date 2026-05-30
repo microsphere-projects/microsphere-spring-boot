@@ -28,10 +28,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static io.microsphere.collection.ListUtils.newArrayList;
+import static io.microsphere.collection.MapUtils.newHashMap;
 
 /**
  * {@link ConfigurationProperties @ConfigurationProperties} for a web server (e.g. port
@@ -150,7 +151,7 @@ public class ServerProperties {
         /**
          * Servlet context init parameters.
          */
-        private final Map<String, String> contextParameters = new HashMap<>();
+        private final Map<String, String> contextParameters = newHashMap();
 
         /**
          * Context path of the application.
@@ -360,19 +361,19 @@ public class ServerProperties {
          * special '?' and '*' characters can be used in the pattern to match one and only
          * one character and zero or more characters respectively.
          */
-        private List<String> additionalTldSkipPatterns = new ArrayList<>();
+        private List<String> additionalTldSkipPatterns = newArrayList();
 
         /**
          * List of additional unencoded characters that should be allowed in URI paths.
          * Only "< > [ \ ] ^ ` { | }" are allowed.
          */
-        private List<Character> relaxedPathChars = new ArrayList<>();
+        private List<Character> relaxedPathChars = newArrayList();
 
         /**
          * List of additional unencoded characters that should be allowed in URI query
          * strings. Only "< > [ \ ] ^ ` { | }" are allowed.
          */
-        private List<Character> relaxedQueryChars = new ArrayList<>();
+        private List<Character> relaxedQueryChars = newArrayList();
 
         /**
          * Amount of time the connector will wait, after accepting a connection, for the

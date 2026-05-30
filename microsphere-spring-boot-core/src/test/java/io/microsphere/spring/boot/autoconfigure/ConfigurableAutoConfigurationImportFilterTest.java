@@ -23,9 +23,9 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockEnvironment;
 
 import java.util.Set;
-import java.util.TreeSet;
 
 import static io.microsphere.collection.Maps.ofMap;
+import static io.microsphere.collection.SetUtils.newTreeSet;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.addExcludedAutoConfigurationClass;
 import static io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilter.getExcludedAutoConfigurationClasses;
@@ -127,28 +127,28 @@ class ConfigurableAutoConfigurationImportFilterTest {
 
         this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, TEST_CLASS_NAME_1 + "," + TEST_CLASS_NAME_2);
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
 
         this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, TEST_CLASS_NAME_1 + "," + TEST_CLASS_NAME_2 + "," + TEST_CLASS_NAME_3);
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
 
         // Test the placeholders
         this.environment.setProperty("exclude", TEST_CLASS_NAME_1 + "," + TEST_CLASS_NAME_3);
         this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, "${exclude}");
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_3)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_3)), classNames);
 
         this.environment.setProperty("exclude1", TEST_CLASS_NAME_1);
         this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, TEST_CLASS_NAME_2 + ",${exclude1}");
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_2, TEST_CLASS_NAME_1)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_2, TEST_CLASS_NAME_1)), classNames);
 
         this.environment.setProperty("exclude1", TEST_CLASS_NAME_1);
         this.environment.setProperty("exclude2", TEST_CLASS_NAME_2);
         this.environment.setProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME, "${exclude1},${exclude2}");
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
     }
 
     @Test
@@ -162,18 +162,18 @@ class ConfigurableAutoConfigurationImportFilterTest {
 
         addExcludedAutoConfigurationClass(this.environment, TEST_CLASS_NAME_2);
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2)), classNames);
 
         // Test the placeholders
         this.environment.setProperty("exclude3", TEST_CLASS_NAME_3);
         addExcludedAutoConfigurationClass(this.environment, "${exclude3}");
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
 
         // Test the duplicated elements
         addExcludedAutoConfigurationClass(this.environment, TEST_CLASS_NAME_3);
         classNames = getExcludedAutoConfigurationClasses(this.environment);
-        assertEquals(new TreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
+        assertEquals(newTreeSet(asList(TEST_CLASS_NAME_1, TEST_CLASS_NAME_2, TEST_CLASS_NAME_3)), classNames);
     }
 
     @Test

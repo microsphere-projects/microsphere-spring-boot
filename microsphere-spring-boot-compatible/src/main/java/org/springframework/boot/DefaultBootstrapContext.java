@@ -23,9 +23,10 @@ import org.springframework.context.event.ApplicationEventMulticaster;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.util.Assert;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
+
+import static io.microsphere.collection.MapUtils.newHashMap;
 
 /**
  * Default {@link ConfigurableBootstrapContext} implementation.
@@ -35,9 +36,9 @@ import java.util.function.Supplier;
  */
 public class DefaultBootstrapContext implements ConfigurableBootstrapContext {
 
-	private final Map<Class<?>, InstanceSupplier<?>> instanceSuppliers = new HashMap<>();
+	private final Map<Class<?>, InstanceSupplier<?>> instanceSuppliers = newHashMap();
 
-	private final Map<Class<?>, Object> instances = new HashMap<>();
+	private final Map<Class<?>, Object> instances = newHashMap();
 
 	private final ApplicationEventMulticaster events = new SimpleApplicationEventMulticaster();
 
