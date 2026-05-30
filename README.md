@@ -111,7 +111,7 @@ Choose the version that matches your Spring Boot generation:
 | Branch | Spring Boot Compatibility | Latest Version |
 |--------|---------------------------|----------------|
 | `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.16`       |
-| `1.x`  | 2.0.x – 2.7.x             | `0.1.16`        |
+| `1.x`  | 2.0.x – 2.7.x             | `0.1.16`       |
 
 ### Add Module Dependencies
 
@@ -281,13 +281,13 @@ cd microsphere-spring-boot
 
 ## Getting Help
 
-| Resource                  | Link                                                                                   |
-|---------------------------|----------------------------------------------------------------------------------------|
-| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot                      |
-| **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot                          |
-| **User Guide (Github)**   | [User Guide](./user-guide.md)                                                          |
-| **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki                   |
-| **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues                 |
+| Resource                  | Link                                                                   |
+|---------------------------|------------------------------------------------------------------------|
+| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot      |
+| **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot          |
+| **User Guide (Github)**   | [User Guide](./user-guide.md)                                          |
+| **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki   |
+| **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues |
 
 **Reporting a bug:**
 
