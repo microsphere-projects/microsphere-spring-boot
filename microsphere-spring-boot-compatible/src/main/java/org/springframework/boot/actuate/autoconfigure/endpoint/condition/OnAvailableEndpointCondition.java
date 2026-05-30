@@ -42,70 +42,70 @@ import java.util.Set;
  */
 class OnAvailableEndpointCondition extends AbstractEndpointCondition {
 
-	private static final String JMX_ENABLED_KEY = "spring.jmx.enabled";
+    private static final String JMX_ENABLED_KEY = "spring.jmx.enabled";
 
-	private static final Map<Environment, Set<Exposure>> exposuresCache = new ConcurrentReferenceHashMap<>();
+    private static final Map<Environment, Set<Exposure>> exposuresCache = new ConcurrentReferenceHashMap<>();
 
-	@Override
-	public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		ConditionOutcome enablementOutcome = getEnablementOutcome(context, metadata,
-				ConditionalOnAvailableEndpoint.class);
-		if (!enablementOutcome.isMatch()) {
-			return enablementOutcome;
-		}
-		ConditionMessage message = enablementOutcome.getConditionMessage();
-		Environment environment = context.getEnvironment();
-		if (CloudPlatform.CLOUD_FOUNDRY.isActive(environment)) {
-			return new ConditionOutcome(true, message.andCondition(ConditionalOnAvailableEndpoint.class)
-					.because("application is running on Cloud Foundry"));
-		}
-		EndpointId id = EndpointId.of(environment,
-				getEndpointAttributes(ConditionalOnAvailableEndpoint.class, context, metadata).getString("id"));
-		Set<Exposure> exposures = getExposures(environment);
-		for (Exposure exposure : exposures) {
-			if (exposure.isExposed(id)) {
-				return new ConditionOutcome(true,
-						message.andCondition(ConditionalOnAvailableEndpoint.class)
-								.because("marked as exposed by a 'management.endpoints." + exposure.getPrefix()
-										+ ".exposure' property"));
-			}
-		}
-		return new ConditionOutcome(false, message.andCondition(ConditionalOnAvailableEndpoint.class)
-				.because("no 'management.endpoints' property marked it as exposed"));
-	}
+    @Override
+    public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        ConditionOutcome enablementOutcome = getEnablementOutcome(context, metadata,
+                ConditionalOnAvailableEndpoint.class);
+        if (!enablementOutcome.isMatch()) {
+            return enablementOutcome;
+        }
+        ConditionMessage message = enablementOutcome.getConditionMessage();
+        Environment environment = context.getEnvironment();
+        if (CloudPlatform.CLOUD_FOUNDRY.isActive(environment)) {
+            return new ConditionOutcome(true, message.andCondition(ConditionalOnAvailableEndpoint.class)
+                    .because("application is running on Cloud Foundry"));
+        }
+        EndpointId id = EndpointId.of(environment,
+                getEndpointAttributes(ConditionalOnAvailableEndpoint.class, context, metadata).getString("id"));
+        Set<Exposure> exposures = getExposures(environment);
+        for (Exposure exposure : exposures) {
+            if (exposure.isExposed(id)) {
+                return new ConditionOutcome(true,
+                        message.andCondition(ConditionalOnAvailableEndpoint.class)
+                                .because("marked as exposed by a 'management.endpoints." + exposure.getPrefix()
+                                        + ".exposure' property"));
+            }
+        }
+        return new ConditionOutcome(false, message.andCondition(ConditionalOnAvailableEndpoint.class)
+                .because("no 'management.endpoints' property marked it as exposed"));
+    }
 
-	private Set<Exposure> getExposures(Environment environment) {
-		Set<Exposure> exposures = exposuresCache.get(environment);
-		if (exposures == null) {
-			exposures = new HashSet<>(2);
-			if (environment.getProperty(JMX_ENABLED_KEY, Boolean.class, false)) {
-				exposures.add(new Exposure(environment, "jmx", DefaultIncludes.JMX));
-			}
-			exposures.add(new Exposure(environment, "web", DefaultIncludes.WEB));
-			exposuresCache.put(environment, exposures);
-		}
-		return exposures;
-	}
+    private Set<Exposure> getExposures(Environment environment) {
+        Set<Exposure> exposures = exposuresCache.get(environment);
+        if (exposures == null) {
+            exposures = new HashSet<>(2);
+            if (environment.getProperty(JMX_ENABLED_KEY, Boolean.class, false)) {
+                exposures.add(new Exposure(environment, "jmx", DefaultIncludes.JMX));
+            }
+            exposures.add(new Exposure(environment, "web", DefaultIncludes.WEB));
+            exposuresCache.put(environment, exposures);
+        }
+        return exposures;
+    }
 
-	static class Exposure extends IncludeExcludeEndpointFilter<ExposableEndpoint<?>> {
+    static class Exposure extends IncludeExcludeEndpointFilter<ExposableEndpoint<?>> {
 
-		private final String prefix;
+        private final String prefix;
 
-		@SuppressWarnings({ "rawtypes", "unchecked" })
-		Exposure(Environment environment, String prefix, DefaultIncludes defaultIncludes) {
-			super((Class) ExposableEndpoint.class, environment, "management.endpoints." + prefix + ".exposure",
-					defaultIncludes);
-			this.prefix = prefix;
-		}
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        Exposure(Environment environment, String prefix, DefaultIncludes defaultIncludes) {
+            super((Class) ExposableEndpoint.class, environment, "management.endpoints." + prefix + ".exposure",
+                    defaultIncludes);
+            this.prefix = prefix;
+        }
 
-		String getPrefix() {
-			return this.prefix;
-		}
+        String getPrefix() {
+            return this.prefix;
+        }
 
-		boolean isExposed(EndpointId id) {
-			return super.match(id);
-		}
+        boolean isExposed(EndpointId id) {
+            return super.match(id);
+        }
 
-	}
+    }
 
 }
