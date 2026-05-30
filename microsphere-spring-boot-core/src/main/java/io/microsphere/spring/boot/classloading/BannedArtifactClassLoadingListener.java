@@ -72,7 +72,7 @@ public class BannedArtifactClassLoadingListener extends SpringApplicationRunList
      * }</pre>
      *
      * @param springApplication the {@link SpringApplication} instance
-     * @param args the command line arguments
+     * @param args              the command line arguments
      */
     public BannedArtifactClassLoadingListener(SpringApplication springApplication, String... args) {
         super(springApplication, args);
