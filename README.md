@@ -110,8 +110,8 @@ Choose the version that matches your Spring Boot generation:
 
 | Branch | Spring Boot Compatibility | Latest Version |
 |--------|---------------------------|----------------|
-| `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.15`       |
-| `1.x`  | 2.0.x – 2.7.x             | `0.1.15`        |
+| `main` | 3.0.x – 3.5.x, 4.0.x      | `0.2.16`       |
+| `1.x`  | 2.0.x – 2.7.x             | `0.1.16`       |
 
 ### Add Module Dependencies
 
@@ -281,13 +281,13 @@ cd microsphere-spring-boot
 
 ## Getting Help
 
-| Resource                  | Link                                                                                   |
-|---------------------------|----------------------------------------------------------------------------------------|
-| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot                      |
-| **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot                          |
-| **User Guide (Github)**   | [User Guide](./user-guide.md)                                                          |
-| **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki                   |
-| **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues                 |
+| Resource                  | Link                                                                   |
+|---------------------------|------------------------------------------------------------------------|
+| **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot      |
+| **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot          |
+| **User Guide (Github)**   | [User Guide](./user-guide.md)                                          |
+| **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki   |
+| **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues |
 
 **Reporting a bug:**
 
@@ -305,12 +305,6 @@ Contributions of all kinds are welcome — bug fixes, documentation improvements
 3. Run `./mvnw verify` to ensure all tests pass before submitting.
 4. Open a pull request against the `main` branch (or `1.x` for Spring Boot 2.x fixes).
 5. Please read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) before participating in the community.
-
-## Maintainers
-
-| Name     | GitHub                                       | Email                |
-|----------|----------------------------------------------|----------------------|
-| Mercy Ma | [@mercyblitz](https://github.com/mercyblitz) | mercyblitz@gmail.com |
 
 The project is maintained under the [Microsphere Projects](https://github.com/microsphere-projects) organisation.
 
