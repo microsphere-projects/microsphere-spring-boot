@@ -73,9 +73,9 @@ public class MonitoredThreadPoolTaskScheduler extends ThreadPoolTaskScheduler im
      *   // The created executor is wrapped with monitoring support.
      * }</pre>
      *
-     * @param poolSize                  the core pool size for the executor
-     * @param threadFactory             the {@link ThreadFactory} to use
-     * @param rejectedExecutionHandler  the {@link RejectedExecutionHandler} to use
+     * @param poolSize                 the core pool size for the executor
+     * @param threadFactory            the {@link ThreadFactory} to use
+     * @param rejectedExecutionHandler the {@link RejectedExecutionHandler} to use
      * @return the created {@link ScheduledExecutorService}
      */
     @Override
