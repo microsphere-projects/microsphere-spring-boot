@@ -129,4 +129,20 @@ Thank you for using our project!
 
 For a detailed list of changes, view the [Full Changelog](https://github.com/microsphere-projects/microsphere/compare/v0.2.14...v0.2.15).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.14...0.2.15
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.14...0.2.15## v0.2.16
+
+# Release Notes - Version 0.2.16
+
+## Dependency Updates
+- Updated `microsphere-spring.version` to `0.2.20`. ([183e86f](#))
+
+## Documentation
+- Updated `README` to reflect new version numbers and removed the "Maintainers" section. ([45cdf30](#))
+
+## Other Changes
+- Reformatted code and Javadoc for improved style consistency. ([baab74e](#))
+- Bumped version to prepare for the next patch. ([35f15d9](#))
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.15...0.2.16
