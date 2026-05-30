@@ -306,12 +306,6 @@ Contributions of all kinds are welcome — bug fixes, documentation improvements
 4. Open a pull request against the `main` branch (or `1.x` for Spring Boot 2.x fixes).
 5. Please read [CODE_OF_CONDUCT.md](./CODE_OF_CONDUCT.md) before participating in the community.
 
-## Maintainers
-
-| Name     | GitHub                                       | Email                |
-|----------|----------------------------------------------|----------------------|
-| Mercy Ma | [@mercyblitz](https://github.com/mercyblitz) | mercyblitz@gmail.com |
-
 The project is maintained under the [Microsphere Projects](https://github.com/microsphere-projects) organisation.
 
 ## License
