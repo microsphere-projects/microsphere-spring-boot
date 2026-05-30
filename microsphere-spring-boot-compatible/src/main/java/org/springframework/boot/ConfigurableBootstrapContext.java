@@ -21,10 +21,10 @@ package org.springframework.boot;
  * {@link BootstrapRegistry} interface.
  *
  * @author Phillip Webb
- * @since 2.4.0
  * @see BootstrapRegistry
  * @see BootstrapContext
  * @see DefaultBootstrapContext
+ * @since 2.4.0
  */
 public interface ConfigurableBootstrapContext extends BootstrapRegistry, BootstrapContext {
 

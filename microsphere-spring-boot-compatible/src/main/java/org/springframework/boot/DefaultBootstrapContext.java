@@ -35,102 +35,103 @@ import java.util.function.Supplier;
  */
 public class DefaultBootstrapContext implements ConfigurableBootstrapContext {
 
-	private final Map<Class<?>, InstanceSupplier<?>> instanceSuppliers = new HashMap<>();
+    private final Map<Class<?>, InstanceSupplier<?>> instanceSuppliers = new HashMap<>();
 
-	private final Map<Class<?>, Object> instances = new HashMap<>();
+    private final Map<Class<?>, Object> instances = new HashMap<>();
 
-	private final ApplicationEventMulticaster events = new SimpleApplicationEventMulticaster();
+    private final ApplicationEventMulticaster events = new SimpleApplicationEventMulticaster();
 
-	@Override
-	public <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier) {
-		register(type, instanceSupplier, true);
-	}
+    @Override
+    public <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier) {
+        register(type, instanceSupplier, true);
+    }
 
-	@Override
-	public <T> void registerIfAbsent(Class<T> type, InstanceSupplier<T> instanceSupplier) {
-		register(type, instanceSupplier, false);
-	}
+    @Override
+    public <T> void registerIfAbsent(Class<T> type, InstanceSupplier<T> instanceSupplier) {
+        register(type, instanceSupplier, false);
+    }
 
-	private <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier, boolean replaceExisting) {
-		Assert.notNull(type, "Type must not be null");
-		Assert.notNull(instanceSupplier, "InstanceSupplier must not be null");
-		synchronized (this.instanceSuppliers) {
-			boolean alreadyRegistered = this.instanceSuppliers.containsKey(type);
-			if (replaceExisting || !alreadyRegistered) {
-				Assert.state(!this.instances.containsKey(type), () -> type.getName() + " has already been created");
-				this.instanceSuppliers.put(type, instanceSupplier);
-			}
-		}
-	}
+    private <T> void register(Class<T> type, InstanceSupplier<T> instanceSupplier, boolean replaceExisting) {
+        Assert.notNull(type, "Type must not be null");
+        Assert.notNull(instanceSupplier, "InstanceSupplier must not be null");
+        synchronized (this.instanceSuppliers) {
+            boolean alreadyRegistered = this.instanceSuppliers.containsKey(type);
+            if (replaceExisting || !alreadyRegistered) {
+                Assert.state(!this.instances.containsKey(type), () -> type.getName() + " has already been created");
+                this.instanceSuppliers.put(type, instanceSupplier);
+            }
+        }
+    }
 
-	@Override
-	public <T> boolean isRegistered(Class<T> type) {
-		synchronized (this.instanceSuppliers) {
-			return this.instanceSuppliers.containsKey(type);
-		}
-	}
+    @Override
+    public <T> boolean isRegistered(Class<T> type) {
+        synchronized (this.instanceSuppliers) {
+            return this.instanceSuppliers.containsKey(type);
+        }
+    }
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> InstanceSupplier<T> getRegisteredInstanceSupplier(Class<T> type) {
-		synchronized (this.instanceSuppliers) {
-			return (InstanceSupplier<T>) this.instanceSuppliers.get(type);
-		}
-	}
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> InstanceSupplier<T> getRegisteredInstanceSupplier(Class<T> type) {
+        synchronized (this.instanceSuppliers) {
+            return (InstanceSupplier<T>) this.instanceSuppliers.get(type);
+        }
+    }
 
-	@Override
-	public void addCloseListener(ApplicationListener<BootstrapContextClosedEvent> listener) {
-		this.events.addApplicationListener(listener);
-	}
+    @Override
+    public void addCloseListener(ApplicationListener<BootstrapContextClosedEvent> listener) {
+        this.events.addApplicationListener(listener);
+    }
 
-	@Override
-	public <T> T get(Class<T> type) throws IllegalStateException {
-		return getOrElseThrow(type, () -> new IllegalStateException(type.getName() + " has not been registered"));
-	}
+    @Override
+    public <T> T get(Class<T> type) throws IllegalStateException {
+        return getOrElseThrow(type, () -> new IllegalStateException(type.getName() + " has not been registered"));
+    }
 
-	@Override
-	public <T> T getOrElse(Class<T> type, T other) {
-		return getOrElseSupply(type, () -> other);
-	}
+    @Override
+    public <T> T getOrElse(Class<T> type, T other) {
+        return getOrElseSupply(type, () -> other);
+    }
 
-	@Override
-	public <T> T getOrElseSupply(Class<T> type, Supplier<T> other) {
-		synchronized (this.instanceSuppliers) {
-			InstanceSupplier<?> instanceSupplier = this.instanceSuppliers.get(type);
-			return (instanceSupplier != null) ? getInstance(type, instanceSupplier) : other.get();
-		}
-	}
+    @Override
+    public <T> T getOrElseSupply(Class<T> type, Supplier<T> other) {
+        synchronized (this.instanceSuppliers) {
+            InstanceSupplier<?> instanceSupplier = this.instanceSuppliers.get(type);
+            return (instanceSupplier != null) ? getInstance(type, instanceSupplier) : other.get();
+        }
+    }
 
-	@Override
-	public <T, X extends Throwable> T getOrElseThrow(Class<T> type, Supplier<? extends X> exceptionSupplier) throws X {
-		synchronized (this.instanceSuppliers) {
-			InstanceSupplier<?> instanceSupplier = this.instanceSuppliers.get(type);
-			if (instanceSupplier == null) {
-				throw exceptionSupplier.get();
-			}
-			return getInstance(type, instanceSupplier);
-		}
-	}
+    @Override
+    public <T, X extends Throwable> T getOrElseThrow(Class<T> type, Supplier<? extends X> exceptionSupplier) throws X {
+        synchronized (this.instanceSuppliers) {
+            InstanceSupplier<?> instanceSupplier = this.instanceSuppliers.get(type);
+            if (instanceSupplier == null) {
+                throw exceptionSupplier.get();
+            }
+            return getInstance(type, instanceSupplier);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	private <T> T getInstance(Class<T> type, InstanceSupplier<?> instanceSupplier) {
-		T instance = (T) this.instances.get(type);
-		if (instance == null) {
-			instance = (T) instanceSupplier.get(this);
-			if (instanceSupplier.getScope() == Scope.SINGLETON) {
-				this.instances.put(type, instance);
-			}
-		}
-		return instance;
-	}
+    @SuppressWarnings("unchecked")
+    private <T> T getInstance(Class<T> type, InstanceSupplier<?> instanceSupplier) {
+        T instance = (T) this.instances.get(type);
+        if (instance == null) {
+            instance = (T) instanceSupplier.get(this);
+            if (instanceSupplier.getScope() == Scope.SINGLETON) {
+                this.instances.put(type, instance);
+            }
+        }
+        return instance;
+    }
 
-	/**
-	 * Method to be called when {@link BootstrapContext} is closed and the
-	 * {@link ApplicationContext} is prepared.
-	 * @param applicationContext the prepared context
-	 */
-	public void close(ConfigurableApplicationContext applicationContext) {
-		this.events.multicastEvent(new BootstrapContextClosedEvent(this, applicationContext));
-	}
+    /**
+     * Method to be called when {@link BootstrapContext} is closed and the
+     * {@link ApplicationContext} is prepared.
+     *
+     * @param applicationContext the prepared context
+     */
+    public void close(ConfigurableApplicationContext applicationContext) {
+        this.events.multicastEvent(new BootstrapContextClosedEvent(this, applicationContext));
+    }
 
 }

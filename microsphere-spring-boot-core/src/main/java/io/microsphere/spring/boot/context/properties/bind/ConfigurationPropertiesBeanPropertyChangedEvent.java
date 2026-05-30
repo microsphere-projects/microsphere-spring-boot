@@ -46,11 +46,11 @@ public class ConfigurationPropertiesBeanPropertyChangedEvent<T> extends BeanProp
      *           myPropsBean, "name", "oldName", "newName", configProp);
      * }</pre>
      *
-     * @param bean                    the bean whose property changed
-     * @param propertyName            the name of the changed property
-     * @param oldValue                the previous value of the property
-     * @param newValue                the new value of the property
-     * @param configurationProperty   the {@link ConfigurationProperty} that triggered the change
+     * @param bean                  the bean whose property changed
+     * @param propertyName          the name of the changed property
+     * @param oldValue              the previous value of the property
+     * @param newValue              the new value of the property
+     * @param configurationProperty the {@link ConfigurationProperty} that triggered the change
      */
     public ConfigurationPropertiesBeanPropertyChangedEvent(Object bean, String propertyName, Object oldValue, Object newValue, ConfigurationProperty configurationProperty) {
         super(bean, propertyName, oldValue, newValue);
