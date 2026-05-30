@@ -88,6 +88,7 @@ public class ActuatorAutoConfiguration {
 
     /**
      * The class name of {@link io.micrometer.core.instrument.MeterRegistry}
+     *
      * @see io.micrometer.core.instrument.MeterRegistry
      */
     static final String METER_REGISTRY_CLASS_NAME = "io.micrometer.core.instrument.MeterRegistry";

@@ -97,21 +97,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * @author Brian Clozel
  * @author Stephane Nicoll
- * @since 2.2.0
  * @see Endpoint
+ * @since 2.2.0
  */
 @Retention(RUNTIME)
-@Target({ METHOD, TYPE })
+@Target({METHOD, TYPE})
 @Documented
 @Conditional(OnAvailableEndpointCondition.class)
 public @interface ConditionalOnAvailableEndpoint {
 
-	/**
-	 * The endpoint type that should be checked. Inferred when the return type of the
-	 * {@code @Bean} method is either an {@link Endpoint @Endpoint} or an
-	 * {@link EndpointExtension @EndpointExtension}.
-	 * @return the endpoint type to check
-	 */
-	Class<?> endpoint() default Void.class;
+    /**
+     * The endpoint type that should be checked. Inferred when the return type of the
+     * {@code @Bean} method is either an {@link Endpoint @Endpoint} or an
+     * {@link EndpointExtension @EndpointExtension}.
+     *
+     * @return the endpoint type to check
+     */
+    Class<?> endpoint() default Void.class;
 
 }

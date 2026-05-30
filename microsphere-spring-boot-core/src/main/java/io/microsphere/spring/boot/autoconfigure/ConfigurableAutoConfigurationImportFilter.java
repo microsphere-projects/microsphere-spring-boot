@@ -72,7 +72,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
      *   // results[i] is false if candidate[i] is excluded
      * }</pre>
      *
-     * @param autoConfigurationClasses the candidate auto-configuration class names
+     * @param autoConfigurationClasses  the candidate auto-configuration class names
      * @param autoConfigurationMetadata the auto-configuration metadata
      * @return a boolean array where {@code true} means the class is not excluded
      */
