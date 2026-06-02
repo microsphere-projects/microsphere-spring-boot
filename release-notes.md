@@ -150,4 +150,19 @@ For a detailed list of changes, refer to the [Full Changelog](#).
 
 For the complete list of changes, refer to the [Full Changelog](https://github.com/mercyblitz/microsphere-spring-boot/compare/0.1.15...0.1.16).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.15...0.1.16
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.15...0.1.16## v0.1.17
+
+# Release Notes for v0.1.17
+
+## Dependency Updates
+- Updated `microsphere-spring` version numbers for compatibility improvements. ([2dc6aae](https://github.com/mercyblitz/commit/2dc6aae))
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` to maintain branch consistency. ([cacd141](https://github.com/mercyblitz/commit/cacd141))
+- Bumped version to the next patch after publishing v0.1.16. ([06cd144](https://github.com/mercyblitz/commit/06cd144))  
+
+---
+
+**Note:** This release includes backend optimizations and preparatory updates for future development.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.16...0.1.17
