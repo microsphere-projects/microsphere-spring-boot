@@ -145,4 +145,15 @@ For a detailed list of changes, view the [Full Changelog](https://github.com/mic
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.15...0.2.16
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.15...0.2.16## v0.2.17
+
+# Release Notes - Version 0.2.17
+
+## Dependency Updates
+- **microsphere-spring** versions updated.  
+
+## Other Changes
+- Prepared for the next development cycle by bumping patch version.  
+- Merged `main` into `release` and vice versa.  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.16...0.2.17
