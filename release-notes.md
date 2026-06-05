@@ -165,4 +165,22 @@ For the complete list of changes, refer to the [Full Changelog](https://github.c
 
 **Note:** This release includes backend optimizations and preparatory updates for future development.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.16...0.1.17
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.16...0.1.17## v0.1.18
+
+# Release Notes - Version 0.1.18
+
+## Dependency Updates
+- Bumped `microsphere-spring.version` to `0.1.22`.  
+- Updated parent POM version to `0.3.1`.
+
+## Bug Fixes
+- Fixed typo in test class name.  
+
+## Documentation
+- Updated README versions to `0.2.18` and `0.1.18`.  
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` for synchronization.  
+- Adjusted version to the next patch after publishing `0.1.17`.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.17...0.1.18
