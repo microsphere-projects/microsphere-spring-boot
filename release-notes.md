@@ -156,4 +156,22 @@ For a detailed list of changes, view the [Full Changelog](https://github.com/mic
 - Prepared for the next development cycle by bumping patch version.  
 - Merged `main` into `release` and vice versa.  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.16...0.2.17
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.16...0.2.17## v0.2.18
+
+# Release Notes for Version 0.2.18
+
+## Bug Fixes
+- Fixed typo in class name: `Disalbed` ➡️ `Disabled`. ([ae77745](https://github.com/microsphere-projects/microsphere-spring-boot/commit/ae77745))
+
+## Documentation
+- Updated `README` to reflect new latest versions. ([7b7e666](https://github.com/microsphere-projects/microsphere-spring-boot/commit/7b7e666))
+
+## Dependency Updates
+- Bumped `microsphere-spring` version to `0.2.22`. ([07b6ae2](https://github.com/microsphere-projects/microsphere-spring-boot/commit/07b6ae2))
+- Updated parent POM version to `0.3.1`. ([89d952a](https://github.com/microsphere-projects/microsphere-spring-boot/commit/89d952a))
+
+## Other Changes
+- Various maintenance merges with `main` and `release` branches. ([d7e973f](https://github.com/microsphere-projects/microsphere-spring-boot/commit/d7e973f), [6b4cd0d](https://github.com/microsphere-projects/microsphere-spring-boot/commit/6b4cd0d), [cc36a5f](https://github.com/microsphere-projects/microsphere-spring-boot/commit/cc36a5f), [c809acc](https://github.com/microsphere-projects/microsphere-spring-boot/commit/c809acc))
+- Prepared for next patch development following the release of `0.2.17`. ([bb12eb8](https://github.com/microsphere-projects/microsphere-spring-boot/commit/bb12eb8))
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.17...0.2.18
