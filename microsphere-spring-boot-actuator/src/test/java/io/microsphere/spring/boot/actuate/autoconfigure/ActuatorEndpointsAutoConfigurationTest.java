@@ -100,7 +100,7 @@ class ActuatorEndpointsAutoConfigurationTest {
             }
     )
     @EnableAutoConfiguration
-    class Disalbed {
+    class Disabled {
 
         @Autowired(required = false)
         private ArtifactsEndpoint artifactsEndpoint;
