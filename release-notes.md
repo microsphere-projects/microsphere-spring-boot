@@ -174,4 +174,20 @@ For a detailed list of changes, view the [Full Changelog](https://github.com/mic
 - Various maintenance merges with `main` and `release` branches. ([d7e973f](https://github.com/microsphere-projects/microsphere-spring-boot/commit/d7e973f), [6b4cd0d](https://github.com/microsphere-projects/microsphere-spring-boot/commit/6b4cd0d), [cc36a5f](https://github.com/microsphere-projects/microsphere-spring-boot/commit/cc36a5f), [c809acc](https://github.com/microsphere-projects/microsphere-spring-boot/commit/c809acc))
 - Prepared for next patch development following the release of `0.2.17`. ([bb12eb8](https://github.com/microsphere-projects/microsphere-spring-boot/commit/bb12eb8))
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.17...0.2.18
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.17...0.2.18## v0.2.19
+
+# Release Notes for Version 0.2.19
+
+## Dependency Updates
+- **microsphere-spring.version**: Bumped to `0.2.23`.
+
+## Documentation
+- Updated README to reflect versions `0.2.19` and `0.1.19`.
+
+## Build and Workflow Enhancements
+- Merged `main` into `release` and `release` into `main`.  
+- Incremented version to the next patch (`0.2.19`) post `0.2.18` release.
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.18...0.2.19
