@@ -18,7 +18,6 @@
 package io.microsphere.spring.boot.webmvc.autoconfigure;
 
 
-import io.microsphere.spring.test.web.controller.TestController;
 import io.microsphere.spring.test.webmvc.AbstractWebMvcTest;
 import io.microsphere.spring.webmvc.annotation.WebMvcExtensionConfiguration;
 import org.junit.jupiter.api.Test;
@@ -47,6 +46,7 @@ class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
     @Test
     void test() throws Exception {
         assertNotNull(webMvcExtensionConfiguration);
-        testWebEndpoints();
+        this.testHelloWorld();
+        this.testGreeting();
     }
 }
