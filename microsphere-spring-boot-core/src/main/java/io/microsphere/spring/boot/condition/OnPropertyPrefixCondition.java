@@ -42,6 +42,8 @@ import static org.springframework.core.annotation.AnnotationAttributes.fromMap;
  */
 class OnPropertyPrefixCondition extends SpringBootCondition {
 
+    static final Class<ConditionalOnPropertyPrefix> ANNOTATION_TYPE = ConditionalOnPropertyPrefix.class;
+
     /**
      * Evaluates whether properties with the specified prefix exist in the {@link ConfigurableEnvironment}.
      * Returns a match if at least one property name starts with any of the configured prefix values.
@@ -63,11 +65,11 @@ class OnPropertyPrefixCondition extends SpringBootCondition {
     @Override
     public ConditionOutcome getMatchOutcome(ConditionContext context, AnnotatedTypeMetadata metadata) {
 
-        AnnotationAttributes annotationAttributes = fromMap(metadata.getAnnotationAttributes(ConditionalOnPropertyPrefix.class.getName()));
+        AnnotationAttributes annotationAttributes = fromMap(metadata.getAnnotationAttributes(ANNOTATION_TYPE.getName()));
 
         ConfigurableEnvironment environment = (ConfigurableEnvironment) context.getEnvironment();
 
-        ResolvablePlaceholderAnnotationAttributes attributes = of(annotationAttributes, environment);
+        ResolvablePlaceholderAnnotationAttributes attributes = of(annotationAttributes, ANNOTATION_TYPE, environment);
 
         String[] prefixValues = attributes.getStringArray("value");
 
