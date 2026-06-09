@@ -89,7 +89,7 @@ class WebMvcAutoConfigurationAllEnabledTest extends AbstractWebMvcAutoConfigurat
 
     @Test
     void test() throws Exception {
-        super.test();
+        super.testWebEndpoints();
         assertContentNegotiationManager(this.contentNegotiationManager);
     }
 

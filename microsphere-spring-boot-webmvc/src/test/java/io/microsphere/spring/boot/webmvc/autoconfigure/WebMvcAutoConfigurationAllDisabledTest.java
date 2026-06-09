@@ -38,7 +38,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link WebMvcAutoConfiguration} Test with all enabled components
+ * {@link WebMvcAutoConfiguration} Test with all disalbed components
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see WebMvcAutoConfiguration
@@ -82,7 +82,7 @@ class WebMvcAutoConfigurationAllDisabledTest extends AbstractWebMvcAutoConfigura
 
     @Test
     void test() throws Exception {
-        super.test();
+        super.testWebEndpoints();
         assertContentNegotiationManager(this.contentNegotiationManager);
     }
 
