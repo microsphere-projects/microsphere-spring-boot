@@ -26,7 +26,14 @@ import io.microsphere.spring.webmvc.interceptor.LoggingMethodHandlerInterceptor;
 import io.microsphere.spring.webmvc.interceptor.LoggingPageRenderContextHandlerInterceptor;
 import io.microsphere.spring.webmvc.method.support.LoggingHandlerMethodArgumentResolverAdvice;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
+
+import static io.microsphere.constants.PropertyConstants.ENABLED_PROPERTY_NAME;
+import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.FILTER_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.LOGGING_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationListener.EXCLUSIVE_VIEW_RESOLVER_BEAN_NAME_PROPERTY_NAME;
 
 /**
  * MicroSphere Spring Boot WebMVC Auto-Configuration
@@ -39,12 +46,34 @@ import org.springframework.context.annotation.Import;
 @AutoConfiguration(afterName = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration")
 @EnableWebMvcExtension(registerHandlerInterceptors = true)
 @Import(value = {
-        ContentCachingFilter.class,
-        LoggingMethodHandlerInterceptor.class,
-        LoggingPageRenderContextHandlerInterceptor.class,
-        LoggingHandlerMethodArgumentResolverAdvice.class,
-        ConfigurableContentNegotiationManagerWebMvcConfigurer.class,
-        ExclusiveViewResolverApplicationListener.class
+        WebMvcAutoConfiguration.LoggingConfiguration.class
 })
 public class WebMvcAutoConfiguration {
+
+    @ConditionalOnProperty(prefix = FILTER_PROPERTY_NAME_PREFIX, name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @Bean
+    public ContentCachingFilter contentCachingFilter() {
+        return new ContentCachingFilter();
+    }
+
+    @ConditionalOnProperty(prefix = "microsphere.spring.webmvc.content-negotiation.", name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @Bean
+    public ConfigurableContentNegotiationManagerWebMvcConfigurer contentNegotiationManagerWebMvcConfigurer() {
+        return new ConfigurableContentNegotiationManagerWebMvcConfigurer();
+    }
+
+    @ConditionalOnProperty(name = EXCLUSIVE_VIEW_RESOLVER_BEAN_NAME_PROPERTY_NAME)
+    @Bean
+    public ExclusiveViewResolverApplicationListener exclusiveViewResolverApplicationListener() {
+        return new ExclusiveViewResolverApplicationListener();
+    }
+
+    @ConditionalOnProperty(prefix = LOGGING_PROPERTY_NAME_PREFIX, name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @Import(value = {
+            LoggingMethodHandlerInterceptor.class,
+            LoggingPageRenderContextHandlerInterceptor.class,
+            LoggingHandlerMethodArgumentResolverAdvice.class
+    })
+    static class LoggingConfiguration {
+    }
 }
