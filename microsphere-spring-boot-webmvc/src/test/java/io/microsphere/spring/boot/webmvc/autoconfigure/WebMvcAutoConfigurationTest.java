@@ -18,14 +18,12 @@
 package io.microsphere.spring.boot.webmvc.autoconfigure;
 
 
-import io.microsphere.spring.test.webmvc.AbstractWebMvcTest;
 import io.microsphere.spring.web.servlet.filter.ContentCachingFilter;
 import io.microsphere.spring.webmvc.annotation.WebMvcExtensionConfiguration;
 import io.microsphere.spring.webmvc.config.ConfigurableContentNegotiationManagerWebMvcConfigurer;
 import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,8 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest(classes = {
         WebMvcAutoConfigurationTest.class
 })
-@EnableAutoConfiguration
-class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
+class WebMvcAutoConfigurationTest extends AbstractWebMvcAutoConfigurationTest {
 
     @Autowired
     private WebMvcExtensionConfiguration webMvcExtensionConfiguration;
@@ -66,8 +63,6 @@ class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
         assertNotNull(this.webMvcConfigurer);
         assertNotNull(this.loggingConfiguration);
         assertNull(this.listener);
-
-        this.testHelloWorld();
-        this.testGreeting();
+        super.test();
     }
 }
