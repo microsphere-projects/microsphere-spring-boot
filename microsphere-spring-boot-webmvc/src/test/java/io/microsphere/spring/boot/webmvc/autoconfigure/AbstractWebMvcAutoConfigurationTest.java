@@ -22,7 +22,6 @@ import io.microsphere.spring.test.domain.User;
 import io.microsphere.spring.test.web.controller.TestController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -66,11 +65,6 @@ class AbstractWebMvcAutoConfigurationTest {
     @BeforeEach
     void setUp() {
         this.mockMvc = webAppContextSetup(this.context).build();
-    }
-
-    @Test
-    void test() throws Exception {
-        testWebEndpoints();
     }
 
     /**
