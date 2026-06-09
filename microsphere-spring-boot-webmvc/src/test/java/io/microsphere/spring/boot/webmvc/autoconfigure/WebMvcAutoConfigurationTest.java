@@ -18,15 +18,12 @@
 package io.microsphere.spring.boot.webmvc.autoconfigure;
 
 
-import io.microsphere.spring.test.webmvc.AbstractWebMvcTest;
 import io.microsphere.spring.web.servlet.filter.ContentCachingFilter;
 import io.microsphere.spring.webmvc.annotation.WebMvcExtensionConfiguration;
 import io.microsphere.spring.webmvc.config.ConfigurableContentNegotiationManagerWebMvcConfigurer;
 import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationListener;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,8 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest(classes = {
         WebMvcAutoConfigurationTest.class
 })
-@EnableAutoConfiguration
-class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
+class WebMvcAutoConfigurationTest extends AbstractWebMvcAutoConfigurationTest {
 
     @Autowired
     private WebMvcExtensionConfiguration webMvcExtensionConfiguration;
@@ -60,23 +56,13 @@ class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
     @Autowired(required = false)
     private ExclusiveViewResolverApplicationListener listener;
 
-    @Override
-    @BeforeEach
-    public void setUp() {
-        super.setUp();
-    }
-
     @Test
     void test() throws Exception {
+        super.test();
         assertNotNull(this.webMvcExtensionConfiguration);
         assertNotNull(this.contentCachingFilter);
         assertNotNull(this.webMvcConfigurer);
         assertNotNull(this.loggingConfiguration);
         assertNull(this.listener);
-
-        super.testHelloWorld();
-        super.testGreeting();
-        super.testUser();
-        super.testResponseEntity();
     }
 }
