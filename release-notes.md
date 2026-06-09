@@ -199,4 +199,42 @@ For the complete list of changes, refer to the [Full Changelog](https://github.c
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.18...0.1.19
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.18...0.1.19## v0.1.20
+
+# Release Notes - Version 0.1.20
+
+## New Features
+- **WebFlux Support:**  
+  - Added `microsphere-spring-boot-webflux` module for WebFlux support.  
+  - Introduced `@EnableWebFluxExtension` in test properties.  
+  - Implemented reversed proxy handler mapping and `HandlerMethod` for WebFlux.  
+  - Registered WebFlux auto-configuration using `spring.factories`.  
+  - Improved configuration ordering with `@AutoConfigureAfter`.  
+
+- **WebMvc Enhancements:**  
+  - Added `microsphere-spring-boot-webmvc` module for enhanced WebMvc integration.  
+  - Conditionalized WebMvc auto-configuration and tests.  
+  - Refactored WebMvc tests with an abstract test implementation.
+
+## Dependency Updates
+- Bumped `microsphere-spring` to `0.1.25`.  
+- Updated parent POM to version `0.3.3`.  
+- Added JUnit dependency for enhanced testing.
+
+## Test Improvements
+- Redesigned tests with abstract test classes for better reuse.  
+- Replaced `super.test()` with specialized `testWebEndpoints()` in Web tests.  
+- Broadened `@ConditionalOnWebMvcAvailable` checks for more robust test coverage.
+
+## Build and Workflow Enhancements
+- Merged changes from `release-1.x` into `dev-1.x`.  
+- Updated `README.md` to reflect the latest release versions.  
+- Incremented version to prepare for the next patch.
+
+## Other Changes
+- Registered WebMvc auto-configuration in `spring.factories`.  
+- Refactored test annotations and improved modularity.
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.19...0.1.20
