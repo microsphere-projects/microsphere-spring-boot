@@ -19,20 +19,18 @@ package io.microsphere.spring.boot.webflux.autoconfigure;
 
 import io.microsphere.spring.boot.webflux.autoconfigure.condition.ConditionalOnWebFluxAvailable;
 import io.microsphere.spring.webflux.annotation.EnableWebFluxExtension;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 
 /**
  * MicroSphere Spring Boot WebMVC Auto-Configuration
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration
- * @see org.springframework.boot.webflux.autoconfigure.WebFluxAutoConfiguration
  * @since 1.0.0
  */
 @ConditionalOnWebFluxAvailable
-@AutoConfiguration(afterName = {
-        "org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration", // Spring Boot [2.0, 4.0)
-        "org.springframework.boot.webflux.autoconfigure.WebFluxAutoConfiguration"       // Spring Boot  [4.0,)
+@AutoConfigureAfter(name = {
+        "org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration"
 })
 @EnableWebFluxExtension(reversedProxyHandlerMapping = true)
 public class WebFluxAutoConfiguration {
