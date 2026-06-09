@@ -17,12 +17,13 @@
 
 package io.microsphere.spring.boot.webmvc.autoconfigure.condition;
 
+import io.microsphere.spring.web.method.support.HandlerMethodInterceptor;
 import io.microsphere.spring.webmvc.annotation.EnableWebMvcExtension;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.DispatcherServlet;
 
 import javax.servlet.Servlet;
@@ -51,8 +52,9 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
 @ConditionalOnClass(value = {
         Servlet.class,                   // Servlet API
         ApplicationContext.class,        // Spring Context API
-        WebApplicationInitializer.class, // Spring Web API
+        HandlerMethod.class,             // Spring Web API
         DispatcherServlet.class,         // Spring Web MVC API
+        HandlerMethodInterceptor.class,  // Microsphere Spring Web API
         EnableWebMvcExtension.class      // Microsphere Spring Web MVC API
 })
 @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME, matchIfMissing = true)
