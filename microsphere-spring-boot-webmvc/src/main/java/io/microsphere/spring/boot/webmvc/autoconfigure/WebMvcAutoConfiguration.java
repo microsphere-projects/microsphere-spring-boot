@@ -25,7 +25,7 @@ import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationList
 import io.microsphere.spring.webmvc.interceptor.LoggingMethodHandlerInterceptor;
 import io.microsphere.spring.webmvc.interceptor.LoggingPageRenderContextHandlerInterceptor;
 import io.microsphere.spring.webmvc.method.support.LoggingHandlerMethodArgumentResolverAdvice;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Import;
 
 /**
@@ -36,7 +36,7 @@ import org.springframework.context.annotation.Import;
  * @since 1.0.0
  */
 @ConditionalOnWebMvcAvailable
-@AutoConfiguration(afterName = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration")
+@AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration")
 @EnableWebMvcExtension(registerHandlerInterceptors = true)
 @Import(value = {
         ContentCachingFilter.class,
