@@ -49,4 +49,14 @@ public interface PropertyConstants {
             source = APPLICATION_SOURCE
     )
     String MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
+
+    /**
+     * The property name prefix of Microsphere Spring Boot Web MVC Filter : "microsphere.spring.boot.webmvc.filter."
+     */
+    String FILTER_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX + "filter.";
+
+    /**
+     * The property name prefix of Microsphere Spring Boot Web MVC Logging : "microsphere.spring.boot.webmvc.logging."
+     */
+    String LOGGING_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX + "logging.";
 }
