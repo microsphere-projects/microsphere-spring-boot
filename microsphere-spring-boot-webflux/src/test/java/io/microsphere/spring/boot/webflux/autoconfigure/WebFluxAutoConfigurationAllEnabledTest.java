@@ -44,8 +44,8 @@ import static io.microsphere.collection.Sets.ofSet;
 })
 @TestPropertySource(
         properties = {
-                "microsphere.spring.prefix.EnableWebFluxExtension.storeRequestBodyArgument=true",
-                "microsphere.spring.prefix.EnableWebFluxExtension.storeResponseBodyReturnValue=true",
+                "microsphere.spring.@EnableWebFluxExtension.storeRequestBodyArgument=true",
+                "microsphere.spring.@EnableWebFluxExtension.storeResponseBodyReturnValue=true",
         }
 )
 @EnableAutoConfiguration
