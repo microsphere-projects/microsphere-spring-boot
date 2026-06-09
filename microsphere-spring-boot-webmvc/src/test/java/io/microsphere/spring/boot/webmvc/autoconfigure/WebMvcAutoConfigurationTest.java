@@ -53,6 +53,9 @@ class WebMvcAutoConfigurationTest extends AbstractWebMvcTest {
     @Test
     void test() throws Exception {
         assertNotNull(webMvcExtensionConfiguration);
-        testWebEndpoints();
+        super.testHelloWorld();
+        super.testGreeting();
+        super.testUser();
+        super.testResponseEntity();
     }
 }
