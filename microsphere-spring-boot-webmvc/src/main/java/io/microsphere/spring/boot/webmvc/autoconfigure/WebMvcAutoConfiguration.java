@@ -45,7 +45,7 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
  */
 @ConditionalOnWebMvcAvailable
 @AutoConfiguration(afterName = {
-        "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration", // Springg Boot [2.0, 4.0)
+        "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration", // Spring Boot [2.0, 4.0)
         "org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration"       // Spring Boot  [4.0,)
 })
 @EnableWebMvcExtension(registerHandlerInterceptors = true)
