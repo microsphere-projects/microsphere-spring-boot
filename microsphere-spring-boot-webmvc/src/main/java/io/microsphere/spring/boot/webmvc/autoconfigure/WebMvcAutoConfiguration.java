@@ -44,7 +44,10 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
  */
 @ConditionalOnWebMvcAvailable
 @AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration")
-@EnableWebMvcExtension(registerHandlerInterceptors = true)
+@EnableWebMvcExtension(
+        registerHandlerInterceptors = true,
+        reversedProxyHandlerMapping = true
+)
 @Import(value = {
         WebMvcAutoConfiguration.LoggingConfiguration.class
 })
