@@ -40,10 +40,14 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration
+ * @see org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration
  * @since 1.0.0
  */
 @ConditionalOnWebMvcAvailable
-@AutoConfiguration(afterName = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration")
+@AutoConfiguration(afterName = {
+        "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration", // Springg Boot [2.0, 4.0)
+        "org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration"       // Spring Boot  [4.0,)
+})
 @EnableWebMvcExtension(registerHandlerInterceptors = true)
 @Import(value = {
         WebMvcAutoConfiguration.LoggingConfiguration.class
