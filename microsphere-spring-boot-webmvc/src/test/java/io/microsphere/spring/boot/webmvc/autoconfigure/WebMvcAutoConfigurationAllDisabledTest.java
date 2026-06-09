@@ -26,6 +26,7 @@ import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationList
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.accept.ContentNegotiationManager;
@@ -54,6 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
                 "microsphere.spring.webmvc.logging.enabled=false"
         }
 )
+@EnableAutoConfiguration
 class WebMvcAutoConfigurationAllDisabledTest extends AbstractWebMvcAutoConfigurationTest {
 
     @Autowired(required = false)
