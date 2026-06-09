@@ -18,13 +18,13 @@
 package io.microsphere.spring.boot.webflux.autoconfigure;
 
 
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Set;
 
 import static io.microsphere.collection.Sets.ofSet;
-import static java.util.Collections.emptySet;
 
 /**
  * {@link WebFluxAutoConfiguration} Test with all disalbed components
@@ -41,6 +41,7 @@ import static java.util.Collections.emptySet;
                 "microsphere.spring.boot.webflux.enabled=false"
         }
 )
+@EnableAutoConfiguration
 class WebFluxAutoConfigurationAllDisabledTest extends AbstractWebFluxAutoConfigurationTest {
 
     @Override

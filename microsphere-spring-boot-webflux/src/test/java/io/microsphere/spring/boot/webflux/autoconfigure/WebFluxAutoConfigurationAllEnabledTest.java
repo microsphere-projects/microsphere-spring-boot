@@ -24,6 +24,7 @@ import io.microsphere.spring.webflux.method.InterceptingHandlerMethodProcessor;
 import io.microsphere.spring.webflux.method.StoringRequestBodyArgumentInterceptor;
 import io.microsphere.spring.webflux.method.StoringResponseBodyReturnValueInterceptor;
 import io.microsphere.spring.webflux.server.filter.RequestHandledEventPublishingWebFilter;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
@@ -47,6 +48,7 @@ import static io.microsphere.collection.Sets.ofSet;
                 "microsphere.spring.prefix.EnableWebFluxExtension.storeResponseBodyReturnValue=true",
         }
 )
+@EnableAutoConfiguration
 class WebFluxAutoConfigurationAllEnabledTest extends AbstractWebFluxAutoConfigurationTest {
 
     @Override

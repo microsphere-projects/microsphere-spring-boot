@@ -21,11 +21,8 @@ package io.microsphere.spring.boot.webflux.autoconfigure;
 import io.microsphere.spring.webflux.handler.ReversedProxyHandlerMapping;
 import io.microsphere.spring.webflux.metadata.HandlerMappingWebEndpointMappingResolver;
 import io.microsphere.spring.webflux.method.InterceptingHandlerMethodProcessor;
-import io.microsphere.spring.webflux.method.StoringRequestBodyArgumentInterceptor;
-import io.microsphere.spring.webflux.method.StoringResponseBodyReturnValueInterceptor;
 import io.microsphere.spring.webflux.server.filter.RequestHandledEventPublishingWebFilter;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Set;
@@ -42,6 +39,7 @@ import static io.microsphere.collection.Sets.ofSet;
 @SpringBootTest(classes = {
         WebFluxAutoConfigurationTest.class
 })
+@EnableAutoConfiguration
 class WebFluxAutoConfigurationTest extends AbstractWebFluxAutoConfigurationTest {
 
     @Override

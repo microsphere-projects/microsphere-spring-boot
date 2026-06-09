@@ -25,7 +25,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -55,7 +54,6 @@ import static reactor.core.publisher.Mono.just;
         TestController.class,           // Test Controller
         RouterFunctionTestConfig.class  // Test RouterFunction
 })
-@EnableAutoConfiguration
 abstract class AbstractWebFluxAutoConfigurationTest {
 
     @Autowired
