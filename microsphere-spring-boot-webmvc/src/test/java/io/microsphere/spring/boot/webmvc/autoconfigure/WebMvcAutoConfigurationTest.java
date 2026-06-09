@@ -58,7 +58,7 @@ class WebMvcAutoConfigurationTest extends AbstractWebMvcAutoConfigurationTest {
 
     @Test
     void test() throws Exception {
-        super.test();
+        super.testWebEndpoints();
         assertNotNull(this.webMvcExtensionConfiguration);
         assertNotNull(this.contentCachingFilter);
         assertNotNull(this.webMvcConfigurer);

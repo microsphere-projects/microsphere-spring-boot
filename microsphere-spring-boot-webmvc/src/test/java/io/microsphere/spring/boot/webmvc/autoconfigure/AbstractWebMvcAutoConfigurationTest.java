@@ -24,7 +24,6 @@ import io.microsphere.spring.test.webmvc.RouterFunctionTestConfig;
 import jakarta.servlet.ServletException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -69,11 +68,6 @@ class AbstractWebMvcAutoConfigurationTest {
     @BeforeEach
     void setUp() {
         this.mockMvc = webAppContextSetup(this.context).build();
-    }
-
-    @Test
-    void test() throws Exception {
-        testWebEndpoints();
     }
 
     /**
