@@ -30,7 +30,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.accept.ContentNegotiationStrategy;
-import org.springframework.web.accept.ParameterContentNegotiationStrategy;
+import org.springframework.web.accept.HeaderContentNegotiationStrategy;
 
 import java.util.List;
 
@@ -45,40 +45,33 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @since 1.0.0
  */
 @SpringBootTest(classes = {
-        WebMvcAutoConfigurationAllEnabledTest.class
+        WebMvcAutoConfigurationAllDisabledTest.class
 })
 @TestPropertySource(
         properties = {
-                "microsphere.spring.webmvc.view-resolver.exclusive-bean-name=viewResolver",
-                "microsphere.spring.webmvc.content-negotiation.enabled=true",
-                "microsphere.spring.webmvc.content-negotiation.favorParameter=true",
-                "microsphere.spring.webmvc.content-negotiation.parameterName=p",
-                "microsphere.spring.webmvc.content-negotiation.favorPathExtension=true",
-                "microsphere.spring.webmvc.content-negotiation.ignoreUnknownPathExtensions=false",
-                "microsphere.spring.webmvc.content-negotiation.useRegisteredExtensionsOnly=true",
-                "microsphere.spring.webmvc.content-negotiation.ignoreAcceptHeader=true",
-                "microsphere.spring.webmvc.filter.enabled=true",
-                "microsphere.spring.webmvc.logging.enabled=true"
+                "microsphere.spring.webmvc.content-negotiation.enabled=false",
+                "microsphere.spring.webmvc.filter.enabled=false",
+                "microsphere.spring.webmvc.logging.enabled=false"
         }
 )
-class WebMvcAutoConfigurationAllEnabledTest extends AbstractWebMvcAutoConfigurationTest {
+class WebMvcAutoConfigurationAllDisabledTest extends AbstractWebMvcAutoConfigurationTest {
 
-    @Autowired
+    @Autowired(required = false)
     private WebMvcExtensionConfiguration webMvcExtensionConfiguration;
 
-    @Autowired
+    @Autowired(required = false)
     private ContentCachingFilter contentCachingFilter;
 
-    @Autowired
+    @Autowired(required = false)
     private ConfigurableContentNegotiationManagerWebMvcConfigurer webMvcConfigurer;
 
     @Autowired
     private ContentNegotiationManager contentNegotiationManager;
 
-    @Autowired
+    @Autowired(required = false)
     private LoggingConfiguration loggingConfiguration;
 
-    @Autowired
+    @Autowired(required = false)
     private ExclusiveViewResolverApplicationListener listener;
 
     @Override
@@ -89,26 +82,14 @@ class WebMvcAutoConfigurationAllEnabledTest extends AbstractWebMvcAutoConfigurat
 
     @Test
     void test() throws Exception {
-
-        super.testHelloWorld();
-        super.testGreeting();
-        super.testUser();
-        super.testResponseEntity();
-
         assertContentNegotiationManager(this.contentNegotiationManager);
     }
 
     void assertContentNegotiationManager(ContentNegotiationManager contentNegotiationManager) {
         List<ContentNegotiationStrategy> strategies = contentNegotiationManager.getStrategies();
-        assertEquals(2, strategies.size());
+        assertEquals(1, strategies.size());
 
-        ContentNegotiationStrategy strategy1 = strategies.get(0);
-        ContentNegotiationStrategy strategy2 = strategies.get(1);
-
-        assertTrue(strategy2 instanceof ParameterContentNegotiationStrategy);
-
-        ParameterContentNegotiationStrategy parameterContentNegotiationStrategy = (ParameterContentNegotiationStrategy) strategy2;
-
-        assertEquals("p", parameterContentNegotiationStrategy.getParameterName());
+        ContentNegotiationStrategy strategy = strategies.get(0);
+        assertTrue(strategy instanceof HeaderContentNegotiationStrategy);
     }
 }
