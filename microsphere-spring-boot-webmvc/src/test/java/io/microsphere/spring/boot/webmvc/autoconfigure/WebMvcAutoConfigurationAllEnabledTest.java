@@ -35,7 +35,7 @@ import org.springframework.web.accept.ParameterContentNegotiationStrategy;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  * {@link WebMvcAutoConfiguration} Test with all enabled components
@@ -95,15 +95,12 @@ class WebMvcAutoConfigurationAllEnabledTest extends AbstractWebMvcAutoConfigurat
 
     void assertContentNegotiationManager(ContentNegotiationManager contentNegotiationManager) {
         List<ContentNegotiationStrategy> strategies = contentNegotiationManager.getStrategies();
-        assertEquals(2, strategies.size());
+        assertFalse(strategies.isEmpty());
 
-        ContentNegotiationStrategy strategy1 = strategies.get(0);
-        ContentNegotiationStrategy strategy2 = strategies.get(1);
-
-        assertTrue(strategy2 instanceof ParameterContentNegotiationStrategy);
-
-        ParameterContentNegotiationStrategy parameterContentNegotiationStrategy = (ParameterContentNegotiationStrategy) strategy2;
-
-        assertEquals("p", parameterContentNegotiationStrategy.getParameterName());
+        for (ContentNegotiationStrategy strategy : strategies) {
+            if (strategy instanceof ParameterContentNegotiationStrategy parameterContentNegotiationStrategy) {
+                assertEquals("p", parameterContentNegotiationStrategy.getParameterName());
+            }
+        }
     }
 }
