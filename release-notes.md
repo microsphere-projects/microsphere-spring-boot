@@ -190,4 +190,42 @@ For a detailed list of changes, view the [Full Changelog](https://github.com/mic
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.18...0.2.19
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.18...0.2.19## v0.2.20
+
+# Release Notes - Version 0.2.20
+
+## New Features
+- Added `microsphere-spring-boot-webmvc` module. ([62249a7](#))
+- Introduced WebFlux auto-configuration module. ([9c4b382](#))
+- Enabled reversed proxy handler mapping. ([2345783](#))
+- Added support for Spring Boot 4 in `WebMvcAutoConfiguration`. ([9542a50](#))
+
+## Bug Fixes
+- Fixed test property keys for `EnableWebFluxExtension`. ([3af57ab](#))
+- Fixed typo in `WebMvcAutoConfiguration` comment. ([c079456](#))
+
+## Dependency Updates
+- Upgraded `microsphere-spring` to version `0.2.25`. ([506e76c](#))
+- Updated `microsphere-build` parent to version `0.3.3`. ([884e9fb](#))
+
+## Test Improvements
+- Unified WebMVC tests to call `super.test()`. ([66f6aca](#))
+- Refactored `WebMvcAutoConfiguration` tests and added base test. ([16729ff](#))
+- Enhanced WebMvc auto-config tests with additional coverage. ([4817f56](#))  
+- Simplified tests to invoke specific cases in `WebMvcAutoConfigurationTest`. ([3a4dbe9](#))
+- Refactored tests to call `testWebEndpoints()`. ([5bd6dc9](#))  
+
+## Build and Workflow Enhancements
+- Removed `jackson-databind` test dependency. ([d6d8fa7](#))
+- Updated README to ensure the latest version documentation. ([90ab736](#))
+
+## Other Changes
+- Broadened `@ConditionalOnClass` checks for Web MVC compatibility. ([e806646](#))
+- Replaced `test` scope for Jackson dependency; relaxed negotiation test. ([097d841](#))
+- Improved `OnPropertyPrefixCondition` annotation handling for `ANNOTATION_TYPE`. ([810220e](#))
+- Removed redundant `PropertyConstants` test file. ([bb64a67](#))
+- Added specific handler and interceptor conditions for WebMVC. ([3b70727](#))
+
+For a complete list of changes, please see the [full changelog](#).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.19...0.2.20
