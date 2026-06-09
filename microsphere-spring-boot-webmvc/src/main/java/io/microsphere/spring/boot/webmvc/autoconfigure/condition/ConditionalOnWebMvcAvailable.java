@@ -17,11 +17,13 @@
 
 package io.microsphere.spring.boot.webmvc.autoconfigure.condition;
 
+import io.microsphere.spring.webmvc.annotation.EnableWebMvcExtension;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.Servlet;
 import java.lang.annotation.Documented;
@@ -46,7 +48,13 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
 @Retention(RUNTIME)
 @Documented
 @ConditionalOnWebApplication(type = SERVLET)
-@ConditionalOnClass({Servlet.class, DispatcherServlet.class, EnableWebMvc.class})
+@ConditionalOnClass(value = {
+        Servlet.class,                   // Servlet API
+        ApplicationContext.class,        // Spring Context API
+        WebApplicationInitializer.class, // Spring Web API
+        DispatcherServlet.class,         // Spring Web MVC API
+        EnableWebMvcExtension.class      // Microsphere Spring Web MVC API
+})
 @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME, matchIfMissing = true)
 public @interface ConditionalOnWebMvcAvailable {
 }
