@@ -114,8 +114,8 @@ public abstract class OnceApplicationPreparedEventListener implements Applicatio
 
         markProcessed(contextId);
 
-        context.addApplicationListener(event -> {
-            if (event instanceof ContextClosedEvent && context == ((ContextClosedEvent) event).getApplicationContext()) {
+        context.addApplicationListener(e -> {
+            if (e instanceof ContextClosedEvent && context == ((ContextClosedEvent) e).getApplicationContext()) {
                 processedContextIds.remove(contextId);
             }
         });
