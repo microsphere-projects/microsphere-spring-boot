@@ -237,4 +237,27 @@ For the complete list of changes, refer to the [Full Changelog](https://github.c
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.19...0.1.20
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.19...0.1.20## v0.1.21
+
+# Release Notes - Version 0.1.21
+
+### Dependency Updates
+- Bumped `microsphere-spring.version` to `0.1.26`.  
+- Updated parent version to `0.3.4`.  
+- Improved Spring Boot compatibility for the main branch.
+
+### Code Improvements
+- Switched to name-based `ConditionalOnClass` checks to enhance compatibility.
+
+### Documentation
+- Updated README to reflect the latest version numbers.
+
+### Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` to sync branches.  
+- Bumped version to the next patch after publishing `0.1.20`.  
+
+---
+
+For a list of all changes, refer to the full changelog.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.20...0.1.21
