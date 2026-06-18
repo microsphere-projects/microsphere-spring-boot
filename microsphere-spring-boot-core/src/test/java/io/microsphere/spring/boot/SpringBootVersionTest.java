@@ -29,6 +29,7 @@ import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_3_5;
 import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_4_0;
 import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_4_0_3;
 import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_4_0_4;
+import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_4_1;
 import static io.microsphere.spring.boot.SpringBootVersion.resolveVersion;
 import static io.microsphere.spring.boot.SpringBootVersion.valueOf;
 import static io.microsphere.spring.boot.SpringBootVersion.values;
@@ -59,8 +60,9 @@ class SpringBootVersionTest {
         testVersionRange(SPRING_BOOT_3_4, 0, 13);
         // Spring Boot Framework 3.5 -> [3.5.0, 3.5.14]
         testVersionRange(SPRING_BOOT_3_5, 0, 14);
-        // Spring Boot Framework 4.0 -> [4.0.0, 4.0.6]
-        testVersionRange(SPRING_BOOT_4_0, 0, 6);
+        // Spring Boot Framework 4.0 -> [4.0.0, 4.0.7]
+        testVersionRange(SPRING_BOOT_4_0, 0, 7);
+        testVersionRange(SPRING_BOOT_4_1, 0, 0);
     }
 
     private void testVersionRange(SpringBootVersion baseVersion, int start, int end) {

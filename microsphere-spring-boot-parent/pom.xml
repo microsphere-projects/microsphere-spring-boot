@@ -122,7 +122,14 @@
         <profile>
             <id>spring-boot-4.0</id>
             <properties>
-                <spring-boot.version>4.0.6</spring-boot.version>
+                <spring-boot.version>4.0.7</spring-boot.version>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>spring-boot-4.1</id>
+            <properties>
+                <spring-boot.version>4.1.0</spring-boot.version>
             </properties>
         </profile>
     </profiles>
