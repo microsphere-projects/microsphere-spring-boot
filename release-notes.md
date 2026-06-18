@@ -228,4 +228,30 @@ For a detailed list of changes, view the [Full Changelog](https://github.com/mic
 
 For a complete list of changes, please see the [full changelog](#).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.19...0.2.20
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.19...0.2.20## v0.2.21
+
+# Release Notes - Version 0.2.21
+
+## New Features
+- **Spring Boot 4.1 Support**:  
+  - Added `spring-boot-4.1` profile to Maven `pom.xml`. ([209e962](https://github.com/commit-id/209e962))  
+  - Updated CI matrix to include `spring-boot-4.1`. ([b29e407](https://github.com/commit-id/b29e407))  
+  - Added Spring Boot `4.0.7` and `4.1` enum entries. ([747dfe4](https://github.com/commit-id/747dfe4))
+
+## Documentation Updates
+- Updated README to indicate compatibility with Spring Boot `4.1.x`. ([f1d569f](https://github.com/commit-id/f1d569f))  
+- Updated README to include the latest version details. ([322634b](https://github.com/commit-id/322634b))
+
+## Dependency Updates
+- Bumped `microsphere-spring` version to `0.2.26`. ([580af0a](https://github.com/commit-id/580af0a))  
+- Upgraded parent project version to `0.3.4`. ([d15cda4](https://github.com/commit-id/d15cda4))  
+- Updated Spring Boot version dependencies. ([a120113](https://github.com/commit-id/a120113))
+
+## Build and Workflow Enhancements
+- Merged `main` branch into `release` branch. ([9368d2d](https://github.com/commit-id/9368d2d), [8169716](https://github.com/commit-id/8169716), [caea46a](https://github.com/commit-id/caea46a), [05ddcde](https://github.com/commit-id/05ddcde), [b35eb66](https://github.com/commit-id/b35eb66), [cedd52f](https://github.com/commit-id/cedd52f))  
+- Merged `release` branch back into `main`. ([415cb1f](https://github.com/commit-id/415cb1f))  
+- Bumped version to prepare for `0.2.21`. ([45f9ba9](https://github.com/commit-id/45f9ba9))
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.20...0.2.21
