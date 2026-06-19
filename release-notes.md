@@ -254,4 +254,15 @@ For a complete list of changes, please see the [full changelog](#).
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.20...0.2.21
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.20...0.2.21## v0.2.22
+
+# Release Notes for v0.2.22
+
+## Dependency Updates
+- Updated Microsphere versions to `0.2.27`, `0.2.22`, and `0.1.22`.  
+
+## Other Changes
+- Merged `main` into `release` branch and vice versa.  
+- Bumped version to next patch after publishing `v0.2.21`.  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.21...0.2.22
