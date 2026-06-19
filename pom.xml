@@ -51,7 +51,7 @@
     </scm>
 
     <properties>
-        <revision>0.1.22-SNAPSHOT</revision>
+        <revision>0.1.23-SNAPSHOT</revision>
     </properties>
 
     <modules>
