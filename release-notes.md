@@ -276,4 +276,30 @@ For a list of all changes, refer to the full changelog.
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.21...0.1.22
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.21...0.1.22## v0.1.23
+
+# Release Notes - Version 0.1.23
+
+## New Features
+- **Added**: Support for `META-INF` path in test resources.
+- **Moved**: `core.properties` and added Microsphere defaults.
+
+## Bug Fixes
+- **Fixed**: Missing trailing newlines in files.
+- **Resolved**: Removal of jolokia version and adjustment of EOF newlines.
+
+## Dependency Updates
+- **Upgraded**: `microsphere-spring` to versions `0.1.28`, `0.1.29`, and `0.1.30`.
+
+## Documentation
+- **Updated**: README versions bumped to `0.2.23` and `0.1.23`.
+
+## Build and Workflow Enhancements
+- **Merge**: Integrated `release-1.x` into `dev-1.x`.
+- **Version Increment**: Bumped project version after publishing `0.1.22`.
+
+---
+
+For more details on the changes, refer to the commit history.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.22...0.1.23
