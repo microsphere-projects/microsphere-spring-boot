@@ -1,9 +1,6 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
-io.microsphere.spring.context.event.EventPublishingBeanInitializer,\
 io.microsphere.spring.boot.report.ConditionEvaluationReportInitializer,\
-io.microsphere.spring.beans.factory.support.ListenableAutowireCandidateResolverInitializer,\
-io.microsphere.spring.core.env.ListenableConfigurableEnvironmentInitializer,\
 io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer,\
 io.microsphere.spring.boot.context.config.AutoRegistrationBeanInitializer
 
