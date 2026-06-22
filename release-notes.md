@@ -265,4 +265,18 @@ For a complete list of changes, please see the [full changelog](#).
 - Merged `main` into `release` branch and vice versa.  
 - Bumped version to next patch after publishing `v0.2.21`.  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.21...0.2.22
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.21...0.2.22## v0.2.23
+
+# Release Notes - Version 0.2.23
+
+## Dependency Updates
+- Bumped `microsphere-spring` version to `0.2.30`.  
+- Incremented `microsphere-spring` version to `0.2.29` and subsequently to `0.2.28`.  
+
+## Other Changes
+- Moved `core.properties` to `META-INF` and added `microsphere` properties.  
+- Removed unused imports in web modules.  
+- Updated test resource path to `META-INF`.  
+- Updated README version table to reflect `0.2.23/0.1.23`.  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.22...0.2.23
