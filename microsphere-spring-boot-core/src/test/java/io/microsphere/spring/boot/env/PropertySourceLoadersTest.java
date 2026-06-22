@@ -50,7 +50,7 @@ class PropertySourceLoadersTest {
 
     private static final String TEST_PROPERTY_NAME = "core";
 
-    private static final String TEST_RESOURCE_LOCATION = "classpath:/config/default/core.properties";
+    private static final String TEST_RESOURCE_LOCATION = "classpath:/META-INF/config/default/core.properties";
 
     @Test
     void testGetFileExtensions() {
