@@ -39,18 +39,6 @@ import static io.microsphere.spring.beans.BeanSource.SPRING_FACTORIES;
 import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-/**
- * The extension of {@link org.springframework.boot.context.properties.EnableConfigurationProperties @EnableConfigurationProperties}
- *
- * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see org.springframework.boot.context.properties.EnableConfigurationProperties
- * @see OverrideAnnotationAttributes
- * @see ListenableConfigurationPropertiesBindHandlerAdvisor
- * @see BindListener
- * @see ConfigurationPropertiesBindHandlerAdvisor
- * @see BindHandler
- * @since 1.0.0
- */
 
 /**
  * An extension annotation of {@link EnableConfigurationProperties @EnableConfigurationProperties} that provides
