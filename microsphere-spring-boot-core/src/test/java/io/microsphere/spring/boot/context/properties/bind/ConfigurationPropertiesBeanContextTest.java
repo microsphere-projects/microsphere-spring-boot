@@ -23,16 +23,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.env.Environment;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateClass;
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
+import static io.microsphere.spring.test.util.SpringTestUtils.testInSpringContainer;
 import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -56,6 +60,21 @@ class ConfigurationPropertiesBeanContextTest {
         context.refresh();
         this.beanContext = new ConfigurationPropertiesBeanContext(beanInfo.getBeanClass(), beanInfo.getAnnotation(),
                 beanInfo.getPrefix(), context);
+    }
+
+    @Test
+    void testCloneConfigurationPropertiesBean() {
+        testInSpringContainer(context -> {
+            ServerProperties serverProperties = this.beanContext.cloneConfigurationPropertiesBean(ServerProperties.class, context);
+            assertNotNull(serverProperties);
+
+            Test1Properties test1Properties = this.beanContext.cloneConfigurationPropertiesBean(Test1Properties.class, context);
+            assertSame(context.getEnvironment(), test1Properties.environment);
+
+            Test2Properties test2Properties = this.beanContext.cloneConfigurationPropertiesBean(Test2Properties.class, context);
+            assertSame(context.getEnvironment(), test2Properties.environment);
+            assertSame(context, test2Properties.context);
+        });
     }
 
     @Test
@@ -111,5 +130,26 @@ class ConfigurationPropertiesBeanContextTest {
     void testIsCandidateClass() {
         assertTrue(isCandidateClass(ServerProperties.class));
         assertFalse(isCandidateClass(String.class));
+    }
+
+    static class Test1Properties {
+
+        private Environment environment;
+
+        public Test1Properties(Environment environment) {
+            this.environment = environment;
+        }
+    }
+
+    static class Test2Properties {
+
+        private Environment environment;
+
+        private ConfigurableApplicationContext context;
+
+        public Test2Properties(Environment environment, ConfigurableApplicationContext context) {
+            this.environment = environment;
+            this.context = context;
+        }
     }
 }
