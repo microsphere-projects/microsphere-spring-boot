@@ -19,16 +19,20 @@ package io.microsphere.spring.boot.context.autoconfigure;
 
 import io.microsphere.spring.boot.context.properties.annotation.EnableConfigurationPropertiesExtension;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * {@link ConfigurationProperties @ConfigurationProperties} Auto Configuration
+ * {@link ConfigurationProperties @ConfigurationProperties} Auto-Configuration
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration
+ * @see EnableConfigurationPropertiesExtension
  * @since 1.0.0
  */
+@ConditionalOnClass(name = {
+        "io.microsphere.spring.context.annotation.BeanCapableImportCandidate"
+})
 @AutoConfigureBefore(name = {
         "org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration"
 })
