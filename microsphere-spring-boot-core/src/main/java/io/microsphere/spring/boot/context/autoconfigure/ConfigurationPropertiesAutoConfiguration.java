@@ -17,6 +17,7 @@
 
 package io.microsphere.spring.boot.context.autoconfigure;
 
+import io.microsphere.spring.boot.context.properties.annotation.EnableConfigurationPropertiesExtension;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -31,6 +32,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @AutoConfigureBefore(name = {
         "org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration"
 })
-@ConditionalOnProperty()
+@EnableConfigurationPropertiesExtension
 public class ConfigurationPropertiesAutoConfiguration {
 }

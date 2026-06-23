@@ -15,3 +15,7 @@ io.microsphere.spring.context.event.LoggingBeanFactoryListener
 org.springframework.context.ApplicationListener=\
 io.microsphere.spring.boot.context.LoggingOnceApplicationPreparedEventListener,\
 io.microsphere.spring.boot.context.LoggingOnceMainApplicationPreparedEventListener
+
+# BindListener
+io.microsphere.spring.boot.context.properties.bind.BindListener=\
+io.microsphere.spring.boot.context.properties.bind.TestBindListener
