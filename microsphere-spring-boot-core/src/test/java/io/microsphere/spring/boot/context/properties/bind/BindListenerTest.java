@@ -19,9 +19,6 @@ package io.microsphere.spring.boot.context.properties.bind;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.context.properties.bind.BindContext;
-import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 /**
  * {@link BindListener} Test
@@ -36,32 +33,7 @@ class BindListenerTest {
 
     @BeforeEach
     void setUp() {
-        listener = new BindListener() {
-            @Override
-            public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
-                BindListener.super.onStart(name, target, context);
-            }
-
-            @Override
-            public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-                BindListener.super.onSuccess(name, target, context, result);
-            }
-
-            @Override
-            public void onCreate(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-                BindListener.super.onCreate(name, target, context, result);
-            }
-
-            @Override
-            public void onFailure(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Exception error) {
-                BindListener.super.onFailure(name, target, context, error);
-            }
-
-            @Override
-            public void onFinish(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-                BindListener.super.onFinish(name, target, context, result);
-            }
-        };
+        listener = new TestBindListener();
     }
 
     @Test

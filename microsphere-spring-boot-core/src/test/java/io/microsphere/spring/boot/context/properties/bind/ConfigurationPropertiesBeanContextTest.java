@@ -132,7 +132,6 @@ class ConfigurationPropertiesBeanContextTest {
         assertFalse(isCandidateClass(String.class));
     }
 
-
     static class Test1Properties {
 
         private Environment environment;
