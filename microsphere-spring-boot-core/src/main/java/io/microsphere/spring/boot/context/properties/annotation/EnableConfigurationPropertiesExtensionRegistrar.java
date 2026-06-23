@@ -61,11 +61,11 @@ class EnableConfigurationPropertiesExtensionRegistrar extends AnnotatedBeanCapab
 
         if (adviseBindListener) {
             // register ListenableConfigurationPropertiesBindHandlerAdvisor
-            registerGenericBean(registry, ListenableConfigurationPropertiesBindHandlerAdvisor.class, importBeanNameGenerator);
+            registerGenericBean(registry, ListenableConfigurationPropertiesBindHandlerAdvisor.class);
             boolean publishEvents = annotationAttributes.getBoolean("publishEvents");
             if (publishEvents) {
                 // register EventPublishingConfigurationPropertiesBeanPropertyChangedListener
-                registerGenericBean(registry, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class, importBeanNameGenerator);
+                registerGenericBean(registry, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
             }
             // register BindListener Beans
             registerBindListenerBeans(registry, sources);
