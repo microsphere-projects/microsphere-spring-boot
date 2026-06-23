@@ -1,8 +1,7 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
 io.microsphere.spring.boot.report.ConditionEvaluationReportInitializer,\
-io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer,\
-io.microsphere.spring.boot.context.config.AutoRegistrationBeanInitializer
+io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer
 
 # SpringApplicationRunListener
 org.springframework.boot.SpringApplicationRunListener=\
