@@ -32,7 +32,7 @@ import static io.microsphere.spring.beans.BeanUtils.isBeanPresent;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link ConfigurationPropertiesAutoConfiguration}
+ * {@link ConfigurationPropertiesAutoConfiguration} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationPropertiesAutoConfiguration
