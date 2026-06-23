@@ -30,3 +30,7 @@ io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilt
 io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
 io.microsphere.spring.boot.env.SpringApplicationDefaultPropertiesPostProcessor
 
+# @EnableAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.microsphere.spring.boot.context.autoconfigure.ConfigurationPropertiesAutoConfiguration
+
