@@ -15,49 +15,22 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.context.properties.bind;
+package io.microsphere.spring.boot.context.properties;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindHandlerAdvisor;
+import org.springframework.boot.context.properties.bind.BindHandler;
 
 /**
- * {@link BindListener} Test
+ * {@link ConfigurationPropertiesBindHandlerAdvisor} for testing
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see BindListener
+ * @see ConfigurationPropertiesBindHandlerAdvisor
  * @since 1.0.0
  */
-class BindListenerTest {
+public class TestConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor {
 
-    private BindListener listener;
-
-    @BeforeEach
-    void setUp() {
-        listener = new TestBindListener();
-    }
-
-    @Test
-    void testOnStart() {
-        this.listener.onStart(null, null, null);
-    }
-
-    @Test
-    void testOnSuccess() {
-        this.listener.onSuccess(null, null, null, null);
-    }
-
-    @Test
-    void testOnCreate() {
-        this.listener.onCreate(null, null, null, null);
-    }
-
-    @Test
-    void testOnFailure() {
-        this.listener.onFailure(null, null, null, null);
-    }
-
-    @Test
-    void testOnFinish() {
-        this.listener.onFinish(null, null, null, null);
+    @Override
+    public BindHandler apply(BindHandler bindHandler) {
+        return bindHandler;
     }
 }

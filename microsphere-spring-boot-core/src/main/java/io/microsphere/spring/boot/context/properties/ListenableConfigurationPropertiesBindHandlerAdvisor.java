@@ -25,6 +25,7 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesBindHa
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
+import org.springframework.core.Ordered;
 
 import java.util.List;
 
@@ -70,7 +71,10 @@ import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
  * @see Bindable
  * @since 1.0.0
  */
-public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
+public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor,
+        BeanFactoryAware, Ordered {
+
+    private int order = HIGHEST_PRECEDENCE + 8;
 
     private BeanFactory beanFactory;
 
@@ -111,5 +115,19 @@ public class ListenableConfigurationPropertiesBindHandlerAdvisor implements Conf
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
         this.beanFactory = beanFactory;
+    }
+
+    /**
+     * Set the order for this {@link Ordered} component.
+     *
+     * @param order the order to set
+     */
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    @Override
+    public int getOrder() {
+        return this.order;
     }
 }

@@ -15,49 +15,23 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.context.properties.bind;
+package io.microsphere.spring.boot.context.autoconfigure;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import io.microsphere.spring.boot.context.properties.annotation.EnableConfigurationPropertiesExtension;
+import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
- * {@link BindListener} Test
+ * {@link ConfigurationProperties @ConfigurationProperties} Auto Configuration
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see BindListener
+ * @see org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration
  * @since 1.0.0
  */
-class BindListenerTest {
-
-    private BindListener listener;
-
-    @BeforeEach
-    void setUp() {
-        listener = new TestBindListener();
-    }
-
-    @Test
-    void testOnStart() {
-        this.listener.onStart(null, null, null);
-    }
-
-    @Test
-    void testOnSuccess() {
-        this.listener.onSuccess(null, null, null, null);
-    }
-
-    @Test
-    void testOnCreate() {
-        this.listener.onCreate(null, null, null, null);
-    }
-
-    @Test
-    void testOnFailure() {
-        this.listener.onFailure(null, null, null, null);
-    }
-
-    @Test
-    void testOnFinish() {
-        this.listener.onFinish(null, null, null, null);
-    }
+@AutoConfigureBefore(name = {
+        "org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration"
+})
+@EnableConfigurationPropertiesExtension
+public class ConfigurationPropertiesAutoConfiguration {
 }
