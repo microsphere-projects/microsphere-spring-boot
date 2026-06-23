@@ -92,16 +92,17 @@ class ConfigurationPropertiesBeanContext {
      *
      * @param beanClass the bean class
      * @param context   {@link ConfigurableApplicationContext}
+     * @param <T>       the type of the bean
      * @return the cloned bean
      */
     @Nonnull
-    protected Object cloneConfigurationPropertiesBean(Class<?> beanClass, ConfigurableApplicationContext context) {
+    protected <T> T cloneConfigurationPropertiesBean(Class<T> beanClass, ConfigurableApplicationContext context) {
         if (hasNonPrivateConstructorWithoutParameters(beanClass)) {
             return instantiateClass(beanClass);
         }
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         Object clonedBean = beanFactory.autowire(beanClass, AUTOWIRE_CONSTRUCTOR, true);
-        return clonedBean;
+        return (T) clonedBean;
     }
 
     /**
