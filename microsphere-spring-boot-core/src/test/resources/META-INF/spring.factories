@@ -15,7 +15,3 @@ io.microsphere.spring.context.event.LoggingBeanFactoryListener
 org.springframework.context.ApplicationListener=\
 io.microsphere.spring.boot.context.LoggingOnceApplicationPreparedEventListener,\
 io.microsphere.spring.boot.context.LoggingOnceMainApplicationPreparedEventListener
-
-# AutoRegistrationBean
-io.microsphere.spring.context.config.AutoRegistrationBean=\
-io.microsphere.spring.boot.context.config.TestAutoRegistrationBean
