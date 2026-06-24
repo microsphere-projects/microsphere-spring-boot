@@ -21,12 +21,14 @@ import io.microsphere.spring.boot.context.properties.annotation.EnableConfigurat
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 /**
  * {@link ConfigurationProperties @ConfigurationProperties} Auto-Configuration
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration
+ * @see EnableConfigurationProperties
  * @see EnableConfigurationPropertiesExtension
  * @since 1.0.0
  */
