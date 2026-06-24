@@ -302,4 +302,39 @@ For a list of all changes, refer to the full changelog.
 
 For more details on the changes, refer to the commit history.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.22...0.1.23
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.22...0.1.23## v0.1.24
+
+# Release Notes - Version 0.1.24
+
+## New Features
+- Introduced `WebMVC` property constants. ([#138](https://github.com/mercyblitz/repo/pull/138))
+- Added `ConfigurationProperties` auto-configuration and related tests.
+- Added `EnableConfigurationPropertiesExtension` with accompanying tests.
+- Extended `ConfigurableApplicationContextInitializer` for enhanced initialization support.
+- Supported cloning of `ConfigurationProperties` beans via a generic API.
+
+## Bug Fixes
+- Corrected `WebFlux` enabled default constant name.
+- Removed redundancy in `Advisor`'s `Ordered` implementation.
+
+## Documentation
+- Added Javadoc references for `EnableConfigurationProperties`.
+- Clarified Javadoc link text in test classes.
+- Removed extra Javadoc from extension classes.
+
+## Dependency Updates
+- Upgraded `microsphere-spring` to version 0.1.32.
+
+## Test Improvements
+- Employed `TestBindListener` in `BindListenerTest`.
+- Enhanced test coverage for cloned `ConfigurationProperties`.
+
+## Build and Workflow Enhancements
+- Removed `importBeanNameGenerator` argument from bean registrations.
+- Removed `AutoRegistrationBeanInitializer` and associated tests.
+
+---
+
+**Note**: Upgrade recommended to leverage new features and improvements.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.23...0.1.24
