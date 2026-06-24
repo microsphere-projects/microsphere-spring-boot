@@ -38,14 +38,14 @@ public interface PropertyConstants {
     /**
      * The default value of 'enabled' property of Microsphere Spring Boot WebFlux : "true"
      */
-    String DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_ENABLED = "true";
+    String DEFAULT_MICROSPHERE_SPRING_BOOT_WEBFLUX_ENABLED = "true";
 
     /**
      * The 'enabled' property name of Microsphere Spring Boot WebFlux : "microsphere.spring.boot.webflux.enabled"
      */
     @ConfigurationProperty(
             type = boolean.class,
-            defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_ENABLED,
+            defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_WEBFLUX_ENABLED,
             source = APPLICATION_SOURCE
     )
     String MICROSPHERE_SPRING_BOOT_WEBFLUX_ENALBED_PROPERTY_NAME = MICROSPHERE_SPRING_BOOT_WEBFLUX_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
