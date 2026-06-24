@@ -1,8 +1,7 @@
 # ApplicationContextInitializer
 org.springframework.context.ApplicationContextInitializer=\
 io.microsphere.spring.boot.report.ConditionEvaluationReportInitializer,\
-io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer,\
-io.microsphere.spring.boot.context.config.AutoRegistrationBeanInitializer
+io.microsphere.spring.boot.env.config.OriginTrackedConfigurationPropertyInitializer
 
 # SpringApplicationRunListener
 org.springframework.boot.SpringApplicationRunListener=\
@@ -30,4 +29,8 @@ io.microsphere.spring.boot.autoconfigure.ConfigurableAutoConfigurationImportFilt
 # DefaultPropertiesPostProcessor
 io.microsphere.spring.boot.env.DefaultPropertiesPostProcessor=\
 io.microsphere.spring.boot.env.SpringApplicationDefaultPropertiesPostProcessor
+
+# @EnableAutoConfiguration
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.microsphere.spring.boot.context.autoconfigure.ConfigurationPropertiesAutoConfiguration
 

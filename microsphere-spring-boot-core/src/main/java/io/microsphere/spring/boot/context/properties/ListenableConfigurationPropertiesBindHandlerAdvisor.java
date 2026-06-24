@@ -70,7 +70,8 @@ import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
  * @see Bindable
  * @since 1.0.0
  */
-public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor, BeanFactoryAware {
+public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor,
+        BeanFactoryAware {
 
     private BeanFactory beanFactory;
 

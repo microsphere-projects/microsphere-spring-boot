@@ -18,9 +18,9 @@ package io.microsphere.spring.boot.env.config;
 
 import io.microsphere.logging.Logger;
 import io.microsphere.spring.boot.env.PropertySourceLoaders;
+import io.microsphere.spring.context.ConfigurableApplicationContextInitializer;
 import io.microsphere.spring.context.event.BeanFactoryListenerAdapter;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.boot.env.OriginTrackedMapPropertySource;
 import org.springframework.boot.origin.Origin;
 import org.springframework.boot.origin.OriginLookup;
@@ -38,7 +38,6 @@ import java.util.Map;
 
 import static io.microsphere.collection.MapUtils.newLinkedHashMap;
 import static io.microsphere.logging.LoggerFactory.getLogger;
-import static io.microsphere.spring.beans.factory.support.BeanRegistrar.registerBean;
 import static org.springframework.boot.origin.OriginTrackedValue.of;
 
 /**
@@ -48,15 +47,14 @@ import static org.springframework.boot.origin.OriginTrackedValue.of;
  * @see ConfigurableEnvironment
  * @since ApplicationContextInitializer
  */
-public class OriginTrackedConfigurationPropertyInitializer implements BeanFactoryListenerAdapter, ApplicationContextInitializer<ConfigurableApplicationContext> {
-
-    public static final String BEAN_NAME = "originTrackedConfigurationPropertyInitializer";
+public class OriginTrackedConfigurationPropertyInitializer extends ConfigurableApplicationContextInitializer implements BeanFactoryListenerAdapter {
 
     private static final Logger logger = getLogger(OriginTrackedConfigurationPropertyInitializer.class);
 
     private ConfigurableApplicationContext applicationContext;
 
     private PropertySourceLoaders propertySourceLoaders;
+
 
     /**
      * Initializes the application context by storing references and registering this instance
@@ -70,15 +68,13 @@ public class OriginTrackedConfigurationPropertyInitializer implements BeanFactor
      *   initializer.initialize(applicationContext);
      * }</pre>
      *
-     * @param applicationContext the {@link ConfigurableApplicationContext} to initialize
+     * @param context     the {@link ConfigurableApplicationContext} to initialize
+     * @param environment the {@link ConfigurableEnvironment}
      */
     @Override
-    public void initialize(ConfigurableApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-        this.propertySourceLoaders = new PropertySourceLoaders(applicationContext.getClassLoader());
-        ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
-        BeanDefinitionRegistry registry = (BeanDefinitionRegistry) beanFactory;
-        registerBean(registry, BEAN_NAME, this);
+    protected void initialize(ConfigurableApplicationContext context, ConfigurableEnvironment environment) {
+        this.applicationContext = context;
+        this.propertySourceLoaders = new PropertySourceLoaders(context.getClassLoader());
     }
 
     /**

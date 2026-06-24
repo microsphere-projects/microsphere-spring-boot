@@ -20,6 +20,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
@@ -32,12 +33,15 @@ import java.util.Map;
 import java.util.Objects;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
+import static io.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
+import static org.springframework.beans.BeanUtils.instantiateClass;
+import static org.springframework.beans.factory.config.AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 
 /**
@@ -80,7 +84,25 @@ class ConfigurationPropertiesBeanContext {
         this.annotation = annotation;
         this.prefix = prefix;
         this.context = context;
-        this.initializedBeanWrapper = createInitializedBeanWrapper(beanClass);
+        this.initializedBeanWrapper = createInitializedBeanWrapper(beanClass, context);
+    }
+
+    /**
+     * Clone the {@link ConfigurationProperties @ConfigurationProperties} bean
+     *
+     * @param beanClass the bean class
+     * @param context   {@link ConfigurableApplicationContext}
+     * @param <T>       the type of the bean
+     * @return the cloned bean
+     */
+    @Nonnull
+    protected <T> T cloneConfigurationPropertiesBean(Class<T> beanClass, ConfigurableApplicationContext context) {
+        if (hasNonPrivateConstructorWithoutParameters(beanClass)) {
+            return instantiateClass(beanClass);
+        }
+        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+        Object clonedBean = beanFactory.autowire(beanClass, AUTOWIRE_CONSTRUCTOR, true);
+        return (T) clonedBean;
     }
 
     /**
@@ -193,9 +215,10 @@ class ConfigurationPropertiesBeanContext {
         return this.initializedBeanWrapper.getWrappedInstance();
     }
 
-    private BeanWrapperImpl createInitializedBeanWrapper(Class<?> beanClass) {
-        BeanWrapperImpl beanWrapper = new BeanWrapperImpl(beanClass);
-        ConversionService conversionService = getConversionService(context);
+    private BeanWrapperImpl createInitializedBeanWrapper(Class<?> beanClass, ConfigurableApplicationContext context) {
+        Object clonedBean = cloneConfigurationPropertiesBean(beanClass, context);
+        BeanWrapperImpl beanWrapper = new BeanWrapperImpl(clonedBean);
+        ConversionService conversionService = getConversionService(this.context);
         beanWrapper.setAutoGrowNestedPaths(true);
         beanWrapper.setConversionService(conversionService);
         return beanWrapper;

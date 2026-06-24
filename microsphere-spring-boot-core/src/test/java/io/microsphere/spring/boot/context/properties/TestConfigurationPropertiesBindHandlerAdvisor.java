@@ -15,16 +15,22 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.context.config;
+package io.microsphere.spring.boot.context.properties;
 
-import io.microsphere.spring.context.config.AutoRegistrationBean;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindHandlerAdvisor;
+import org.springframework.boot.context.properties.bind.BindHandler;
 
 /**
- * {@link AutoRegistrationBean} class for testing.
+ * {@link ConfigurationPropertiesBindHandlerAdvisor} for testing
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see AutoRegistrationBean
+ * @see ConfigurationPropertiesBindHandlerAdvisor
  * @since 1.0.0
  */
-public class TestAutoRegistrationBean implements AutoRegistrationBean {
+public class TestConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor {
+
+    @Override
+    public BindHandler apply(BindHandler bindHandler) {
+        return bindHandler;
+    }
 }
