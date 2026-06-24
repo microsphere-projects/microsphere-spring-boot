@@ -17,10 +17,12 @@
 package io.microsphere.spring.boot.webmvc.constants;
 
 import io.microsphere.annotation.ConfigurationProperty;
+import io.microsphere.spring.webmvc.config.ConfigurableContentNegotiationManagerWebMvcConfigurer;
 
 import static io.microsphere.annotation.ConfigurationProperty.APPLICATION_SOURCE;
 import static io.microsphere.constants.PropertyConstants.ENABLED_PROPERTY_NAME;
 import static io.microsphere.spring.boot.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.webmvc.constants.PropertyConstants.MICROSPHERE_SPRING_WEBMVC_PROPERTY_NAME_PREFIX;
 
 /**
  * The Property constants for Microsphere Spring Boot Web MVC
@@ -41,6 +43,21 @@ public interface PropertyConstants {
     String DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_ENABLED = "true";
 
     /**
+     * The default value of 'enabled' property of Microsphere Spring Boot MVC Filter : "true"
+     */
+    String DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED = "true";
+
+    /**
+     * The default value of 'enabled' property of Microsphere Spring Boot MVC Logging : "true"
+     */
+    String DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENABLED = "true";
+
+    /**
+     * The default value of 'enabled' property of Microsphere Spring Web MVC Content Negotiation : "true"
+     */
+    String DEFAULT_MICROSPHERE_SPRING_WEBMVC_CONTENT_NEGOTIATION_ENABLED = "true";
+
+    /**
      * The 'enabled' property name of Microsphere Spring Boot Web MVC : "microsphere.spring.boot.webmvc.enabled"
      */
     @ConfigurationProperty(
@@ -56,7 +73,44 @@ public interface PropertyConstants {
     String FILTER_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX + "filter.";
 
     /**
+     * The 'enabled' property name of Microsphere Spring Boot Web MVC Filter : "microsphere.spring.boot.webmvc.filter.enabled"
+     */
+    @ConfigurationProperty(
+            type = boolean.class,
+            defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED,
+            source = APPLICATION_SOURCE
+    )
+    String MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME = FILTER_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
+
+    /**
+     * The property name prefix of Microsphere Spring Web MVC Content Negotiation : "microsphere.spring.webmvc.content-negotiation."
+     *
+     * @see ConfigurableContentNegotiationManagerWebMvcConfigurer#PROPERTY_NAME_PREFIX
+     */
+    String CONTENT_NEGOTIATION_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_WEBMVC_PROPERTY_NAME_PREFIX + "content-negotiation.";
+
+    /**
+     * The 'enabled' property name of Microsphere Spring Web MVC Content Negotiation : "microsphere.spring.webmvc.content-negotiation.enabled"
+     */
+    @ConfigurationProperty(
+            type = boolean.class,
+            defaultValue = DEFAULT_MICROSPHERE_SPRING_WEBMVC_CONTENT_NEGOTIATION_ENABLED,
+            source = APPLICATION_SOURCE
+    )
+    String MICROSPHERE_SPRING_WEBMVC_CONTENT_NEGOTIATION_ENABLED_PROPERTY_NAME = CONTENT_NEGOTIATION_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
+
+    /**
      * The property name prefix of Microsphere Spring Boot Web MVC Logging : "microsphere.spring.boot.webmvc.logging."
      */
     String LOGGING_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX + "logging.";
+
+    /**
+     * The 'enabled' property name of Microsphere Spring Boot Web MVC Logging : "microsphere.spring.boot.webmvc.logging.enabled"
+     */
+    @ConfigurationProperty(
+            type = boolean.class,
+            defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENABLED,
+            source = APPLICATION_SOURCE
+    )
+    String MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENALBED_PROPERTY_NAME = LOGGING_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
 }
