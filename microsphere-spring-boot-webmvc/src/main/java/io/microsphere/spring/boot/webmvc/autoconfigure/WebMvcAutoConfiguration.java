@@ -30,9 +30,9 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-import static io.microsphere.constants.PropertyConstants.ENABLED_PROPERTY_NAME;
-import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.FILTER_PROPERTY_NAME_PREFIX;
-import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.LOGGING_PROPERTY_NAME_PREFIX;
+import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME;
+import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENALBED_PROPERTY_NAME;
+import static io.microsphere.spring.boot.webmvc.constants.PropertyConstants.MICROSPHERE_SPRING_WEBMVC_CONTENT_NEGOTIATION_ENABLED_PROPERTY_NAME;
 import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationListener.EXCLUSIVE_VIEW_RESOLVER_BEAN_NAME_PROPERTY_NAME;
 
 /**
@@ -57,13 +57,13 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
 })
 public class WebMvcAutoConfiguration {
 
-    @ConditionalOnProperty(prefix = FILTER_PROPERTY_NAME_PREFIX, name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME, matchIfMissing = true)
     @Bean
     public ContentCachingFilter contentCachingFilter() {
         return new ContentCachingFilter();
     }
 
-    @ConditionalOnProperty(prefix = "microsphere.spring.webmvc.content-negotiation.", name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @ConditionalOnProperty(name = MICROSPHERE_SPRING_WEBMVC_CONTENT_NEGOTIATION_ENABLED_PROPERTY_NAME, matchIfMissing = true)
     @Bean
     public ConfigurableContentNegotiationManagerWebMvcConfigurer contentNegotiationManagerWebMvcConfigurer() {
         return new ConfigurableContentNegotiationManagerWebMvcConfigurer();
@@ -75,7 +75,7 @@ public class WebMvcAutoConfiguration {
         return new ExclusiveViewResolverApplicationListener();
     }
 
-    @ConditionalOnProperty(prefix = LOGGING_PROPERTY_NAME_PREFIX, name = ENABLED_PROPERTY_NAME, matchIfMissing = true)
+    @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENALBED_PROPERTY_NAME, matchIfMissing = true)
     @Import(value = {
             LoggingMethodHandlerInterceptor.class,
             LoggingPageRenderContextHandlerInterceptor.class,
