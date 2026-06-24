@@ -15,34 +15,41 @@
  * limitations under the License.
  */
 
-package io.microsphere.spring.boot.context.config;
+package io.microsphere.spring.boot.context.autoconfigure;
 
-import org.junit.jupiter.api.DisplayName;
+
+import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import io.microsphere.spring.boot.context.properties.TestConfigurationPropertiesBindHandlerAdvisor;
+import io.microsphere.spring.boot.context.properties.bind.EventPublishingConfigurationPropertiesBeanPropertyChangedListener;
+import io.microsphere.spring.boot.context.properties.bind.TestBindListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
+import static io.microsphere.spring.beans.BeanUtils.isBeanPresent;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * {@link AutoRegistrationBeanInitializer} Test
+ * {@link ConfigurationPropertiesAutoConfiguration} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see AutoRegistrationBeanInitializer
+ * @see ConfigurationPropertiesAutoConfiguration
  * @since 1.0.0
  */
-@SpringJUnitConfig(
-        initializers = AutoRegistrationBeanInitializer.class
-)
-class AutoRegistrationBeanInitializerTest {
+@SpringJUnitConfig
+@EnableAutoConfiguration
+class ConfigurationPropertiesAutoConfigurationTest {
 
     @Autowired
     private ConfigurableApplicationContext context;
 
     @Test
-    @DisplayName("Enable AutoRegistrationBeanInitializer Test")
     void test() {
-        assertTrue(context.containsBean("testAutoRegistrationBean"));
+        assertTrue(isBeanPresent(this.context, ListenableConfigurationPropertiesBindHandlerAdvisor.class));
+        assertTrue(isBeanPresent(this.context, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class));
+        assertTrue(isBeanPresent(this.context, TestBindListener.class));
+        assertTrue(isBeanPresent(this.context, TestConfigurationPropertiesBindHandlerAdvisor.class));
     }
 }
