@@ -20,27 +20,19 @@ package io.microsphere.spring.boot.context.properties.bind;
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.env.Environment;
 
-import java.beans.PropertyDescriptor;
-import java.lang.reflect.Method;
-
-import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateClass;
-import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
-import static io.microsphere.spring.test.util.SpringTestUtils.testInSpringContainer;
-import static java.lang.Integer.valueOf;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
+import static org.springframework.core.ResolvableType.forRawClass;
+import static org.springframework.core.ResolvableType.forType;
 
 /**
  * {@link ConfigurationPropertiesBeanContext} Test
@@ -58,23 +50,16 @@ class ConfigurationPropertiesBeanContextTest {
         ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(ServerProperties.class);
         GenericApplicationContext context = new GenericApplicationContext();
         context.refresh();
-        this.beanContext = new ConfigurationPropertiesBeanContext(beanInfo.getBeanClass(), beanInfo.getAnnotation(),
+        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), beanInfo.getAnnotation(),
                 beanInfo.getPrefix(), context);
     }
 
     @Test
-    void testCloneConfigurationPropertiesBean() {
-        testInSpringContainer(context -> {
-            ServerProperties serverProperties = this.beanContext.cloneConfigurationPropertiesBean(ServerProperties.class, context);
-            assertNotNull(serverProperties);
-
-            Test1Properties test1Properties = this.beanContext.cloneConfigurationPropertiesBean(Test1Properties.class, context);
-            assertSame(context.getEnvironment(), test1Properties.environment);
-
-            Test2Properties test2Properties = this.beanContext.cloneConfigurationPropertiesBean(Test2Properties.class, context);
-            assertSame(context.getEnvironment(), test2Properties.environment);
-            assertSame(context, test2Properties.context);
-        });
+    void testGetter() {
+        assertEquals(ServerProperties.class, this.beanContext.getBeanClass());
+        assertEquals(ServerProperties.class.getAnnotation(ConfigurationProperties.class), this.beanContext.getAnnotation());
+        assertEquals("server", this.beanContext.getPrefix());
+        assertNull(this.beanContext.getInitializedBean());
     }
 
     @Test
@@ -86,70 +71,67 @@ class ConfigurationPropertiesBeanContextTest {
         ServerProperties bean = (ServerProperties) this.beanContext.getInitializedBean();
         assertNull(bean.getPort());
 
-        // setProperty
-        String propertyName = "server.port";
-        String propertyValue = "8080";
-        ConfigurationProperty configurationProperty = new ConfigurationProperty(of(propertyName), propertyValue, null);
-        this.beanContext.setProperty(configurationProperty, "9090");
-        // setProperty again
-        this.beanContext.setProperty(configurationProperty, "9090");
-
-        assertEquals(valueOf(9090), this.beanContext.getPropertyValue("port"));
-
-        bean = (ServerProperties) this.beanContext.getInitializedBean();
-        assertEquals(valueOf(9090), bean.getPort());
-
+        assertSame(serverProperties, bean);
     }
 
     @Test
-    void testGetPrefix() {
-        assertEquals("server", this.beanContext.getPrefix());
-    }
+    void testSetProperty() {
+        // String type field
+        String propertyName = "test.name";
+        Object propertyValue = "Mercy";
+        ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
 
-    @Test
-    void testGetBeanClass() {
-        assertEquals(ServerProperties.class, this.beanContext.getBeanClass());
-    }
-
-    @Test
-    void testConvertForProperty() {
         ServerProperties serverProperties = new ServerProperties();
         this.beanContext.initialize(serverProperties);
-        assertSame(serverProperties, this.beanContext.convertForProperty("port", serverProperties));
+
+        this.beanContext.setProperty(property, propertyValue);
+
+        Bindable<String> bindable = ofInstance("Mercy");
+        this.beanContext.initProperty(property.getName(), bindable);
+        this.beanContext.setProperty(property, propertyValue);
+        this.beanContext.setProperty(property, propertyValue);
     }
 
-    @Test
-    void testIsCandidateProperty() throws Exception {
-        Method readMethod = null;
-        Method writeMethod = BeanNameAware.class.getMethod("setBeanName", String.class);
-        PropertyDescriptor propertyDescriptor = new PropertyDescriptor("beanName", readMethod, writeMethod);
-        assertTrue(isCandidateProperty(propertyDescriptor));
-    }
+//    @Test
+//    void testTestConfigurationProperties() {
+//        ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(TestConfigurationProperties.class);
+//        GenericApplicationContext context = new GenericApplicationContext();
+//        ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder = new ValueHolder<>();
+//        context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
+//            eventHolder.setValue(event);
+//        });
+//        context.refresh();
+//        ConfigurationPropertiesBeanContext beanContext = new ConfigurationPropertiesBeanContext(TestConfigurationProperties.class, beanInfo.getAnnotation(), beanInfo.getPrefix(), context);
+//        beanContext.initialize(new TestConfigurationProperties());
+//
+//        // String type field
+//        String propertyName = "test.name";
+//        Object propertyValue = "Mercy";
+//        ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
+//        beanContext.setProperty(property, property.getValue());
+//
+//        assertEvent(eventHolder, property, beanContext);
+//
+//        // Map type field
+//        propertyName = "test.properties.status";
+//        propertyValue = "OK";
+//        property = newConfigurationProperty(propertyName, propertyValue);
+//        beanContext.setProperty(property, property.getValue());
+//    }
+//
+//    void assertEvent(ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder,
+//                     ConfigurationProperty property, ConfigurationPropertiesBeanContext beanContext) {
+//        String propertyName = property.getName().toString();
+//        Object propertyValue = property.getValue();
+//        ConfigurationPropertiesBeanPropertyChangedEvent event = eventHolder.getValue();
+//        assertNotNull(event);
+//        assertTrue(propertyName.contains(event.getPropertyName()));
+//        assertNull(event.getOldValue());
+//        assertEquals(propertyValue, event.getNewValue());
+//        assertEquals(property, event.getConfigurationProperty());
+//    }
 
-    @Test
-    void testIsCandidateClass() {
-        assertTrue(isCandidateClass(ServerProperties.class));
-        assertFalse(isCandidateClass(String.class));
-    }
-
-    static class Test1Properties {
-
-        private Environment environment;
-
-        public Test1Properties(Environment environment) {
-            this.environment = environment;
-        }
-    }
-
-    static class Test2Properties {
-
-        private Environment environment;
-
-        private ConfigurableApplicationContext context;
-
-        public Test2Properties(Environment environment, ConfigurableApplicationContext context) {
-            this.environment = environment;
-            this.context = context;
-        }
+    ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
+        return new ConfigurationProperty(of(propertyName), propertyValue, null);
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 
 /**
@@ -52,14 +53,34 @@ public abstract class ConfigurationPropertyUtils {
      * @return the prefix of the specified {@link ConfigurationPropertyName}
      * @throws IllegalArgumentException if name or context is null
      */
-    public static final String getPrefix(ConfigurationPropertyName name, BindContext context) {
+    public static String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
+        if (name.isLastElementIndexed()) {
+            name = name.getParent();
+            depth--;
+        }
         String propertyName = name.toString();
+        if (depth == 0) {
+            return propertyName;
+        }
         String prefix = propertyName;
         for (int i = 0; i < depth; i++) {
             prefix = substringBeforeLast(prefix, DOT);
         }
+        if (propertyName.equalsIgnoreCase(prefix)) {
+            prefix = getSource(name);
+        }
         return prefix;
+    }
+
+    /**
+     * @param name the {@link ConfigurationPropertyName}
+     * @return the prefix of the specified {@link ConfigurationPropertyName}
+     * @throws IllegalArgumentException if name is null
+     */
+    public static String getSource(ConfigurationPropertyName name) {
+        Object elements = getFieldValue(name, "elements");
+        return getFieldValue(elements, "source");
     }
 
     /**

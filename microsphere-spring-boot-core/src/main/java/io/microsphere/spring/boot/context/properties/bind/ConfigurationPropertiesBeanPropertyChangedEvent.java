@@ -19,6 +19,7 @@ package io.microsphere.spring.boot.context.properties.bind;
 import io.microsphere.spring.context.event.BeanPropertyChangedEvent;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
+import org.springframework.core.ResolvableType;
 
 /**
  * Event raised when the property of bean annotated {@link ConfigurationProperties @ConfigurationProperties} was changed.
@@ -32,40 +33,39 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
  */
 public class ConfigurationPropertiesBeanPropertyChangedEvent<T> extends BeanPropertyChangedEvent {
 
+    private final ResolvableType propertyType;
+
     private final ConfigurationProperty configurationProperty;
 
     /**
      * Constructs a new event indicating that a configuration property bound to a
      * {@link ConfigurationProperties @ConfigurationProperties} bean has changed.
      *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationProperty configProp = ...; // from BindContext
-     *   ConfigurationPropertiesBeanPropertyChangedEvent<MyProps> event =
-     *       new ConfigurationPropertiesBeanPropertyChangedEvent<>(
-     *           myPropsBean, "name", "oldName", "newName", configProp);
-     * }</pre>
-     *
      * @param bean                  the bean whose property changed
      * @param propertyName          the name of the changed property
+     * @param propertyType          the type of the changed property
      * @param oldValue              the previous value of the property
      * @param newValue              the new value of the property
      * @param configurationProperty the {@link ConfigurationProperty} that triggered the change
      */
-    public ConfigurationPropertiesBeanPropertyChangedEvent(Object bean, String propertyName, Object oldValue, Object newValue, ConfigurationProperty configurationProperty) {
+    public ConfigurationPropertiesBeanPropertyChangedEvent(Object bean, String propertyName, ResolvableType propertyType,
+                                                           Object oldValue, Object newValue, ConfigurationProperty configurationProperty) {
         super(bean, propertyName, oldValue, newValue);
+        this.propertyType = propertyType;
         this.configurationProperty = configurationProperty;
     }
 
     /**
-     * Returns the {@link ConfigurationProperty} associated with the property change.
+     * Returns the type of the changed property.
      *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationPropertiesBeanPropertyChangedEvent<?> event = ...;
-     *   ConfigurationProperty property = event.getConfigurationProperty();
-     *   System.out.println("Changed property source: " + property.getOrigin());
-     * }</pre>
+     * @return the property type
+     */
+    public ResolvableType getPropertyType() {
+        return propertyType;
+    }
+
+    /**
+     * Returns the {@link ConfigurationProperty} associated with the property change.
      *
      * @return the {@link ConfigurationProperty} that triggered the change
      */

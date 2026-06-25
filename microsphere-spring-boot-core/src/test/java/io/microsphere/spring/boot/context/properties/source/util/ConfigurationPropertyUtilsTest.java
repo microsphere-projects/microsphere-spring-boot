@@ -47,6 +47,7 @@ class ConfigurationPropertyUtilsTest {
             @Override
             public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
                 assertEquals(prefix, getPrefix(name, context));
+                assertEquals(prefix, ConfigurationPropertyUtils.getSource(name));
             }
         });
         assertEquals(12345, serverProperties.getPort());
