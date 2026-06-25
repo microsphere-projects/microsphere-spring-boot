@@ -279,4 +279,33 @@ For a complete list of changes, please see the [full changelog](#).
 - Updated test resource path to `META-INF`.  
 - Updated README version table to reflect `0.2.23/0.1.23`.  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.22...0.2.23
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.22...0.2.23## v0.2.24
+
+# Release Notes: Version 0.2.24
+
+## New Features  
+- Added property constants for WebMVC feature toggles.  
+- Introduced `EnableConfigurationPropertiesExtension` with supporting tests.  
+- Enabled cloning of `ConfigurationProperties` bean for wrappers via a generic method.  
+- Registered `ConfigurationProperties` auto-configuration.  
+- Implemented `ConfigurableApplicationContextInitializer` for improved extensibility.
+
+## Bug Fixes  
+- Fixed default enabled constant for WebFlux.  
+
+## Dependency Updates  
+- Upgraded `microsphere-spring` to version 0.2.32.  
+
+## Documentation  
+- Updated README to reflect the new version (0.2.24).  
+- Removed redundant class-level Javadoc in some classes.  
+
+## Other Changes  
+- Removed outdated components: `TestAutoRegistrationBean`, `factory entry`, and `AutoRegistrationBeanInitializer`.  
+- Simplified logic by removing `importBeanNameGenerator` usage in registrar and `Ordered` implementation from advisor.  
+
+---
+
+Full Changelog: [View here](link-to-full-changelog)
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.23...0.2.24

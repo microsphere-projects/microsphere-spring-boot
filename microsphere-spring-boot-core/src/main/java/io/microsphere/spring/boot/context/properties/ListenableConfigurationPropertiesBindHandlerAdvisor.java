@@ -65,9 +65,10 @@ import static io.microsphere.spring.beans.BeanUtils.getSortedBeans;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationPropertiesBindHandlerAdvisor
- * @see BindHandler
  * @see Binder
  * @see Bindable
+ * @see BindHandler
+ * @see BindListener
  * @since 1.0.0
  */
 public class ListenableConfigurationPropertiesBindHandlerAdvisor implements ConfigurationPropertiesBindHandlerAdvisor,

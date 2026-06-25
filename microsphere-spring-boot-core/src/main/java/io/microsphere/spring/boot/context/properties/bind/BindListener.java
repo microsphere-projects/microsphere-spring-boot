@@ -16,16 +16,23 @@
  */
 package io.microsphere.spring.boot.context.properties.bind;
 
+import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBindHandlerAdvisor;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindHandler;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
 /**
  * Bind Listener
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see Binder
+ * @see Bindable
  * @see BindHandler
+ * @see ConfigurationPropertiesBindHandlerAdvisor
+ * @see ListenableConfigurationPropertiesBindHandlerAdvisor
  * @since 1.0.0
  */
 public interface BindListener {
