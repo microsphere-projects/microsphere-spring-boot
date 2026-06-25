@@ -18,31 +18,41 @@ package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
-import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
-import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import io.microsphere.logging.Logger;
+import io.microsphere.reflect.MemberUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.core.convert.ConversionService;
+import org.springframework.core.ResolvableType;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import static io.microsphere.collection.MapUtils.newHashMap;
-import static io.microsphere.reflect.ConstructorUtils.hasNonPrivateConstructorWithoutParameters;
+import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
+import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.StringUtils.replace;
 import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
-import static org.springframework.beans.BeanUtils.instantiateClass;
-import static org.springframework.beans.factory.config.AutowireCapableBeanFactory.AUTOWIRE_CONSTRUCTOR;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.Form.ORIGINAL;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
+import static org.springframework.core.ResolvableType.forInstance;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
+import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
  * The context for the bean annotated {@link ConfigurationProperties @ConfigurationProperties}
@@ -52,102 +62,95 @@ import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
  */
 class ConfigurationPropertiesBeanContext {
 
+    private static final Logger logger = getLogger(ConfigurationPropertiesBeanContext.class);
+
+    /**
+     * The {@link Class#getName() class name} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
+     */
+    private static final String BEAN_PROPERTY_CLASS_NAME = "org.springframework.boot.context.properties.bind.JavaBeanBinder$BeanProperty";
+
+    private static final ClassLoader classLoader = ConfigurationProperties.class.getClassLoader();
+
+    /**
+     * The {@link Class} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
+     */
+    private static final Class<?> BEAN_PROPERTY_CLASS = loadClass(classLoader, BEAN_PROPERTY_CLASS_NAME);
+
+    private final ResolvableType beanType;
+
     private final ConfigurationProperties annotation;
 
     private final String prefix;
 
     private final ConfigurableApplicationContext context;
 
-    private final BeanWrapperImpl initializedBeanWrapper;
+    /**
+     * The {@link ConfigurationPropertiesBeanProperty} map which key is the {@link ConfigurationPropertyName} and
+     * value is the {@link ConfigurationPropertiesBeanProperty}.
+     */
+    private final Map<ConfigurationPropertyName, ConfigurationPropertiesBeanProperty> beanProperties;
 
-    private Map<String, String> bindingPropertyNames;
-
-    private volatile Object bean;
+    private volatile Object initializedBean;
 
     /**
      * Constructor
      *
-     * @param beanClass  the bean class
+     * @param beanType   the bean type
      * @param annotation the annotation of {@link ConfigurationProperties}
      * @param prefix     {@link ConfigurationProperties#prefix() the prefix}
      * @param context    {@link ConfigurableApplicationContext}
      * @throws IllegalArgumentException If <code>beanClass</code> or <code>annotation</code> or <code>context</code> argument is null,
      *                                  or the <code>prefix</code> is blank
      */
-    public ConfigurationPropertiesBeanContext(Class<?> beanClass, ConfigurationProperties annotation, String prefix,
+    public ConfigurationPropertiesBeanContext(ResolvableType beanType, ConfigurationProperties annotation, String prefix,
                                               ConfigurableApplicationContext context) throws IllegalArgumentException {
-        assertNotNull(beanClass, () -> "The 'beanClass' must not be null!");
+        assertNotNull(beanType, () -> "The 'beanType' must not be null!");
         assertNotNull(annotation, () -> "The 'annotation' must not be null!");
         assertNotBlank(prefix, () -> "The 'prefix' must not be black!");
         assertNotNull(context, () -> "The 'assertNotNull' must not be null!");
         // TODO support @ConstructorBinding creating beans
+        this.beanType = beanType;
         this.annotation = annotation;
         this.prefix = prefix;
         this.context = context;
-        this.initializedBeanWrapper = createInitializedBeanWrapper(beanClass, context);
+        this.beanProperties = newHashMap();
     }
 
-    /**
-     * Clone the {@link ConfigurationProperties @ConfigurationProperties} bean
-     *
-     * @param beanClass the bean class
-     * @param context   {@link ConfigurableApplicationContext}
-     * @param <T>       the type of the bean
-     * @return the cloned bean
-     */
     @Nonnull
-    protected <T> T cloneConfigurationPropertiesBean(Class<T> beanClass, ConfigurableApplicationContext context) {
-        if (hasNonPrivateConstructorWithoutParameters(beanClass)) {
-            return instantiateClass(beanClass);
-        }
-        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
-        Object clonedBean = beanFactory.autowire(beanClass, AUTOWIRE_CONSTRUCTOR, true);
-        return (T) clonedBean;
+    public ResolvableType getBeanType() {
+        return beanType;
     }
 
     /**
-     * Initializes the context by copying the bean's current property values into
-     * the internal bean wrapper and setting up property name bindings.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationPropertiesBeanContext ctx = new ConfigurationPropertiesBeanContext(
-     *       MyProps.class, annotation, "app", applicationContext);
-     *   MyProps bean = applicationContext.getBean(MyProps.class);
-     *   ctx.initialize(bean);
-     * }</pre>
-     *
-     * @param bean the bean instance to initialize from
-     */
-    protected void initialize(Object bean) {
-        this.bean = bean;
-        setProperties(bean);
-        initBinding(bean);
-    }
-
-    /**
-     * Sets a property value on the initialized bean. If the new value differs from the old value,
-     * a {@link ConfigurationPropertiesBeanPropertyChangedEvent} is published.
+     * Returns the class of the {@link ConfigurationProperties @ConfigurationProperties} bean.
      *
      * <h3>Example Usage</h3>
      * <pre>{@code
      *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   ConfigurationProperty property = context.getConfigurationProperty();
-     *   ctx.setProperty(property, "newValue");
+     *   Class<?> beanClass = ctx.getBeanClass(); // e.g. MyProps.class
      * }</pre>
      *
-     * @param property the {@link ConfigurationProperty} being set
-     * @param newValue the new value to set
+     * @return the bean class, never {@code null}
      */
-    public void setProperty(ConfigurationProperty property, Object newValue) {
-        ConfigurationPropertyName name = property.getName();
-        String propertyName = getPropertyName(name);
-        Object convertedNewValue = convertForProperty(propertyName, newValue);
-        Object oldValue = getPropertyValue(propertyName);
-        if (!Objects.deepEquals(oldValue, convertedNewValue)) {
-            initializedBeanWrapper.setPropertyValue(propertyName, convertedNewValue);
-            publishEvent(property, propertyName, oldValue, newValue);
-        }
+    @Nonnull
+    public Class<?> getBeanClass() {
+        return this.beanType.getRawClass();
+    }
+
+    /**
+     * Returns the {@link ConfigurationProperties @ConfigurationProperties} annotation.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   ConfigurationPropertiesBeanContext ctx = ...;
+     *   ConfigurationProperties annotation = ctx.getAnnotation();
+     * }</pre>
+     *
+     * @return the annotation, never {@code null}
+     */
+    @Nonnull
+    public ConfigurationProperties getAnnotation() {
+        return annotation;
     }
 
     /**
@@ -167,39 +170,6 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Returns the class of the {@link ConfigurationProperties @ConfigurationProperties} bean.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   Class<?> beanClass = ctx.getBeanClass(); // e.g. MyProps.class
-     * }</pre>
-     *
-     * @return the bean class, never {@code null}
-     */
-    @Nonnull
-    public Class<?> getBeanClass() {
-        return initializedBeanWrapper.getWrappedClass();
-    }
-
-    /**
-     * Returns the current value of the specified property from the initialized bean.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   ConfigurationPropertiesBeanContext ctx = ...;
-     *   Object value = ctx.getPropertyValue("name"); // e.g. "myApp"
-     * }</pre>
-     *
-     * @param name the property name
-     * @return the current property value, or {@code null} if not set
-     */
-    @Nullable
-    public Object getPropertyValue(String name) {
-        return initializedBeanWrapper.getPropertyValue(name);
-    }
-
-    /**
      * Returns the initialized bean instance that mirrors the original bean's property values.
      *
      * <h3>Example Usage</h3>
@@ -210,75 +180,78 @@ class ConfigurationPropertiesBeanContext {
      *
      * @return the initialized bean instance, never {@code null}
      */
-    @Nonnull
+    @Nullable
     public Object getInitializedBean() {
-        return this.initializedBeanWrapper.getWrappedInstance();
+        return this.initializedBean;
     }
 
-    private BeanWrapperImpl createInitializedBeanWrapper(Class<?> beanClass, ConfigurableApplicationContext context) {
-        Object clonedBean = cloneConfigurationPropertiesBean(beanClass, context);
-        BeanWrapperImpl beanWrapper = new BeanWrapperImpl(clonedBean);
-        ConversionService conversionService = getConversionService(this.context);
-        beanWrapper.setAutoGrowNestedPaths(true);
-        beanWrapper.setConversionService(conversionService);
-        return beanWrapper;
+    void initialize(Object bean) {
+        this.initializedBean = bean;
+        initBeanProperties(bean);
     }
 
-    private ConversionService getConversionService(ConfigurableApplicationContext context) {
-        return new ConversionServiceResolver(context.getBeanFactory()).resolve();
-    }
-
-    private void setProperties(Object bean) {
-        Object initializedBean = this.initializedBeanWrapper.getWrappedInstance();
-        copyProperties(bean, initializedBean);
-    }
-
-    private void initBinding(Object bean) {
-        Map<String, String> bindingPropertyNames = newHashMap();
+    private void initBeanProperties(Object bean) {
         String prefix = getPrefix();
-        initBinding(bean.getClass(), prefix, bindingPropertyNames, null);
-        this.bindingPropertyNames = bindingPropertyNames;
+        ConfigurationPropertyName prefixName = of(prefix);
+        initBeanProperties(forInstance(bean), prefixName, null);
     }
 
-    private void initBinding(Class<?> beanClass, String prefix, Map<String, String> bindingPropertyNames, String nestedPath) {
+    private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
+        Class<?> beanClass = beanType.getRawClass();
         if (isCandidateClass(beanClass)) {
             PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
-            int descriptorSize = descriptors.length;
-            for (int i = 0; i < descriptorSize; i++) {
-                PropertyDescriptor descriptor = descriptors[i];
-                if (isCandidateProperty(descriptor)) {
-                    String propertyName = descriptor.getName();
-                    Class<?> propertyType = descriptor.getPropertyType();
-                    String configurationPropertyName = prefix + "." + toDashedForm(propertyName);
-                    String propertyPath = nestedPath == null ? propertyName : nestedPath + "." + propertyName;
-                    bindingPropertyNames.put(configurationPropertyName, propertyPath);
-                    initBinding(propertyType, configurationPropertyName, bindingPropertyNames, propertyPath);
-                }
-            }
+            initBeanProperties(beanType, descriptors, prefixName, nestedPath);
+            Set<Field> fields = findAllDeclaredFields(beanClass, MemberUtils::isNonStatic);
+            initBeanProperties(beanType, fields, prefixName, nestedPath);
         }
     }
 
-    /**
-     * Converts the given value to the type of the specified property using the configured
-     * {@link ConversionService}.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   Object converted = beanContext.convertForProperty("port", "8080");
-     *   // converted is Integer 8080 if the property type is int
-     * }</pre>
-     *
-     * @param propertyName the name of the target property
-     * @param value        the value to convert
-     * @return the converted value, or the original value if conversion is not supported
-     */
-    Object convertForProperty(String propertyName, Object value) {
-        Class<?> propertyType = this.initializedBeanWrapper.getPropertyType(propertyName);
-        ConversionService conversionService = this.initializedBeanWrapper.getConversionService();
-        if (conversionService.canConvert(value.getClass(), propertyType)) {
-            return conversionService.convert(value, propertyType);
+    private void initBeanProperties(ResolvableType beanType, PropertyDescriptor[] descriptors, ConfigurationPropertyName prefixName, String nestedPath) {
+        for (PropertyDescriptor descriptor : descriptors) {
+            initBeanProperty(beanType, descriptor, prefixName, nestedPath);
         }
-        return value;
+    }
+
+    private void initBeanProperty(ResolvableType beanType, PropertyDescriptor descriptor, ConfigurationPropertyName prefixName, String nestedPath) {
+        if (isCandidateProperty(descriptor)) {
+            String propertyName = descriptor.getName();
+            String propertyPath = buildPropertyPath(propertyName, nestedPath);
+            ConfigurationPropertyName configurationPropertyName = prefixName.append(toDashedForm(propertyName));
+            ConfigurationPropertiesBeanProperty property = this.beanProperties.computeIfAbsent(configurationPropertyName, name -> {
+                ConfigurationPropertiesBeanProperty newProperty = new ConfigurationPropertiesBeanProperty();
+                newProperty.setDeclaringClassType(beanType);
+                newProperty.setName(propertyPath);
+                newProperty.setGetter(descriptor.getReadMethod());
+                newProperty.setSetter(descriptor.getWriteMethod());
+                return newProperty;
+            });
+            initBeanProperties(property.getType(), configurationPropertyName, propertyPath);
+        }
+    }
+
+    private void initBeanProperties(ResolvableType beanType, Set<Field> fields, ConfigurationPropertyName prefixName, String nestedPath) {
+        for (Field field : fields) {
+            initBeanProperty(beanType, field, prefixName, nestedPath);
+        }
+    }
+
+    private void initBeanProperty(ResolvableType beanType, Field field, ConfigurationPropertyName prefixName, String nestedPath) {
+        String propertyName = field.getName();
+        propertyName = replace(propertyName, "_", "");
+        ConfigurationPropertyName configurationPropertyName = prefixName.append(toDashedForm(propertyName));
+        String propertyPath = buildPropertyPath(field.getName(), nestedPath);
+        ConfigurationPropertiesBeanProperty property = this.beanProperties.computeIfAbsent(configurationPropertyName, name -> {
+            ConfigurationPropertiesBeanProperty newProperty = new ConfigurationPropertiesBeanProperty();
+            newProperty.setDeclaringClassType(beanType);
+            return newProperty;
+        });
+        property.setName(propertyPath);
+        property.setField(field);
+        initBeanProperties(property.getType(), configurationPropertyName, propertyPath);
+    }
+
+    private String buildPropertyPath(String propertyName, String nestedPath) {
+        return nestedPath == null ? propertyName : nestedPath + DOT + propertyName;
     }
 
     /**
@@ -324,11 +297,76 @@ class ConfigurationPropertiesBeanContext {
         return isConcreteClass(beanClass);
     }
 
-    private void publishEvent(ConfigurationProperty property, String propertyName, Object oldValue, Object newValue) {
-        context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(bean, propertyName, oldValue, newValue, property));
+    ConfigurationPropertiesBeanProperty initProperty(ConfigurationPropertyName propertyName, Bindable<?> bindable) {
+        if (propertyName.isLastElementIndexed()) {
+            propertyName = propertyName.getParent();
+        }
+        return this.beanProperties.computeIfAbsent(propertyName, n -> newProperty(n, bindable));
     }
 
-    private String getPropertyName(ConfigurationPropertyName name) {
-        return bindingPropertyNames.get(name.toString());
+    @Nullable
+    ConfigurationPropertiesBeanProperty newProperty(ConfigurationPropertyName name, Bindable<?> bindable) {
+        Supplier<?> value = bindable.getValue();
+        if (value == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The value from Bindable[{}] is null for the property name : '{}'", bindable, name);
+            }
+            return null;
+        }
+        Class<?> valueClass = value.getClass();
+        ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
+
+        doWithFields(valueClass, valueField -> {
+            Object beanProperty = getFieldValue(value, valueField);
+            if (beanProperty != null) {
+                copyProperties(beanProperty, property);
+            }
+        }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
+
+        return property;
+    }
+
+    ConfigurationPropertiesBeanProperty getProperty(ConfigurationPropertyName propertyName) {
+        ConfigurationPropertiesBeanProperty property = this.beanProperties.get(propertyName);
+        if (property == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("No ConfigurationPropertiesBeanProperty was found by the configuration property name : '{}'", propertyName);
+            }
+        }
+        return property;
+    }
+
+    void setProperty(ConfigurationProperty property, Object newValue) {
+        ConfigurationPropertyName name = property.getName();
+        ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = getProperty(name);
+        if (configurationPropertiesBeanProperty == null) {
+            name = name.getParent();
+            configurationPropertiesBeanProperty = getProperty(name);
+        }
+        if (configurationPropertiesBeanProperty != null) {
+            ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
+            Object oldValue = configurationPropertiesBeanProperty.getValue();
+            if (propertyType.isAssignableFrom(Map.class)) {
+                Map<String, Object> map = (Map<String, Object>) oldValue;
+                String propertyName = property.getName().getLastElement(ORIGINAL);
+                oldValue = map.get(propertyName);
+            }
+
+            if (!Objects.deepEquals(oldValue, newValue)) {
+                configurationPropertiesBeanProperty.setValue(newValue);
+                publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
+                if (logger.isInfoEnabled()) {
+                    logger.info("Set property ['{}'] from [{}] to [{}]", name, oldValue, newValue);
+                }
+            }
+        }
+    }
+
+    void publishEvent(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
+                      Object oldValue, Object newValue) {
+        String propertyName = configurationPropertiesBeanProperty.getName();
+        ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
+        this.context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(initializedBean, propertyName,
+                propertyType, oldValue, newValue, property));
     }
 }

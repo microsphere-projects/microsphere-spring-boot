@@ -25,6 +25,7 @@ import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -56,12 +57,23 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
 })
-@TestPropertySource(properties = {"server.error.path=/error.jsp"})
+@TestPropertySource(properties = {
+        "server.error.path=/error.jsp",
+        "spring.web.locale=en_US",
+        "spring.web.locale=fixed",
+        "spring.web.resources.static-locations[0]=/static",
+        "spring.web.resources.static-locations[1]=/public",
+        "spring.web.resources.static-locations[2]=/resources",
+        "management.endpoints.web.exposure.include=*",
+        "management.health.defaults.enabled=true",
+        "management.endpoints.web.path-mapping.health = microsphere/health",
+})
 @EnableAutoConfiguration
 @EnableConfigurationProperties(
         value = {
                 ServerProperties.class,
-                JacksonProperties.class
+                JacksonProperties.class,
+                WebProperties.class
         }
 )
 class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
@@ -77,6 +89,9 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ServerProperties serverProperties;
+
+    @Autowired
+    private WebProperties webProperties;
 
     @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
@@ -168,6 +183,6 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         BindContext context = mock(BindContext.class);
         when(context.getDepth()).thenReturn(0);
 
-        this.listener.initConfigurationPropertiesBeanContext(name, target, context);
+        this.listener.initConfigurationPropertiesBeanContext(name, target, context, null);
     }
 }

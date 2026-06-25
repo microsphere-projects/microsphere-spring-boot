@@ -44,7 +44,7 @@ import static org.springframework.core.io.support.ResourcePatternResolver.CLASSP
  */
 public class ConfigurationMetadataReader implements ResourceLoaderAware {
 
-    private final static Logger logger = getLogger(ConfigurationMetadataReader.class);
+    private static final Logger logger = getLogger(ConfigurationMetadataReader.class);
 
     public static final String METADATA_PATH = CLASSPATH_ALL_URL_PREFIX + "/META-INF/spring-configuration-metadata.json";
 
