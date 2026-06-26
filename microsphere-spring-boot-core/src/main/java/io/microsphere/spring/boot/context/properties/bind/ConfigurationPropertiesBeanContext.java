@@ -277,7 +277,7 @@ class ConfigurationPropertiesBeanContext {
         return property;
     }
 
-    void setProperty(ConfigurationProperty property, Object newValue) {
+    void setProperty(ConfigurationProperty property, Object newValue, boolean publishedEvent) {
         ConfigurationPropertyName name = property.getName();
 
         ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = null;
@@ -301,18 +301,20 @@ class ConfigurationPropertiesBeanContext {
         if (propertyType.isInstance(newValue)) {
             Object oldValue = configurationPropertiesBeanProperty.getValue();
             if (!deepEquals(oldValue, newValue)) {
-                setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue);
+                setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue, publishedEvent);
             }
         }
     }
 
     void setProperty(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
-                     ConfigurationPropertyName name, Object oldValue, Object newValue) {
+                     ConfigurationPropertyName name, Object oldValue, Object newValue, boolean publishedEvent) {
         configurationPropertiesBeanProperty.setValue(newValue);
-        publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
         if (logger.isInfoEnabled()) {
             logger.info("Set property [name : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {} , Source : {}",
                     name, oldValue, newValue, configurationPropertiesBeanProperty, property);
+        }
+        if (publishedEvent) {
+            publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
         }
     }
 

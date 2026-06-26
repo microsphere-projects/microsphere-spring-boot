@@ -77,12 +77,12 @@ class ConfigurationPropertiesBeanContextTest {
         ServerProperties serverProperties = new ServerProperties();
         this.beanContext.initialize(serverProperties);
 
-        this.beanContext.setProperty(property, propertyValue);
+        this.beanContext.setProperty(property, propertyValue, false);
 
         Bindable<String> bindable = ofInstance("Mercy");
         this.beanContext.initProperty(property.getName(), bindable);
-        this.beanContext.setProperty(property, propertyValue);
-        this.beanContext.setProperty(property, propertyValue);
+        this.beanContext.setProperty(property, propertyValue, true);
+        this.beanContext.setProperty(property, propertyValue, true);
     }
 
     ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
