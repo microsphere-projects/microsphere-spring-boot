@@ -35,6 +35,7 @@ import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.core.ResolvableType.NONE;
 import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
@@ -190,6 +191,14 @@ public abstract class ConfigurationPropertyUtils {
                 copyProperties(beanProperty, property);
             }
         }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
+
+        if (property.getType() == NONE) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The value of Bindable[{}] can't resolve the JavaBeanBinder.BeanProperty", bindable);
+            }
+            return null;
+        }
+
         return property;
     }
 
