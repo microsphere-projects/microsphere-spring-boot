@@ -78,10 +78,6 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         "spring.web.resources.static-locations[1]=/public",
         "spring.web.resources.static-locations[2]=/resources",
 
-        "management.endpoints.web.exposure.include=*",
-        "management.health.defaults.enabled=true",
-        "management.endpoints.web.path-mapping.health = microsphere/health",
-
         // TestConfigurationProperties
         "test.name=test-name",
         "test.properties.key-1=value-1",
