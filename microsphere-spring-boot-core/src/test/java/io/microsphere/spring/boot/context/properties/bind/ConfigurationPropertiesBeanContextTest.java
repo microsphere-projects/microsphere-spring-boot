@@ -21,8 +21,8 @@ import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBean
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
@@ -64,7 +64,7 @@ class ConfigurationPropertiesBeanContextTest {
         this.beanContext.initialize(serverProperties);
         assertNull(serverProperties.getPort());
 
-        this.beanContext.initialize(new WebProperties());
+        this.beanContext.initialize(new JacksonProperties());
     }
 
     @Test
