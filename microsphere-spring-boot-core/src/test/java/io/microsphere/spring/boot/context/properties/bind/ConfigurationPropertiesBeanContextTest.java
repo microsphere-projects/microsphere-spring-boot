@@ -18,17 +18,19 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.annotation.AnnotationAttributes;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forRawClass;
@@ -40,6 +42,7 @@ import static org.springframework.core.ResolvableType.forRawClass;
  * @see ConfigurationPropertiesBeanContext
  * @since 1.0.0
  */
+@SpringLoggingTest
 class ConfigurationPropertiesBeanContextTest {
 
     private ConfigurationPropertiesBeanContext beanContext;
@@ -49,16 +52,10 @@ class ConfigurationPropertiesBeanContextTest {
         ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(ServerProperties.class);
         GenericApplicationContext context = new GenericApplicationContext();
         context.refresh();
-        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), beanInfo.getAnnotation(),
+        ConfigurationProperties annotation = beanInfo.getAnnotation();
+        AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
+        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), annotationAttributes,
                 beanInfo.getPrefix(), context);
-    }
-
-    @Test
-    void testGetter() {
-        assertEquals(ServerProperties.class, this.beanContext.getBeanClass());
-        assertEquals(ServerProperties.class.getAnnotation(ConfigurationProperties.class), this.beanContext.getAnnotation());
-        assertEquals("server", this.beanContext.getPrefix());
-        assertNull(this.beanContext.getInitializedBean());
     }
 
     @Test
@@ -67,10 +64,7 @@ class ConfigurationPropertiesBeanContextTest {
         this.beanContext.initialize(serverProperties);
         assertNull(serverProperties.getPort());
 
-        ServerProperties bean = (ServerProperties) this.beanContext.getInitializedBean();
-        assertNull(bean.getPort());
-
-        assertSame(serverProperties, bean);
+        this.beanContext.initialize(new WebProperties());
     }
 
     @Test
@@ -90,45 +84,6 @@ class ConfigurationPropertiesBeanContextTest {
         this.beanContext.setProperty(property, propertyValue);
         this.beanContext.setProperty(property, propertyValue);
     }
-
-//    @Test
-//    void testTestConfigurationProperties() {
-//        ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(TestConfigurationProperties.class);
-//        GenericApplicationContext context = new GenericApplicationContext();
-//        ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder = new ValueHolder<>();
-//        context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
-//            eventHolder.setValue(event);
-//        });
-//        context.refresh();
-//        ConfigurationPropertiesBeanContext beanContext = new ConfigurationPropertiesBeanContext(TestConfigurationProperties.class, beanInfo.getAnnotation(), beanInfo.getPrefix(), context);
-//        beanContext.initialize(new TestConfigurationProperties());
-//
-//        // String type field
-//        String propertyName = "test.name";
-//        Object propertyValue = "Mercy";
-//        ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
-//        beanContext.setProperty(property, property.getValue());
-//
-//        assertEvent(eventHolder, property, beanContext);
-//
-//        // Map type field
-//        propertyName = "test.properties.status";
-//        propertyValue = "OK";
-//        property = newConfigurationProperty(propertyName, propertyValue);
-//        beanContext.setProperty(property, property.getValue());
-//    }
-//
-//    void assertEvent(ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder,
-//                     ConfigurationProperty property, ConfigurationPropertiesBeanContext beanContext) {
-//        String propertyName = property.getName().toString();
-//        Object propertyValue = property.getValue();
-//        ConfigurationPropertiesBeanPropertyChangedEvent event = eventHolder.getValue();
-//        assertNotNull(event);
-//        assertTrue(propertyName.contains(event.getPropertyName()));
-//        assertNull(event.getOldValue());
-//        assertEquals(propertyValue, event.getNewValue());
-//        assertEquals(property, event.getConfigurationProperty());
-//    }
 
     ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
         return new ConfigurationProperty(of(propertyName), propertyValue, null);

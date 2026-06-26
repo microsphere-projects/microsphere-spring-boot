@@ -31,6 +31,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.annotation.AnnotationAttributes;
 
 import java.util.Map;
 import java.util.function.Supplier;
@@ -42,6 +43,7 @@ import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.findConfigurationProperties;
+import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
 import static org.springframework.util.Assert.isInstanceOf;
 
 /**
@@ -70,13 +72,6 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      * Handles the start of a binding operation. During initial binding, initializes the
      * {@link ConfigurationPropertiesBeanContext} for the target bean.
      *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
-     *   listener.onStart(ConfigurationPropertyName.of("app"),
-     *       Bindable.of(MyProps.class), context);
-     * }</pre>
-     *
      * @param name    the configuration property name
      * @param target  the bindable target
      * @param context the bind context
@@ -93,13 +88,6 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      * Handles a successful binding operation. After initial binding is complete, detects property
      * changes and publishes {@link ConfigurationPropertiesBeanPropertyChangedEvent}s.
      *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
-     *   listener.onSuccess(ConfigurationPropertyName.of("app.name"),
-     *       Bindable.of(String.class), context, "newValue");
-     * }</pre>
-     *
      * @param name    the configuration property name
      * @param target  the bindable target
      * @param context the bind context
@@ -114,7 +102,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
         if (configurationPropertiesBeanContext == null) {
             if (logger.isWarnEnabled()) {
-                logger.warn("No ConfigurationPropertiesBeanContext was found[name : '{}' , target : '{}' , depth : {}]",
+                logger.warn("No ConfigurationPropertiesBeanContext was found[name : '{}' , target : {} , depth : {}]",
                         name, target, context.getDepth());
             }
             return;
@@ -124,15 +112,15 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
             Object bean = value == null ? null : value.get();
             if (bean == null) {
                 if (logger.isWarnEnabled()) {
-                    logger.warn("The ConfigurationPropertiesBeanContext is not initialized caused by the bean is null[name : '{}' , target : '{}' , depth : {}]",
+                    logger.warn("The ConfigurationPropertiesBeanContext is not initialized caused by the bean being null[name : '{}' , target : {} , depth : {}]",
                             name, target, context.getDepth());
                 }
             } else {
+                configurationPropertiesBeanContext.initialize(bean);
                 if (logger.isTraceEnabled()) {
-                    logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : '{}' , depth : {} , bean : '{}']",
+                    logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : {} , depth : {} , bean : '{}']",
                             name, target, context.getDepth(), bean);
                 }
-                configurationPropertiesBeanContext.initialize(bean);
             }
         } else {
             configurationPropertiesBeanContext.initProperty(name, target);
@@ -140,31 +128,38 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     }
 
     @Nullable
-    private ConfigurationPropertiesBeanContext getConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
+    private ConfigurationPropertiesBeanContext getConfigurationPropertiesBeanContext(ConfigurationPropertyName name,
+                                                                                     Bindable<?> target, BindContext context) {
         String prefix = getPrefix(name, context);
         return beanContexts.computeIfAbsent(prefix, p -> newConfigurationPropertiesBeanContext(target, p));
     }
 
-    private ConfigurationPropertiesBeanContext newConfigurationPropertiesBeanContext(Bindable<?> target, String prefix) {
+    ConfigurationPropertiesBeanContext newConfigurationPropertiesBeanContext(Bindable<?> target, String prefix) {
         ConfigurationProperties annotation = findConfigurationProperties(target);
         if (annotation == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The ConfigurationPropertiesBeanContext is not created caused by the missing @ConfigurationProperties annotation, target : {}",
+                        target);
+            }
             return null;
         }
+        AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
+        String actualPrefix = annotationAttributes.getString("prefix");
+        if (!prefix.equalsIgnoreCase(actualPrefix)) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The ConfigurationPropertiesBeanContext is not created caused by the mismatched prefix[expected : '{}' , actual : '{}'], target : {}",
+                        prefix, actualPrefix, target);
+            }
+            return null;
+        }
+
         ResolvableType beanType = target.getType();
-        return new ConfigurationPropertiesBeanContext(beanType, annotation, prefix, this.context);
+        return new ConfigurationPropertiesBeanContext(beanType, annotationAttributes, prefix, this.context);
     }
 
     /**
      * Sets a property on the {@link ConfigurationPropertiesBeanContext} when a bound property
      * change is detected. Publishes an event if the value has changed.
-     *
-     * <h3>Example Usage</h3>
-     * <pre>{@code
-     *   EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener = ...;
-     *   listener.setConfigurationPropertiesBeanProperty(
-     *       ConfigurationPropertyName.of("app.name"),
-     *       Bindable.of(String.class), context, "newValue");
-     * }</pre>
      *
      * @param name    the configuration property name
      * @param target  the bindable target
