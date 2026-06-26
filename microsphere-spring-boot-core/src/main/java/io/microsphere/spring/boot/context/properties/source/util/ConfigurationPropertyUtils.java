@@ -16,14 +16,26 @@
  */
 package io.microsphere.spring.boot.context.properties.source.util;
 
+import io.microsphere.annotation.Nonnull;
+import io.microsphere.annotation.Nullable;
+import io.microsphere.logging.Logger;
+import io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanProperty;
 import org.springframework.boot.context.properties.bind.BindContext;
+import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
+import java.util.function.Supplier;
+
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeStaticMethod;
+import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
+import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
  * The utilities class of {@link ConfigurationProperty}
@@ -34,7 +46,14 @@ import static io.microsphere.util.StringUtils.substringBeforeLast;
  */
 public abstract class ConfigurationPropertyUtils {
 
+    private static final Logger logger = getLogger(ConfigurationPropertyUtils.class);
+
     private static final ClassLoader classLoader = ConfigurationPropertyUtils.class.getClassLoader();
+
+    /**
+     * The {@link Class#getName() class name} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
+     */
+    private static final String BEAN_PROPERTY_CLASS_NAME = "org.springframework.boot.context.properties.bind.JavaBeanBinder$BeanProperty";
 
     /**
      * The class name as a constant since Spring Boot 2.2.3
@@ -42,6 +61,11 @@ public abstract class ConfigurationPropertyUtils {
     private static final String DATA_OBJECT_PROPERTY_NAME_CLASS_NAME = "org.springframework.boot.context.properties.bind.DataObjectPropertyName";
 
     private static final Class<?> DATA_OBJECT_PROPERTY_NAME_CLASS = resolveClass(DATA_OBJECT_PROPERTY_NAME_CLASS_NAME, classLoader);
+
+    /**
+     * The {@link Class} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
+     */
+    private static final Class<?> BEAN_PROPERTY_CLASS = loadClass(classLoader, BEAN_PROPERTY_CLASS_NAME);
 
     /**
      * Get the prefix of the specified {@link ConfigurationPropertyName}
@@ -62,14 +86,38 @@ public abstract class ConfigurationPropertyUtils {
      * @return the prefix of the specified {@link ConfigurationPropertyName}
      * @throws IllegalArgumentException if name or context is null
      */
-    public static final String getPrefix(ConfigurationPropertyName name, BindContext context) {
+    @Nonnull
+    public static String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
+        if (name.isLastElementIndexed()) {
+            name = name.getParent();
+            depth--;
+        }
         String propertyName = name.toString();
+        if (depth == 0) {
+            return propertyName;
+        }
         String prefix = propertyName;
         for (int i = 0; i < depth; i++) {
             prefix = substringBeforeLast(prefix, DOT);
         }
+        if (propertyName.equalsIgnoreCase(prefix)) {
+            prefix = getSource(name);
+        }
         return prefix;
+    }
+
+    /**
+     * Get the source of the specified {@link ConfigurationPropertyName}
+     *
+     * @param name the {@link ConfigurationPropertyName}
+     * @return the prefix of the specified {@link ConfigurationPropertyName}
+     * @throws IllegalArgumentException if name is null
+     */
+    @Nonnull
+    public static String getSource(ConfigurationPropertyName name) {
+        Object elements = getFieldValue(name, "elements");
+        return getFieldValue(elements, "source");
     }
 
     /**
@@ -116,6 +164,33 @@ public abstract class ConfigurationPropertyUtils {
             result.append(Character.toLowerCase(ch));
         }
         return result.toString();
+    }
+
+    /**
+     * Create a new {@link ConfigurationPropertiesBeanProperty} from the specified {@link Bindable}
+     *
+     * @param bindable the specified {@link Bindable}
+     * @return the new {@link ConfigurationPropertiesBeanProperty} , may be {@code null}
+     */
+    @Nullable
+    public static ConfigurationPropertiesBeanProperty newConfigurationPropertiesBeanProperty(Bindable<?> bindable) {
+        Supplier<?> value = bindable.getValue();
+        if (value == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The value from Bindable[{}] is null", bindable);
+            }
+            return null;
+        }
+        Class<?> valueClass = value.getClass();
+        ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
+
+        doWithFields(valueClass, valueField -> {
+            Object beanProperty = getFieldValue(value, valueField);
+            if (beanProperty != null) {
+                copyProperties(beanProperty, property);
+            }
+        }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
+        return property;
     }
 
     private ConfigurationPropertyUtils() {

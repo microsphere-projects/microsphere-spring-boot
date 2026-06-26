@@ -68,7 +68,6 @@ public abstract class ConfigurationPropertiesUtils {
      * @param bindable {@link Bindable}
      * @return an annotation of {@link ConfigurationProperties} if present
      * @throws NullPointerException if bindable is null
-     * @since 1.0.0
      */
     public static ConfigurationProperties findConfigurationProperties(Bindable bindable) {
         // Find an annotation of @ConfigurationProperties from annotations
