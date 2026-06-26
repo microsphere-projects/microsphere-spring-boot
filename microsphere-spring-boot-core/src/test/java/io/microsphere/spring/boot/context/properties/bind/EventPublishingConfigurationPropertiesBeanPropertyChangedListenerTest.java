@@ -18,7 +18,6 @@ package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
 import io.microsphere.spring.boot.context.properties.TestConfigurationProperties;
-import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import io.microsphere.util.ValueHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -86,18 +85,13 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         "test.aliases[0]=a",
         "test.aliases[1]=b",
         "test.aliases[2]=c",
-        "test.ports=7070,8080,9090",
-
-        // TestConstructorBindingConfigurationProperties
-        "test.constructor.binding.name=test-constructor-binding-name",
-        "test.constructor.binding.value=test-constructor-binding-value",
+        "test.ports=7070,8080,9090"
 })
 @EnableAutoConfiguration
 @EnableConfigurationProperties(
         value = {
                 WebProperties.class,
-                TestConfigurationProperties.class,
-                TestConstructorBindingConfigurationProperties.class
+                TestConfigurationProperties.class
         }
 )
 class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {

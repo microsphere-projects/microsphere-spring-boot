@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.context.properties.bind.util;
 
+import io.microsphere.annotation.Nullable;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter;
 import io.microsphere.util.Utils;
@@ -28,10 +29,16 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyS
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
 import org.springframework.core.env.Environment;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.reflect.FieldUtils.getStaticFieldValue;
+import static io.microsphere.reflect.MethodUtils.findMethod;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
+import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.bind.Binder.get;
 
@@ -43,6 +50,29 @@ import static org.springframework.boot.context.properties.bind.Binder.get;
  * @since 1.0.0
  */
 public abstract class BindUtils implements Utils {
+
+    private static final ClassLoader classLoader = ConfigurationProperties.class.getClassLoader();
+
+    /**
+     * The full class name of {@link org.springframework.boot.context.properties.bind.BindConstructorProvider}
+     *
+     * @see org.springframework.boot.context.properties.bind.BindConstructorProvider
+     */
+    private static final String BIND_CONSTRUCTOR_PROVIDER_CLASS_NAME = "org.springframework.boot.context.properties.bind.BindConstructorProvider";
+
+    /**
+     * The {@link Class} of {@link org.springframework.boot.context.properties.bind.BindConstructorProvider}
+     *
+     * @see org.springframework.boot.context.properties.bind.BindConstructorProvider
+     */
+    private static final Class<?> BIND_CONSTRUCTOR_PROVIDER_CLASS = loadClass(classLoader, BIND_CONSTRUCTOR_PROVIDER_CLASS_NAME);
+
+    /**
+     * The instance of {@link org.springframework.boot.context.properties.bind.BindConstructorProvider}
+     *
+     * @see org.springframework.boot.context.properties.bind.BindConstructorProvider#DEFAULT
+     */
+    private static final Object BIND_CONSTRUCTOR_PROVIDER = getStaticFieldValue(BIND_CONSTRUCTOR_PROVIDER_CLASS, "DEFAULT");
 
     /**
      * Checks if the given {@link Bindable} target and {@link BindContext} represent a bean
@@ -223,6 +253,29 @@ public abstract class BindUtils implements Utils {
         ConfigurationPropertySource propertySource = new MapConfigurationPropertySource(properties);
         Binder binder = new Binder(propertySource);
         return bind(binder, propertyNamePrefix, targetType, bindListeners);
+    }
+
+    /**
+     * Return the bind constructor to use for the given bindable, or {@code null} if
+     * constructor binding is not supported.
+     *
+     * @param bindable                   the bindable to check
+     * @param isNestedConstructorBinding if this binding is nested within a constructor
+     *                                   binding
+     * @return the bind constructor or {@code null}
+     */
+    @Nullable
+    public static Constructor<?> getBindConstructor(Bindable<?> bindable, boolean isNestedConstructorBinding) {
+        return getBindConstructor(BIND_CONSTRUCTOR_PROVIDER, bindable, isNestedConstructorBinding);
+    }
+
+    protected static Constructor<?> getBindConstructor(Object bindConstructorProvider, Bindable<?> bindable,
+                                                       boolean isNestedConstructorBinding) {
+        if (bindConstructorProvider == null) { // Spring Boot < 2.2.1
+            return null;
+        }
+        Method method = findMethod(BIND_CONSTRUCTOR_PROVIDER_CLASS, "getBindConstructor", Bindable.class, boolean.class);
+        return invokeMethod(bindConstructorProvider, method, bindable, isNestedConstructorBinding);
     }
 
     /**

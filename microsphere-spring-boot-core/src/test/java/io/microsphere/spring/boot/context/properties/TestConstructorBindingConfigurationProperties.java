@@ -18,14 +18,14 @@
 package io.microsphere.spring.boot.context.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.ConstructorBinding;
 
 /**
- * {@link ConfigurationProperties @ConfigurationProperties} for testing {@link ConstructorBinding @ConstructorBinding}
+ * {@link ConfigurationProperties @ConfigurationProperties} for testing
+ * {@link org.springframework.boot.context.properties.ConstructorBinding @ConstructorBinding}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties
- * @see ConstructorBinding
+ * @see org.springframework.boot.context.properties.ConstructorBinding
  * @since 1.0.0
  */
 @ConfigurationProperties("test.constructor.binding")
@@ -35,7 +35,6 @@ public class TestConstructorBindingConfigurationProperties {
 
     private final String value;
 
-    @ConstructorBinding
     public TestConstructorBindingConfigurationProperties(String name, String value) {
         this.name = name;
         this.value = value;

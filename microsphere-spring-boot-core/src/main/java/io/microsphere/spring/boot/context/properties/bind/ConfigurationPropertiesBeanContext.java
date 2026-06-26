@@ -21,6 +21,7 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.MemberUtils;
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
+import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindConstructorProvider;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -166,7 +167,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private Constructor<?> getBindConstructor(ResolvableType beanType) {
-        return bindConstructorProvider.getBindConstructor(of(beanType), true);
+        return BindUtils.getBindConstructor(of(beanType), true);
     }
 
     private void initBeanProperties(ResolvableType beanType, PropertyDescriptor[] descriptors, ConfigurationPropertyName prefixName, String nestedPath) {
