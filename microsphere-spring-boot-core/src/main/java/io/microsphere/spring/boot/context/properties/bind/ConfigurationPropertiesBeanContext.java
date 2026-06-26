@@ -20,6 +20,7 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.MemberUtils;
+import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
 import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindConstructorProvider;
@@ -45,7 +46,6 @@ import static io.microsphere.spring.boot.context.properties.source.util.Configur
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
-import static io.microsphere.util.Assert.assertTrue;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.StringUtils.replace;
 import static java.util.Objects.deepEquals;
@@ -79,8 +79,6 @@ class ConfigurationPropertiesBeanContext {
 
     private final ConfigurableApplicationContext context;
 
-    private final ConversionService conversionService;
-
     /**
      * The {@link ConfigurationPropertiesBeanProperty} map which key is the {@link ConfigurationPropertyName} and
      * value is the {@link ConfigurationPropertiesBeanProperty}.
@@ -110,7 +108,6 @@ class ConfigurationPropertiesBeanContext {
         this.annotation = annotation;
         this.prefix = prefix;
         this.context = context;
-        this.conversionService = getConversionService(context);
         this.beanProperties = newHashMap();
     }
 
@@ -184,10 +181,19 @@ class ConfigurationPropertiesBeanContext {
     }
 
     void initialize(Object bean) {
-        assertTrue(beanType.isInstance(bean), () -> "The bean[" + bean + "] is not an instance of " + beanType);
+        if (!this.beanType.isInstance(bean)) {
+            if (logger.isWarnEnabled()) {
+                Class<?> beanClass = bean.getClass();
+                ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(beanClass);
+                logger.warn("The bean[info : {}] is not an instance of {}, they have same prefix : '{}' , expected annotation : {}",
+                        beanInfo, this.beanType, this.prefix, this.annotation);
+            }
+            return;
+        }
         this.initializedBean = bean;
         initBeanProperties(bean);
     }
+
 
     private void initBeanProperties(Object bean) {
         String prefix = getPrefix();
