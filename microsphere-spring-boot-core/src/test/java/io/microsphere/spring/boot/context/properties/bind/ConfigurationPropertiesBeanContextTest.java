@@ -32,7 +32,6 @@ import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forRawClass;
-import static org.springframework.core.ResolvableType.forType;
 
 /**
  * {@link ConfigurationPropertiesBeanContext} Test
