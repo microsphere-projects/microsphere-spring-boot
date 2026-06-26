@@ -20,61 +20,68 @@ import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.MemberUtils;
+import io.microsphere.spring.core.convert.support.ConversionServiceResolver;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.BindConstructorProvider;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.ResolvableType;
+import org.springframework.core.convert.ConversionService;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
-import java.util.function.Supplier;
 
+import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
-import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
-import static io.microsphere.util.ClassLoaderUtils.loadClass;
+import static io.microsphere.util.Assert.assertTrue;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.StringUtils.isNumeric;
 import static io.microsphere.util.StringUtils.replace;
-import static org.springframework.beans.BeanUtils.copyProperties;
+import static java.lang.Integer.parseInt;
+import static java.lang.Math.max;
+import static java.lang.System.arraycopy;
+import static java.lang.reflect.Array.get;
+import static java.lang.reflect.Array.getLength;
+import static java.lang.reflect.Array.newInstance;
+import static java.lang.reflect.Array.set;
+import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
+import static org.springframework.boot.context.properties.bind.BindConstructorProvider.DEFAULT;
+import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.Form.ORIGINAL;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forInstance;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
-import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
  * The context for the bean annotated {@link ConfigurationProperties @ConfigurationProperties}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ConfigurationProperties
+ * @see org.springframework.boot.context.properties.bind.JavaBeanBinder
+ * @see org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty
  * @since 1.0.0
  */
 class ConfigurationPropertiesBeanContext {
 
     private static final Logger logger = getLogger(ConfigurationPropertiesBeanContext.class);
 
-    /**
-     * The {@link Class#getName() class name} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
-     */
-    private static final String BEAN_PROPERTY_CLASS_NAME = "org.springframework.boot.context.properties.bind.JavaBeanBinder$BeanProperty";
-
-    private static final ClassLoader classLoader = ConfigurationProperties.class.getClassLoader();
-
-    /**
-     * The {@link Class} of {@link org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty}
-     */
-    private static final Class<?> BEAN_PROPERTY_CLASS = loadClass(classLoader, BEAN_PROPERTY_CLASS_NAME);
+    private static final BindConstructorProvider bindConstructorProvider = DEFAULT;
 
     private final ResolvableType beanType;
 
@@ -83,6 +90,8 @@ class ConfigurationPropertiesBeanContext {
     private final String prefix;
 
     private final ConfigurableApplicationContext context;
+
+    private final ConversionService conversionService;
 
     /**
      * The {@link ConfigurationPropertiesBeanProperty} map which key is the {@link ConfigurationPropertyName} and
@@ -113,6 +122,7 @@ class ConfigurationPropertiesBeanContext {
         this.annotation = annotation;
         this.prefix = prefix;
         this.context = context;
+        this.conversionService = getConversionService(context);
         this.beanProperties = newHashMap();
     }
 
@@ -186,6 +196,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     void initialize(Object bean) {
+        assertTrue(beanType.isInstance(bean), () -> "The bean[" + bean + "] is not an instance of " + beanType);
         this.initializedBean = bean;
         initBeanProperties(bean);
     }
@@ -199,11 +210,19 @@ class ConfigurationPropertiesBeanContext {
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
         Class<?> beanClass = beanType.getRawClass();
         if (isCandidateClass(beanClass)) {
-            PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
-            initBeanProperties(beanType, descriptors, prefixName, nestedPath);
-            Set<Field> fields = findAllDeclaredFields(beanClass, MemberUtils::isNonStatic);
-            initBeanProperties(beanType, fields, prefixName, nestedPath);
+            Constructor<?> bindConstructor = getBindConstructor(beanType);
+            if (bindConstructor == null) {
+                PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
+                initBeanProperties(beanType, descriptors, prefixName, nestedPath);
+            } else {
+                Set<Field> fields = findAllDeclaredFields(beanClass, MemberUtils::isNonStatic);
+                initBeanProperties(beanType, fields, prefixName, nestedPath);
+            }
         }
+    }
+
+    private Constructor<?> getBindConstructor(ResolvableType beanType) {
+        return bindConstructorProvider.getBindConstructor(of(beanType), true);
     }
 
     private void initBeanProperties(ResolvableType beanType, PropertyDescriptor[] descriptors, ConfigurationPropertyName prefixName, String nestedPath) {
@@ -287,7 +306,7 @@ class ConfigurationPropertiesBeanContext {
      * @return {@code true} if the class is a binding candidate, {@code false} otherwise
      */
     static boolean isCandidateClass(Class<?> beanClass) {
-        if (isPrimitiveOrWrapper(beanClass)) {
+        if (isPrimitiveOrWrapper(beanClass) || beanClass.isEnum()) {
             return false;
         }
         String className = beanClass.getName();
@@ -301,29 +320,7 @@ class ConfigurationPropertiesBeanContext {
         if (propertyName.isLastElementIndexed()) {
             propertyName = propertyName.getParent();
         }
-        return this.beanProperties.computeIfAbsent(propertyName, n -> newProperty(n, bindable));
-    }
-
-    @Nullable
-    ConfigurationPropertiesBeanProperty newProperty(ConfigurationPropertyName name, Bindable<?> bindable) {
-        Supplier<?> value = bindable.getValue();
-        if (value == null) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("The value from Bindable[{}] is null for the property name : '{}'", bindable, name);
-            }
-            return null;
-        }
-        Class<?> valueClass = value.getClass();
-        ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
-
-        doWithFields(valueClass, valueField -> {
-            Object beanProperty = getFieldValue(value, valueField);
-            if (beanProperty != null) {
-                copyProperties(beanProperty, property);
-            }
-        }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
-
-        return property;
+        return this.beanProperties.computeIfAbsent(propertyName, n -> newConfigurationPropertiesBeanProperty(bindable));
     }
 
     ConfigurationPropertiesBeanProperty getProperty(ConfigurationPropertyName propertyName) {
@@ -338,27 +335,155 @@ class ConfigurationPropertiesBeanContext {
 
     void setProperty(ConfigurationProperty property, Object newValue) {
         ConfigurationPropertyName name = property.getName();
-        ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = getProperty(name);
-        if (configurationPropertiesBeanProperty == null) {
-            name = name.getParent();
-            configurationPropertiesBeanProperty = getProperty(name);
-        }
-        if (configurationPropertiesBeanProperty != null) {
-            ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-            Object oldValue = configurationPropertiesBeanProperty.getValue();
-            if (propertyType.isAssignableFrom(Map.class)) {
-                Map<String, Object> map = (Map<String, Object>) oldValue;
-                String propertyName = property.getName().getLastElement(ORIGINAL);
-                oldValue = map.get(propertyName);
-            }
 
-            if (!Objects.deepEquals(oldValue, newValue)) {
-                configurationPropertiesBeanProperty.setValue(newValue);
-                publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
-                if (logger.isInfoEnabled()) {
-                    logger.info("Set property ['{}'] from [{}] to [{}]", name, oldValue, newValue);
+        if (name.isLastElementIndexed()) { // name is numerically indexed or non-numerically indexed
+            setIndexedProperty(property, name, newValue);
+        } else {
+            // name is not indexed or Map-typed
+            ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = getProperty(name);
+            if (configurationPropertiesBeanProperty == null) { // name is Map-typed
+                setIndexedProperty(property, name, newValue);
+            } else { // namme is not indexed
+                Object oldValue = configurationPropertiesBeanProperty.getValue();
+                if (!deepEquals(oldValue, newValue)) {
+                    setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue);
                 }
             }
+        }
+    }
+
+    void setIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName name, Object newValue) {
+        ConfigurationPropertyName parentName = name.getParent();
+        ConfigurationPropertiesBeanProperty parentBeanProperty = getProperty(parentName);
+        if (parentBeanProperty == null) {
+            return;
+        }
+        String index = name.getLastElement(ORIGINAL);
+        ResolvableType parentBeanPropertyType = parentBeanProperty.getType();
+        if (isNumeric(index)) {
+            setNumericallyIndexedProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, newValue, parseInt(index));
+        } else {
+            setNameIndexedProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, newValue, index);
+        }
+    }
+
+    private void setNumericallyIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
+                                               ConfigurationPropertiesBeanProperty parentBeanProperty,
+                                               ResolvableType parentBeanPropertyType, Object newValue, int index) {
+        Object propertyValue = parentBeanProperty.getValue();
+        Class<?> parentBeanPropertyClass = parentBeanPropertyType.resolve();
+        if (parentBeanPropertyClass.isArray()) { // Array type
+            setArrayProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, propertyValue, newValue, index);
+        } else if (List.class.isAssignableFrom(parentBeanPropertyClass)) { // List type
+            setListProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, (List) propertyValue, newValue, index);
+        } else if (Collection.class.isAssignableFrom(parentBeanPropertyClass)) { // Collection type
+        }
+    }
+
+    private void setArrayProperty(ConfigurationProperty property, ConfigurationPropertyName parentName, ConfigurationPropertiesBeanProperty beanProperty,
+                                  ResolvableType parentBeanPropertyType, Object array, Object newValue, int index) {
+
+        ResolvableType componentType = parentBeanPropertyType.getComponentType();
+        if (componentType.isInstance(newValue)) {
+            int length = array == null ? 0 : getLength(array);
+            if (index < length) {
+                Object oldValue = get(array, index);
+                if (deepEquals(oldValue, newValue)) {
+                    return;
+                }
+            }
+
+            int newLength = max(length, index + 1);
+
+            Object newArray = newInstance(componentType.resolve(), newLength);
+            if (length > 0) {
+                arraycopy(array, 0, newArray, 0, length);
+            }
+            set(newArray, index, newValue);
+            setProperty(property, beanProperty, parentName, array, newArray);
+        } else if (parentBeanPropertyType.isInstance(newValue)) {
+            if (deepEquals(array, newValue)) {
+                return;
+            }
+            setProperty(property, beanProperty, parentName, array, newValue);
+        }
+    }
+
+    private void setListProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
+                                 ConfigurationPropertiesBeanProperty parentBeanProperty,
+                                 ResolvableType parentBeanPropertyType, List<Object> list, Object newValue, int index) {
+        ResolvableType elementType = parentBeanPropertyType.as(List.class).getGeneric(0);
+        if (!elementType.isInstance(newValue)) {
+            return;
+        }
+
+        int size = list.size();
+        if (index < size) {
+            Object oldValue = list.get(index);
+            if (!deepEquals(oldValue, newValue)) {
+                list.set(index, newValue);
+                setProperty(property, parentBeanProperty, parentName, oldValue, newValue);
+            }
+        } else {
+            List<Object> newList = newArrayList(index + 1);
+            newList.addAll(list);
+            list.set(index, newValue);
+            setProperty(property, parentBeanProperty, parentName, null, newValue);
+        }
+    }
+
+    private void setNameIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
+                                        ConfigurationPropertiesBeanProperty parentBeanProperty,
+                                        ResolvableType parentBeanPropertyType, Object newValue, String name) {
+
+        Class<?> parentBeanPropertyClass = parentBeanPropertyType.resolve();
+        if (!Map.class.isAssignableFrom(parentBeanPropertyClass)) {
+            // TODO
+            return;
+        }
+
+        Map map = (Map) parentBeanProperty.getValue();
+
+        if (parentBeanPropertyClass.isInstance(newValue)) {
+            if (deepEquals(map, newValue)) {
+                // TODO
+                return;
+            }
+        } else {
+            ResolvableType mapType = parentBeanPropertyType.as(Map.class);
+            Class<?> keyClass = mapType.getGeneric(0).resolve();   // key type;
+            Class<?> valueClass = mapType.getGeneric(1).resolve(); // value type
+            ConversionService conversionService = this.conversionService;
+            if (!conversionService.canConvert(String.class, keyClass)) {
+                // TODO
+                return;
+            }
+
+            Object key = conversionService.convert(name, keyClass);
+            Object oldValue = null;
+            Map oldMap;
+            if (map == null) {
+                oldMap = map;
+                oldValue = null;
+                map = newHashMap();
+            } else {
+                oldMap = newHashMap(map);
+                oldValue = oldMap.get(key);
+            }
+            if (!deepEquals(oldValue, newValue)) {
+                map.put(key, newValue);
+                setProperty(property, parentBeanProperty, parentName, oldMap, map);
+            }
+        }
+    }
+
+    void setProperty(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
+                     ConfigurationPropertyName name, Object oldValue, Object newValue) {
+        configurationPropertiesBeanProperty.setValue(newValue);
+        publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
+        if (logger.isInfoEnabled()) {
+            logger.info("Set property [name : '{}'] from [{}] to [{}] , ConfigurationPropertiesBeanProperty : {} , Source : {}",
+                    name, oldValue, newValue, configurationPropertiesBeanProperty, property);
         }
     }
 
@@ -368,5 +493,9 @@ class ConfigurationPropertiesBeanContext {
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
         this.context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(initializedBean, propertyName,
                 propertyType, oldValue, newValue, property));
+    }
+
+    private ConversionService getConversionService(ConfigurableApplicationContext context) {
+        return new ConversionServiceResolver(context.getBeanFactory()).resolve();
     }
 }

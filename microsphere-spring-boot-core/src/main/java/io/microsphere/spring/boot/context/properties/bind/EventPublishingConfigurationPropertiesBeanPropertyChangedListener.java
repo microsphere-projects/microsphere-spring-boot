@@ -85,7 +85,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
         if (isBound()) {
         } else {
-            initConfigurationPropertiesBeanContext(name, target, context, null);
+            initConfigurationPropertiesBeanContext(name, target, context);
         }
     }
 
@@ -107,38 +107,35 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      */
     @Override
     public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-        if (isBound()) {
-            setConfigurationPropertiesBeanProperty(name, target, context, result);
-        } else {
-            initConfigurationPropertiesBeanContext(name, target, context, result);
-        }
+        setConfigurationPropertiesBeanProperty(name, target, context, result);
     }
 
-    void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context,
-                                                @Nullable Object result) {
+    void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
         ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
         if (configurationPropertiesBeanContext == null) {
             if (logger.isWarnEnabled()) {
-                logger.warn("No ConfigurationPropertiesBeanContext was found by the configuration property name : '{}' , type : '{}' , depth : {}",
-                        name, target.getType(), context.getDepth());
+                logger.warn("No ConfigurationPropertiesBeanContext was found[name : '{}' , target : '{}' , depth : {}]",
+                        name, target, context.getDepth());
             }
             return;
         }
         if (isConfigurationPropertiesBean(context)) {
             Supplier<?> value = target.getValue();
-            Object bean = value.get();
-            if (bean != null) {
+            Object bean = value == null ? null : value.get();
+            if (bean == null) {
+                if (logger.isWarnEnabled()) {
+                    logger.warn("The ConfigurationPropertiesBeanContext is not initialized caused by the bean is null[name : '{}' , target : '{}' , depth : {}]",
+                            name, target, context.getDepth());
+                }
+            } else {
                 if (logger.isTraceEnabled()) {
-                    logger.trace("The ConfigurationPropertiesBean binding is finished , configuration property name : '{}' , type : '{}' , depth : {} , bean : '{}'",
-                            name, target.getType(), context.getDepth(), bean);
+                    logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : '{}' , depth : {} , bean : '{}']",
+                            name, target, context.getDepth(), bean);
                 }
                 configurationPropertiesBeanContext.initialize(bean);
             }
         } else {
-            ConfigurationPropertiesBeanProperty property = configurationPropertiesBeanContext.initProperty(name, target);
-            if (property != null) {
-                property.setValue(result);
-            }
+            configurationPropertiesBeanContext.initProperty(name, target);
         }
     }
 
