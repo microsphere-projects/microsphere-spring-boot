@@ -309,6 +309,7 @@ class ConfigurationPropertiesBeanContext {
             // Use clone object to avoid the newValue is changed by other code, which will cause the oldValue and newValue are same
             newValue = invokeMethod(newValue, "clone");
         }
+        configurationPropertiesBeanProperty.setValue(newValue);
         if (logger.isInfoEnabled()) {
             logger.info("Set property [name : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {} , Source : {}",
                     name, oldValue, newValue, configurationPropertiesBeanProperty, property);
