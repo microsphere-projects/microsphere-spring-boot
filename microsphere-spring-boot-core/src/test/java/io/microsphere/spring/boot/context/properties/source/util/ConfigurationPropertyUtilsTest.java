@@ -27,9 +27,13 @@ import java.util.Map;
 
 import static io.microsphere.collection.Maps.ofMap;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.EMPTY;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
 /**
  * {@link ConfigurationPropertyUtils} Test
@@ -59,5 +63,12 @@ class ConfigurationPropertyUtilsTest {
         assertEquals("my-name", toDashedForm("myName"));
         assertEquals("my-name", toDashedForm("MyName"));
         assertEquals("my-name", toDashedForm("my_name"));
+    }
+
+    @Test
+    void testGetParent() {
+        assertSame(EMPTY, getParent(EMPTY));
+        assertEquals(of("test"), getParent(of("test.name")));
+        assertEquals(of("test.name"), getParent(of("test.name.1")));
     }
 }
