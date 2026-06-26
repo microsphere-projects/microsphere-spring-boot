@@ -43,6 +43,7 @@ import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.text.FormatUtils.format;
@@ -308,6 +309,10 @@ class ConfigurationPropertiesBeanContext {
 
     void setProperty(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
                      ConfigurationPropertyName name, Object oldValue, Object newValue, boolean publishedEvent) {
+        if (newValue instanceof Cloneable) {
+            // Use clone object to avoid the newValue is changed by other code, which will cause the oldValue and newValue are same
+            newValue = invokeMethod(newValue, "clone");
+        }
         configurationPropertiesBeanProperty.setValue(newValue);
         if (logger.isInfoEnabled()) {
             logger.info("Set property [name : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {} , Source : {}",
