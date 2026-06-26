@@ -23,7 +23,6 @@ import io.microsphere.reflect.MemberUtils;
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
 import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.BindConstructorProvider;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
@@ -44,6 +43,7 @@ import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
+import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.text.FormatUtils.format;
@@ -53,7 +53,6 @@ import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.StringUtils.replace;
 import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
-import static org.springframework.boot.context.properties.bind.BindConstructorProvider.DEFAULT;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forInstance;
@@ -71,9 +70,6 @@ import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 class ConfigurationPropertiesBeanContext {
 
     private static final Logger logger = getLogger(ConfigurationPropertiesBeanContext.class);
-
-    @Nonnull
-    private static final BindConstructorProvider bindConstructorProvider = DEFAULT;
 
     @Nonnull
     private final ResolvableType beanType;
@@ -113,7 +109,6 @@ class ConfigurationPropertiesBeanContext {
         assertNotNull(annotationAttributes, () -> "The 'annotationAttributes' must not be null!");
         assertNotBlank(prefix, () -> "The 'prefix' must not be black!");
         assertNotNull(context, () -> "The 'assertNotNull' must not be null!");
-        // TODO support @ConstructorBinding creating beans
         this.beanType = beanType;
         this.annotationAttributes = annotationAttributes;
         this.prefix = prefix;
@@ -299,7 +294,8 @@ class ConfigurationPropertiesBeanContext {
         }
 
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-        if (propertyType.isInstance(newValue)) {
+        Class<?> propertyClass = propertyType.resolve();
+        if (propertyClass.isInstance(newValue)) {
             Object oldValue = configurationPropertiesBeanProperty.getValue();
             if (!deepEquals(oldValue, newValue)) {
                 setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue, publishedEvent);
@@ -309,7 +305,10 @@ class ConfigurationPropertiesBeanContext {
 
     void setProperty(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
                      ConfigurationPropertyName name, Object oldValue, Object newValue, boolean publishedEvent) {
-        configurationPropertiesBeanProperty.setValue(newValue);
+        if (newValue instanceof Cloneable) {
+            // Use clone object to avoid the newValue is changed by other code, which will cause the oldValue and newValue are same
+            newValue = invokeMethod(newValue, "clone");
+        }
         if (logger.isInfoEnabled()) {
             logger.info("Set property [name : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {} , Source : {}",
                     name, oldValue, newValue, configurationPropertiesBeanProperty, property);

@@ -26,7 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
-import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
@@ -41,20 +40,19 @@ import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
 import org.springframework.test.context.TestPropertySource;
 
-import java.util.Locale;
+import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.spring.beans.BeanUtils.generateBeanName;
 import static io.microsphere.spring.core.annotation.AnnotationUtils.tryGetMergedAnnotationAttributes;
 import static io.microsphere.util.ArrayUtils.ofArray;
-import static java.util.Locale.SIMPLIFIED_CHINESE;
-import static java.util.Locale.US;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.boot.autoconfigure.web.WebProperties.LocaleResolver.FIXED;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
 /**
@@ -70,13 +68,6 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
 })
 @TestPropertySource(properties = {
-        // WebProperties
-        "spring.web.locale=en_US",
-        "spring.web.locale-resolver=fixed",
-        "spring.web.resources.static-locations[0]=/static",
-        "spring.web.resources.static-locations[1]=/public",
-        "spring.web.resources.static-locations[2]=/resources",
-
         // TestConfigurationProperties
         "test.name=test-name",
         "test.properties.key-1=value-1",
@@ -90,7 +81,6 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
 @EnableAutoConfiguration
 @EnableConfigurationProperties(
         value = {
-                WebProperties.class,
                 TestConfigurationProperties.class
         }
 )
@@ -105,7 +95,7 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     private ConfigurableEnvironment environment;
 
     @Autowired
-    private WebProperties webProperties;
+    private TestConfigurationProperties testConfigurationProperties;
 
     @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
@@ -128,29 +118,27 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     }
 
     @Test
-    void testWebProperties(int index) {
+    void testTestConfigurationProperties(int index) {
         if (index > 0) {
             return;
         }
 
-        // assert the configured values
-        assertEquals(US, webProperties.getLocale());
-        assertEquals(FIXED, webProperties.getLocaleResolver());
-
-        WebProperties.Resources resources = webProperties.getResources();
-        String[] staticLocations = resources.getStaticLocations();
-        assertArrayEquals(ofArray("/static/", "/public/", "/resources/"), staticLocations);
+        Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
+        assertEquals("test-name", testConfigurationProperties.getName());
+        assertEquals(properties, testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
 
         this.eventHolder.reset();
 
-        setProperty("spring.web.locale", "zh_CN", webProperties);
+        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
 
         ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
-        assertSame(this.webProperties, event.getSource());
+        assertSame(this.testConfigurationProperties, event.getSource());
         assertNotNull(event.getConfigurationProperty());
-        assertEquals(Locale.class, event.getPropertyType().resolve());
-        assertEquals(US, event.getOldValue());
-        assertEquals(SIMPLIFIED_CHINESE, event.getNewValue());
+        assertEquals(Map.class, event.getPropertyType().resolve());
+        assertEquals(properties, event.getOldValue());
+        assertEquals(ofMap("key-1", "value-x", "key-2", "value-2", "key-3", "value-3"), event.getNewValue());
 
     }
 
