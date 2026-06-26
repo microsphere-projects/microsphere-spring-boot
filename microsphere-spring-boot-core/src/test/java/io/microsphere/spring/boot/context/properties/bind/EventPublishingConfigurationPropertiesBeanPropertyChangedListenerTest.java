@@ -124,7 +124,6 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     private ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder;
 
-
     @BeforeEach
     void setUp() {
         this.environment = this.context.getEnvironment();
