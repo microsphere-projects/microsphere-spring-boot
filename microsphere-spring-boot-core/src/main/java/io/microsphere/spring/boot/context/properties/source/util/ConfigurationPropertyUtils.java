@@ -35,6 +35,7 @@ import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.ClassLoaderUtils.resolveClass;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.EMPTY;
 import static org.springframework.core.ResolvableType.NONE;
 import static org.springframework.util.ReflectionUtils.doWithFields;
 
@@ -91,7 +92,7 @@ public abstract class ConfigurationPropertyUtils {
     public static String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
         if (name.isLastElementIndexed()) {
-            name = name.getParent();
+            name = getParent(name);
             depth--;
         }
         String propertyName = name.toString();
@@ -119,6 +120,20 @@ public abstract class ConfigurationPropertyUtils {
     public static String getSource(ConfigurationPropertyName name) {
         Object elements = getFieldValue(name, "elements");
         return getFieldValue(elements, "source");
+    }
+
+    /**
+     * Return the parent of this {@link ConfigurationPropertyName} or
+     * {@link ConfigurationPropertyName#EMPTY} if there is no parent.
+     *
+     * @param name the {@link ConfigurationPropertyName}
+     * @return the parent name
+     * @see ConfigurationPropertyName#getParent()
+     */
+    @Nonnull
+    public static ConfigurationPropertyName getParent(ConfigurationPropertyName name) {
+        int numberOfElements = name.getNumberOfElements();
+        return (numberOfElements <= 1) ? EMPTY : name.chop(numberOfElements - 1);
     }
 
     /**

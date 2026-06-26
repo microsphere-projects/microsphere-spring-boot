@@ -44,6 +44,7 @@ import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.text.FormatUtils.format;
@@ -258,7 +259,7 @@ class ConfigurationPropertiesBeanContext {
 
     ConfigurationPropertiesBeanProperty initProperty(ConfigurationPropertyName propertyName, Bindable<?> bindable) {
         if (propertyName.isLastElementIndexed()) {
-            propertyName = propertyName.getParent();
+            propertyName = getParent(propertyName);
         }
         return this.beanProperties.computeIfAbsent(propertyName, n -> newConfigurationPropertiesBeanProperty(bindable));
     }
@@ -279,13 +280,13 @@ class ConfigurationPropertiesBeanContext {
         ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = null;
 
         if (name.isLastElementIndexed()) { // name is numerically indexed or non-numerically indexed
-            name = name.getParent();
+            name = getParent(name);
         }
 
         configurationPropertiesBeanProperty = getProperty(name);
         // name is not indexed or Map-typed
         if (configurationPropertiesBeanProperty == null) { // name is Map-typed
-            name = name.getParent();
+            name = getParent(name);
             configurationPropertiesBeanProperty = getProperty(name);
         }
 
