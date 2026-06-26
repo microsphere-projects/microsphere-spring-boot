@@ -34,12 +34,9 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static io.microsphere.collection.ListUtils.newArrayList;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
@@ -50,20 +47,11 @@ import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.Assert.assertTrue;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
-import static io.microsphere.util.StringUtils.isNumeric;
 import static io.microsphere.util.StringUtils.replace;
-import static java.lang.Integer.parseInt;
-import static java.lang.Math.max;
-import static java.lang.System.arraycopy;
-import static java.lang.reflect.Array.get;
-import static java.lang.reflect.Array.getLength;
-import static java.lang.reflect.Array.newInstance;
-import static java.lang.reflect.Array.set;
 import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
 import static org.springframework.boot.context.properties.bind.BindConstructorProvider.DEFAULT;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
-import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.Form.ORIGINAL;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forInstance;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
@@ -336,143 +324,28 @@ class ConfigurationPropertiesBeanContext {
     void setProperty(ConfigurationProperty property, Object newValue) {
         ConfigurationPropertyName name = property.getName();
 
+        ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = null;
+
         if (name.isLastElementIndexed()) { // name is numerically indexed or non-numerically indexed
-            setIndexedProperty(property, name, newValue);
-        } else {
-            // name is not indexed or Map-typed
-            ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = getProperty(name);
-            if (configurationPropertiesBeanProperty == null) { // name is Map-typed
-                setIndexedProperty(property, name, newValue);
-            } else { // namme is not indexed
-                Object oldValue = configurationPropertiesBeanProperty.getValue();
-                if (!deepEquals(oldValue, newValue)) {
-                    setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue);
-                }
-            }
+            name = name.getParent();
         }
-    }
 
-    void setIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName name, Object newValue) {
-        ConfigurationPropertyName parentName = name.getParent();
-        ConfigurationPropertiesBeanProperty parentBeanProperty = getProperty(parentName);
-        if (parentBeanProperty == null) {
-            return;
+        configurationPropertiesBeanProperty = getProperty(name);
+        // name is not indexed or Map-typed
+        if (configurationPropertiesBeanProperty == null) { // name is Map-typed
+            name = name.getParent();
+            configurationPropertiesBeanProperty = getProperty(name);
         }
-        String index = name.getLastElement(ORIGINAL);
-        ResolvableType parentBeanPropertyType = parentBeanProperty.getType();
-        if (isNumeric(index)) {
-            setNumericallyIndexedProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, newValue, parseInt(index));
-        } else {
-            setNameIndexedProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, newValue, index);
-        }
-    }
 
-    private void setNumericallyIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
-                                               ConfigurationPropertiesBeanProperty parentBeanProperty,
-                                               ResolvableType parentBeanPropertyType, Object newValue, int index) {
-        Object propertyValue = parentBeanProperty.getValue();
-        Class<?> parentBeanPropertyClass = parentBeanPropertyType.resolve();
-        if (parentBeanPropertyClass.isArray()) { // Array type
-            setArrayProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, propertyValue, newValue, index);
-        } else if (List.class.isAssignableFrom(parentBeanPropertyClass)) { // List type
-            setListProperty(property, parentName, parentBeanProperty, parentBeanPropertyType, (List) propertyValue, newValue, index);
-        } else if (Collection.class.isAssignableFrom(parentBeanPropertyClass)) { // Collection type
-        }
-    }
-
-    private void setArrayProperty(ConfigurationProperty property, ConfigurationPropertyName parentName, ConfigurationPropertiesBeanProperty beanProperty,
-                                  ResolvableType parentBeanPropertyType, Object array, Object newValue, int index) {
-
-        ResolvableType componentType = parentBeanPropertyType.getComponentType();
-        if (componentType.isInstance(newValue)) {
-            int length = array == null ? 0 : getLength(array);
-            if (index < length) {
-                Object oldValue = get(array, index);
-                if (deepEquals(oldValue, newValue)) {
-                    return;
-                }
-            }
-
-            int newLength = max(length, index + 1);
-
-            Object newArray = newInstance(componentType.resolve(), newLength);
-            if (length > 0) {
-                arraycopy(array, 0, newArray, 0, length);
-            }
-            set(newArray, index, newValue);
-            setProperty(property, beanProperty, parentName, array, newArray);
-        } else if (parentBeanPropertyType.isInstance(newValue)) {
-            if (deepEquals(array, newValue)) {
-                return;
-            }
-            setProperty(property, beanProperty, parentName, array, newValue);
-        }
-    }
-
-    private void setListProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
-                                 ConfigurationPropertiesBeanProperty parentBeanProperty,
-                                 ResolvableType parentBeanPropertyType, List<Object> list, Object newValue, int index) {
-        ResolvableType elementType = parentBeanPropertyType.as(List.class).getGeneric(0);
-        if (!elementType.isInstance(newValue)) {
+        if (configurationPropertiesBeanProperty == null) {
             return;
         }
 
-        int size = list.size();
-        if (index < size) {
-            Object oldValue = list.get(index);
+        ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
+        if (propertyType.isInstance(newValue)) {
+            Object oldValue = configurationPropertiesBeanProperty.getValue();
             if (!deepEquals(oldValue, newValue)) {
-                list.set(index, newValue);
-                setProperty(property, parentBeanProperty, parentName, oldValue, newValue);
-            }
-        } else {
-            List<Object> newList = newArrayList(index + 1);
-            newList.addAll(list);
-            list.set(index, newValue);
-            setProperty(property, parentBeanProperty, parentName, null, newValue);
-        }
-    }
-
-    private void setNameIndexedProperty(ConfigurationProperty property, ConfigurationPropertyName parentName,
-                                        ConfigurationPropertiesBeanProperty parentBeanProperty,
-                                        ResolvableType parentBeanPropertyType, Object newValue, String name) {
-
-        Class<?> parentBeanPropertyClass = parentBeanPropertyType.resolve();
-        if (!Map.class.isAssignableFrom(parentBeanPropertyClass)) {
-            // TODO
-            return;
-        }
-
-        Map map = (Map) parentBeanProperty.getValue();
-
-        if (parentBeanPropertyClass.isInstance(newValue)) {
-            if (deepEquals(map, newValue)) {
-                // TODO
-                return;
-            }
-        } else {
-            ResolvableType mapType = parentBeanPropertyType.as(Map.class);
-            Class<?> keyClass = mapType.getGeneric(0).resolve();   // key type;
-            Class<?> valueClass = mapType.getGeneric(1).resolve(); // value type
-            ConversionService conversionService = this.conversionService;
-            if (!conversionService.canConvert(String.class, keyClass)) {
-                // TODO
-                return;
-            }
-
-            Object key = conversionService.convert(name, keyClass);
-            Object oldValue = null;
-            Map oldMap;
-            if (map == null) {
-                oldMap = map;
-                oldValue = null;
-                map = newHashMap();
-            } else {
-                oldMap = newHashMap(map);
-                oldValue = oldMap.get(key);
-            }
-            if (!deepEquals(oldValue, newValue)) {
-                map.put(key, newValue);
-                setProperty(property, parentBeanProperty, parentName, oldMap, map);
+                setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue);
             }
         }
     }
