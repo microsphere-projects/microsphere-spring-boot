@@ -18,57 +18,25 @@
 package io.microsphere.spring.boot.context.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.util.List;
-import java.util.Map;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 
 /**
- * {@link ConfigurationProperties @ConfigurationProperties} for testing.
+ * {@link ConfigurationProperties @ConfigurationProperties} for testing {@link ConstructorBinding @ConstructorBinding}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties
+ * @see ConstructorBinding
  * @since 1.0.0
  */
-@ConfigurationProperties(prefix = "test")
-public class TestConfigurationProperties {
+@ConfigurationProperties("test.constructor.binding")
+public class TestConstructorBindingConfigurationProperties {
 
-    private String name;
+    private final String name;
 
-    private Map<String, Object> properties;
+    private final String value;
 
-    private String[] aliases;
-
-    private List<Integer> ports;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+    public TestConstructorBindingConfigurationProperties(String name, String value) {
         this.name = name;
-    }
-
-    public Map<String, Object> getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Map<String, Object> properties) {
-        this.properties = properties;
-    }
-
-    public String[] getAliases() {
-        return aliases;
-    }
-
-    public void setAliases(String[] aliases) {
-        this.aliases = aliases;
-    }
-
-    public List<Integer> getPorts() {
-        return ports;
-    }
-
-    public void setPorts(List<Integer> ports) {
-        this.ports = ports;
+        this.value = value;
     }
 }
