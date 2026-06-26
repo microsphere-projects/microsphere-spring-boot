@@ -35,6 +35,7 @@ import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
 import static org.springframework.beans.BeanUtils.copyProperties;
+import static org.springframework.core.ResolvableType.NONE;
 import static org.springframework.util.ReflectionUtils.doWithFields;
 
 /**
@@ -83,7 +84,7 @@ public abstract class ConfigurationPropertyUtils {
     public static String getPrefix(ConfigurationPropertyName name, BindContext context) {
         int depth = context.getDepth();
         if (name.isLastElementIndexed()) {
-            name = name.getParent();
+            name = getParent(name);
             depth--;
         }
         String propertyName = name.toString();
@@ -111,6 +112,19 @@ public abstract class ConfigurationPropertyUtils {
     public static String getSource(ConfigurationPropertyName name) {
         Object elements = getFieldValue(name, "elements");
         return getFieldValue(elements, "source");
+    }
+
+    /**
+     * Return the parent of this {@link ConfigurationPropertyName} or
+     * {@link ConfigurationPropertyName#EMPTY} if there is no parent.
+     *
+     * @param name the {@link ConfigurationPropertyName}
+     * @return the parent name
+     * @see ConfigurationPropertyName#getParent()
+     */
+    @Nonnull
+    public static ConfigurationPropertyName getParent(ConfigurationPropertyName name) {
+        return name.getParent();
     }
 
     /**
@@ -158,6 +172,14 @@ public abstract class ConfigurationPropertyUtils {
                 copyProperties(beanProperty, property);
             }
         }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
+
+        if (property.getType() == NONE) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("The value of Bindable[{}] can't resolve the JavaBeanBinder.BeanProperty", bindable);
+            }
+            return null;
+        }
+
         return property;
     }
 
