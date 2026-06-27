@@ -17,6 +17,7 @@
 
 package io.microsphere.spring.boot.context.properties.bind.util;
 
+import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,11 +30,14 @@ import org.springframework.mock.env.MockEnvironment;
 import java.util.Map;
 
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
+import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.getBindConstructor;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static io.microsphere.spring.core.env.EnvironmentUtils.getProperties;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 
@@ -99,5 +103,14 @@ class BindUtilsTest {
         Map<String, String> properties = getProperties(this.environment, "server.port");
         ServerProperties serverProperties = bind(properties, "server", ServerProperties.class);
         assertServerPropertiesPort(this.environment, serverProperties);
+    }
+
+    @Test
+    void testGetBindConstructor() {
+        assertNull(getBindConstructor(of(ServerProperties.class), false));
+        assertNull(getBindConstructor(of(ServerProperties.class), true));
+
+        assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
+        assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
     }
 }

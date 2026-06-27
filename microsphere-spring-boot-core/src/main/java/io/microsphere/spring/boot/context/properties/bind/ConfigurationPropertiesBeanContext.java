@@ -21,8 +21,8 @@ import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
 import io.microsphere.reflect.MemberUtils;
 import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
+import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.BindConstructorProvider;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
@@ -54,7 +54,6 @@ import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.StringUtils.replace;
 import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
-import static org.springframework.boot.context.properties.bind.BindConstructorProvider.DEFAULT;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forInstance;
@@ -72,9 +71,6 @@ import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 class ConfigurationPropertiesBeanContext {
 
     private static final Logger logger = getLogger(ConfigurationPropertiesBeanContext.class);
-
-    @Nonnull
-    private static final BindConstructorProvider bindConstructorProvider = DEFAULT;
 
     @Nonnull
     private final ResolvableType beanType;
@@ -168,7 +164,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private Constructor<?> getBindConstructor(ResolvableType beanType) {
-        return bindConstructorProvider.getBindConstructor(of(beanType), true);
+        return BindUtils.getBindConstructor(of(beanType), true);
     }
 
     private void initBeanProperties(ResolvableType beanType, PropertyDescriptor[] descriptors, ConfigurationPropertyName prefixName, String nestedPath) {
