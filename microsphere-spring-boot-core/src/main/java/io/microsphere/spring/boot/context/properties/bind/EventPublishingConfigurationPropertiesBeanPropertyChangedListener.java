@@ -167,8 +167,8 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      * @param result  the new property value
      */
     void setConfigurationPropertiesBeanProperty(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-        ConfigurationProperty property = context.getConfigurationProperty();
-        if (property != null && isBoundProperty(context)) {
+        if (isBoundProperty(context)) {
+            ConfigurationProperty property = context.getConfigurationProperty();
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
             configurationPropertiesBeanContext.setProperty(property, result, isBound());
             if (logger.isTraceEnabled()) {
