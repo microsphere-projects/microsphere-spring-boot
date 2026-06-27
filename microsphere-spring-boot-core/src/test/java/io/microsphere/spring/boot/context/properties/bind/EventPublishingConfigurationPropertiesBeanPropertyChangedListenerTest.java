@@ -43,7 +43,10 @@ import org.springframework.mock.env.MockPropertySource;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.Locale;
+import java.util.Map;
 
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofMap;
 import static io.microsphere.spring.beans.BeanUtils.generateBeanName;
 import static io.microsphere.spring.core.annotation.AnnotationUtils.tryGetMergedAnnotationAttributes;
 import static io.microsphere.util.ArrayUtils.ofArray;
@@ -114,6 +117,9 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     private WebProperties webProperties;
 
     @Autowired
+    private TestConfigurationProperties testConfigurationProperties;
+
+    @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
 
     private MockPropertySource mockPropertySource;
@@ -157,6 +163,31 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         assertEquals(Locale.class, event.getPropertyType().resolve());
         assertEquals(US, event.getOldValue());
         assertEquals(SIMPLIFIED_CHINESE, event.getNewValue());
+
+    }
+
+    @Test
+    void testTestConfigurationProperties(int index) {
+        if (index > 0) {
+            return;
+        }
+
+        Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
+        assertEquals("test-name", testConfigurationProperties.getName());
+        assertEquals(properties, testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
+
+        this.eventHolder.reset();
+
+        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
+
+        ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
+        assertSame(this.testConfigurationProperties, event.getSource());
+        assertNotNull(event.getConfigurationProperty());
+        assertEquals(Map.class, event.getPropertyType().resolve());
+        assertEquals(properties, event.getOldValue());
+        assertEquals(ofMap("key-1", "value-x", "key-2", "value-2", "key-3", "value-3"), event.getNewValue());
 
     }
 
