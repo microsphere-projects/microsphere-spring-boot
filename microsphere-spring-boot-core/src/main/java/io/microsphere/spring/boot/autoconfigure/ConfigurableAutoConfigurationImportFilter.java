@@ -82,7 +82,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         boolean[] results = new boolean[size];
         for (int i = 0; i < size; i++) {
             String autoConfigurationClass = autoConfigurationClasses[i];
-            results[i] = isExcluded(autoConfigurationClass) ? false : true;
+            results[i] = !isExcluded(autoConfigurationClass);
         }
         return results;
     }
