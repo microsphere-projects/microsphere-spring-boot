@@ -62,6 +62,7 @@ import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forInstance;
+import static org.springframework.util.ClassUtils.isAssignableValue;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 
 /**
@@ -365,7 +366,8 @@ class ConfigurationPropertiesBeanContext {
         }
 
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-        if (propertyType.isInstance(newValue)) {
+        Class<?> propertyClass = propertyType.resolve();
+        if (isAssignableValue(propertyClass, newValue)) {
             Object oldValue = configurationPropertiesBeanProperty.getValue();
             if (!deepEquals(oldValue, newValue)) {
                 setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue, publishedEvent);
