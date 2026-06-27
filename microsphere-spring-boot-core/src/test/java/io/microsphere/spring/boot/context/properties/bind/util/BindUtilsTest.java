@@ -112,7 +112,7 @@ class BindUtilsTest {
         assertNull(getBindConstructor(of(ServerProperties.class), false));
         assertNull(getBindConstructor(of(ServerProperties.class), true));
 
-        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
-        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false) == null);
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true) == null);
     }
 }
