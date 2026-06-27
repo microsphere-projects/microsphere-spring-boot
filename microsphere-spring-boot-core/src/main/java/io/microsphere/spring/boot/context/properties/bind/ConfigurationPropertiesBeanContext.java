@@ -365,8 +365,7 @@ class ConfigurationPropertiesBeanContext {
         }
 
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-        Class<?> propertyClass = propertyType.resolve();
-        if (propertyClass.isInstance(newValue)) {
+        if (propertyType.isInstance(newValue)) {
             Object oldValue = configurationPropertiesBeanProperty.getValue();
             if (!deepEquals(oldValue, newValue)) {
                 setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue, publishedEvent);
