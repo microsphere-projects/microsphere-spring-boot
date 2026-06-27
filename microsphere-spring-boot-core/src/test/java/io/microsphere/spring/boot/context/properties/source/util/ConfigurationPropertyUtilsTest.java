@@ -33,12 +33,15 @@ import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getSource;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.EMPTY;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
@@ -63,6 +66,12 @@ class ConfigurationPropertyUtilsTest {
             }
         });
         assertEquals((Integer) 12345, serverProperties.getPort());
+
+        BindContext context = mock(BindContext.class);
+        when(context.getDepth()).thenReturn(1);
+
+        ConfigurationPropertyName name = of(prefix);
+        assertEquals(getSource(name), getPrefix(name, context));
     }
 
     @Test
