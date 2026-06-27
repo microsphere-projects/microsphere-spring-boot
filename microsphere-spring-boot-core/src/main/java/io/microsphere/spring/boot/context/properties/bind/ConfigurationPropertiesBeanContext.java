@@ -19,9 +19,11 @@ package io.microsphere.spring.boot.context.properties.bind;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
+import io.microsphere.reflect.FieldUtils;
 import io.microsphere.reflect.MemberUtils;
-import io.microsphere.spring.boot.context.properties.ConfigurationPropertiesBeanInfo;
 import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
@@ -41,6 +43,8 @@ import java.util.StringJoiner;
 import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
+import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
@@ -51,6 +55,7 @@ import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
 import static io.microsphere.util.ClassUtils.isConcreteClass;
+import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
@@ -94,6 +99,8 @@ class ConfigurationPropertiesBeanContext {
     @Nullable
     private volatile Object initializedBean;
 
+    private volatile BeanWrapper beanWrapper;
+
     /**
      * Constructor
      *
@@ -110,7 +117,6 @@ class ConfigurationPropertiesBeanContext {
         assertNotNull(annotationAttributes, () -> "The 'annotationAttributes' must not be null!");
         assertNotBlank(prefix, () -> "The 'prefix' must not be black!");
         assertNotNull(context, () -> "The 'assertNotNull' must not be null!");
-        // TODO support @ConstructorBinding creating beans
         this.beanType = beanType;
         this.annotationAttributes = annotationAttributes;
         this.prefix = prefix;
@@ -122,13 +128,13 @@ class ConfigurationPropertiesBeanContext {
         if (!this.beanType.isInstance(bean)) {
             if (logger.isWarnEnabled()) {
                 Class<?> beanClass = bean.getClass();
-                ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(beanClass);
-                logger.warn("The bean[info : {}] is not an instance of {}, they have same prefix : '{}' , expected annotation : {}",
-                        beanInfo, this.beanType, this.prefix, this.annotationAttributes);
+                logger.warn("The bean[{}] is not an instance of {}, they have same prefix : '{}' , expected annotation : {}",
+                        beanClass, this.beanType, this.prefix, this.annotationAttributes);
             }
             return;
         }
         this.initializedBean = bean;
+        this.beanWrapper = new BeanWrapperImpl(bean);
         initBeanProperties(bean);
 
         if (logger.isTraceEnabled()) {
@@ -180,14 +186,40 @@ class ConfigurationPropertiesBeanContext {
             ConfigurationPropertyName configurationPropertyName = prefixName.append(toDashedForm(propertyName));
             ConfigurationPropertiesBeanProperty property = this.beanProperties.computeIfAbsent(configurationPropertyName, name -> {
                 ConfigurationPropertiesBeanProperty newProperty = new ConfigurationPropertiesBeanProperty();
+                Method getter = descriptor.getReadMethod();
+                Method setter = descriptor.getWriteMethod();
+                Object value = getPropertyValue(nestedPath, propertyPath);
                 newProperty.setDeclaringClassType(beanType);
                 newProperty.setName(propertyPath);
-                newProperty.setGetter(descriptor.getReadMethod());
-                newProperty.setSetter(descriptor.getWriteMethod());
+                newProperty.setGetter(getter);
+                newProperty.setSetter(setter);
+                newProperty.setValue(value);
                 return newProperty;
             });
             initBeanProperties(property.getType(), configurationPropertyName, propertyPath);
         }
+    }
+
+    private Object getPropertyValue(@Nullable String nestedPath, String propertyPath) {
+        if (!isBlank(nestedPath)) {
+            Object parent = getPropertyValue(nestedPath);
+            if (parent == null) {
+                if (logger.isTraceEnabled()) {
+                    logger.trace("The instance is null in nested path : '{}' , property path : {}", nestedPath, propertyPath);
+                }
+                return null;
+            }
+        }
+        return getPropertyValue(propertyPath);
+    }
+
+    Object getPropertyValue(String propertyPath) {
+        return execute(() -> this.beanWrapper.getPropertyValue(propertyPath), e -> {
+            if (logger.isTraceEnabled()) {
+                logger.trace("Failed to get property value for property path : {}", propertyPath, e);
+            }
+            return null;
+        });
     }
 
     private void initBeanProperties(ResolvableType beanType, Set<Field> fields, ConfigurationPropertyName prefixName, String nestedPath) {
@@ -206,12 +238,49 @@ class ConfigurationPropertiesBeanContext {
             newProperty.setDeclaringClassType(beanType);
             return newProperty;
         });
+        Object value = readFieldValue(field, nestedPath);
         property.setName(propertyPath);
         property.setField(field);
+        property.setValue(value);
         initBeanProperties(property.getType(), configurationPropertyName, propertyPath);
     }
 
-    private String buildPropertyPath(String propertyName, String nestedPath) {
+    Object readFieldValue(Field field, @Nullable String nestedPath) {
+        Object instance = getInstance(this.initializedBean, nestedPath);
+        if (instance == null) {
+            return null;
+        }
+        return FieldUtils.getFieldValue(instance, field);
+    }
+
+    static Object getInstance(Object bean, @Nullable String nestedPath) {
+        if (isBlank(nestedPath)) {
+            return bean;
+        }
+        int index = nestedPath.indexOf(DOT_CHAR);
+        if (index == -1) {
+            return getFieldValue(bean, nestedPath);
+        }
+        String fieldName = nestedPath.substring(0, index);
+        Object instance = getFieldValue(bean, fieldName);
+        if (instance == null) {
+            return null;
+        }
+        String subNestedPath = nestedPath.substring(index + 1);
+        return getFieldValue(instance, subNestedPath);
+    }
+
+    static Object getFieldValue(Object instance, String fieldName) {
+        Object fieldValue = FieldUtils.getFieldValue(instance, fieldName);
+        if (fieldValue == null) {
+            if (logger.isTraceEnabled()) {
+                logger.trace("The field[name : '{}'] value can't be found in the instance : '{}'", fieldName, instance);
+            }
+        }
+        return fieldValue;
+    }
+
+    static String buildPropertyPath(String propertyName, @Nullable String nestedPath) {
         return nestedPath == null ? propertyName : nestedPath + DOT + propertyName;
     }
 
