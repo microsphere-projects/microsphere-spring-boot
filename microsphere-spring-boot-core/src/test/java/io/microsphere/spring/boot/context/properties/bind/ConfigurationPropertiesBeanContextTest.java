@@ -29,8 +29,16 @@ import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.core.annotation.AnnotationAttributes;
 
+import java.beans.PropertyDescriptor;
+
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.getInstance;
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
 import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.springframework.beans.BeanUtils.getPropertyDescriptor;
 import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.core.ResolvableType.forRawClass;
@@ -83,6 +91,37 @@ class ConfigurationPropertiesBeanContextTest {
         this.beanContext.initProperty(property.getName(), bindable);
         this.beanContext.setProperty(property, propertyValue, true);
         this.beanContext.setProperty(property, propertyValue, true);
+    }
+
+    @Test
+    void testGetPropertyValueOnFailed() {
+        assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
+        this.beanContext.initialize(new ServerProperties());
+        assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
+    }
+
+    @Test
+    void testGetInstance() {
+        assertSame(this.beanContext, getInstance(this.beanContext, null));
+        assertSame(this.beanContext, getInstance(this.beanContext, ""));
+        assertSame(this.beanContext, getInstance(this.beanContext, " "));
+        assertNull(getInstance(this.beanContext, "initializedBean"));
+        assertNull(getInstance(this.beanContext, "beanWrapper"));
+        assertNull(getInstance(this.beanContext, "beanWrapper."));
+        assertSame(ServerProperties.class, getInstance(this.beanContext, "beanType.type"));
+    }
+
+    @Test
+    void testIsCandidateProperty() {
+        PropertyDescriptor descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "name");
+        assertTrue(isCandidateProperty(descriptor));
+
+        descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "class");
+        assertFalse(isCandidateProperty(descriptor));
+    }
+
+    public void setName(String name) {
+        // Just for testing purpose
     }
 
     ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
