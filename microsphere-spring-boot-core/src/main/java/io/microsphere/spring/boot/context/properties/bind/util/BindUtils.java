@@ -120,7 +120,7 @@ public abstract class BindUtils implements Utils {
     }
 
     /**
-     * Checks if the given {@link BindContext} represents a bound property.
+     * Checks if the given {@link BindContext} represents a bound property at a nested level.
      *
      * <h3>Example Usage</h3>
      * <h4>Example 1: Should return true</h4>
@@ -139,12 +139,13 @@ public abstract class BindUtils implements Utils {
      * }</pre>
      *
      * @param context the bind context to check, may be {@code null}
-     * @return {@code true} if the context is not null and depth is greater than 0,
-     * {@code false} otherwise
+     * @return {@code true} if the context is not null, depth is greater than 0,
+     * and a configuration property is present; {@code false} otherwise
      * @see BindContext#getDepth()
+     * @see BindContext#getConfigurationProperty()
      */
     public static boolean isBoundProperty(BindContext context) {
-        return context != null && context.getDepth() > 0;
+        return context != null && context.getDepth() > 0 && context.getConfigurationProperty() != null;
     }
 
     /**
