@@ -300,7 +300,7 @@ class ConfigurationPropertiesBeanContext {
      */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
         Method readMethod = descriptor.getReadMethod();
-        return readMethod == null ? true : !Object.class.equals(readMethod.getDeclaringClass());
+        return readMethod == null || !Object.class.equals(readMethod.getDeclaringClass());
     }
 
     /**
