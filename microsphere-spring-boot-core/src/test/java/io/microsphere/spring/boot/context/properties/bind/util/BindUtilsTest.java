@@ -27,7 +27,6 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.mock.env.MockEnvironment;
 
-import java.lang.reflect.Constructor;
 import java.util.Map;
 
 import static io.microsphere.spring.boot.SpringBootVersion.CURRENT;
@@ -110,9 +109,10 @@ class BindUtilsTest {
 
     @Test
     void testGetBindConstructor() {
+        assertNull(getBindConstructor(of(ServerProperties.class), false));
         assertNull(getBindConstructor(of(ServerProperties.class), true));
 
-        Constructor<?> bindConstructor = getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false);
-        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), bindConstructor == null);
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
     }
 }
