@@ -82,7 +82,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         boolean[] results = new boolean[size];
         for (int i = 0; i < size; i++) {
             String autoConfigurationClass = autoConfigurationClasses[i];
-            results[i] = isExcluded(autoConfigurationClass) ? false : true;
+            results[i] = !isExcluded(autoConfigurationClass);
         }
         return results;
     }
@@ -140,8 +140,7 @@ public class ConfigurableAutoConfigurationImportFilter implements AutoConfigurat
         MutablePropertySources propertySources = environment.getPropertySources();
         for (PropertySource propertySource : propertySources) {
             Object property = propertySource.getProperty(AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
-            if (property instanceof String) {
-                String exclude = (String) property;
+            if (property instanceof String exclude) {
                 String resolvedExclude = environment.resolvePlaceholders(exclude);
                 Set<String> classes = commaDelimitedListToSet(resolvedExclude);
                 excludedClasses.addAll(classes);
