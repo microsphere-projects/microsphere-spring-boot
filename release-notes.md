@@ -337,4 +337,39 @@ For more details on the changes, refer to the commit history.
 
 **Note**: Upgrade recommended to leverage new features and improvements.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.23...0.1.24
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.23...0.1.24## v0.1.25
+
+# Release Notes for v0.1.25
+
+## Bug Fixes
+- Fixed issues with bound property checks and bean property copying. ([cc1a735](#))  
+- Resolved missing property assignments during bind updates. ([dda90ed](#))  
+- Guarded against unresolved configuration properties. ([52fd585](#))  
+- Ensured safe parent lookup for configuration names. ([9abd8cd](#))  
+- Fixed bind constructor handling across Spring Boot versions. ([0696e48](#))  
+
+## Enhancements
+- Simplified boolean checks and finalized static map handling. ([16b709c](#))  
+- Improved `getPrefix` to handle source names correctly. ([337b6b0](#))  
+- Made property events optional during updates. ([ccaeb56](#))  
+- Refactored configuration property change binding flow. ([332f040](#))  
+
+## Test Improvements
+- Added null-case tests for bean context creation. ([3b42ffc](#))  
+- Expanded test coverage for bean context validation. ([1f2e67f](#))  
+- Refined `BindUtils` constructor binding and assertion tests. ([f199d13](#), [33a0ebd](#))  
+
+## Performance and Reliability
+- Captured bean property values in bind contexts for consistency. ([5f5bb85](#))  
+- Used assignable checks for reliable property updates. ([6c10c85](#))  
+- Cloned mutable configuration values before publishing for safety. ([f4fedd2](#))  
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` and prepared for future development.  
+  ([fc73c88](#), [651b8c5](#), [2c63fb9](#))  
+
+---
+
+**Note:** This release focused primarily on improving bean binding behavior, configuration property handling, and increasing test robustness.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.24...0.1.25
