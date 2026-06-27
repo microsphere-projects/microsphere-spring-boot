@@ -27,14 +27,16 @@ import org.springframework.boot.context.properties.bind.DataObjectPropertyName;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.logging.LoggerFactory.getLogger;
+import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.FieldUtils.getFieldValue;
+import static io.microsphere.reflect.FieldUtils.setFieldValue;
 import static io.microsphere.util.ClassLoaderUtils.loadClass;
 import static io.microsphere.util.StringUtils.substringBeforeLast;
-import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.core.ResolvableType.NONE;
 import static org.springframework.util.ReflectionUtils.doWithFields;
 
@@ -169,7 +171,11 @@ public abstract class ConfigurationPropertyUtils {
         doWithFields(valueClass, valueField -> {
             Object beanProperty = getFieldValue(value, valueField);
             if (beanProperty != null) {
-                copyProperties(beanProperty, property);
+                doWithFields(BEAN_PROPERTY_CLASS, f -> {
+                    Object fieldValue = getFieldValue(beanProperty, f);
+                    Field targetField = findField(property, f.getName());
+                    setFieldValue(property, targetField, fieldValue);
+                });
             }
         }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
 
