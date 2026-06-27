@@ -29,6 +29,7 @@ import org.springframework.mock.env.MockEnvironment;
 
 import java.util.Map;
 
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContextTest.newConfigurationProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.getBindConstructor;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
@@ -39,6 +40,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 
 /**
@@ -112,5 +115,21 @@ class BindUtilsTest {
 
         assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
         assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
+    }
+
+    @Test
+    void testIsBoundProperty() {
+        assertFalse(isBoundProperty(null));
+
+        BindContext context = mock(BindContext.class);
+        when(context.getDepth()).thenReturn(0);
+        assertFalse(isBoundProperty(context));
+
+        when(context.getDepth()).thenReturn(1);
+        when(context.getConfigurationProperty()).thenReturn(null);
+        assertFalse(isBoundProperty(context));
+
+        when(context.getConfigurationProperty()).thenReturn(newConfigurationProperty("server.port", "12345"));
+        assertTrue(isBoundProperty(context));
     }
 }

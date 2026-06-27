@@ -51,7 +51,7 @@ import static org.springframework.core.ResolvableType.forRawClass;
  * @since 1.0.0
  */
 @SpringLoggingTest
-class ConfigurationPropertiesBeanContextTest {
+public class ConfigurationPropertiesBeanContextTest {
 
     private ConfigurationPropertiesBeanContext beanContext;
 
@@ -124,7 +124,7 @@ class ConfigurationPropertiesBeanContextTest {
         // Just for testing purpose
     }
 
-    ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
+    public static ConfigurationProperty newConfigurationProperty(String propertyName, Object propertyValue) {
         return new ConfigurationProperty(of(propertyName), propertyValue, null);
     }
 }
