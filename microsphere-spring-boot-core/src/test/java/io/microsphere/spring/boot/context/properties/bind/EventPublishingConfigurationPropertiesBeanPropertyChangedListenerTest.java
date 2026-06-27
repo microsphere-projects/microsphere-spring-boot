@@ -55,10 +55,12 @@ import static java.util.Locale.US;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.autoconfigure.web.WebProperties.LocaleResolver.FIXED;
+import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
 /**
@@ -206,12 +208,17 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     @Test
     void testInitConfigurationPropertiesBeanContextOnNullValue() {
         ConfigurationPropertyName name = of("test-name");
-        Bindable<?> target = Bindable.of(ServerProperties.class);
+        Bindable<?> target = of(ServerProperties.class);
         target = target.withSuppliedValue(() -> null);
 
         BindContext context = mock(BindContext.class);
         when(context.getDepth()).thenReturn(0);
 
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
+    }
+
+    @Test
+    void testNewConfigurationPropertiesBeanContextOnMissingConfigurationProperties() {
+        assertNull(this.listener.newConfigurationPropertiesBeanContext(of(String.class), "test"));
     }
 }
