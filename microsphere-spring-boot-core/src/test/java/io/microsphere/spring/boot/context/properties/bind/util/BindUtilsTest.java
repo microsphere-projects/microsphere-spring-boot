@@ -17,6 +17,7 @@
 
 package io.microsphere.spring.boot.context.properties.bind.util;
 
+import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,13 +29,21 @@ import org.springframework.mock.env.MockEnvironment;
 
 import java.util.Map;
 
+import static io.microsphere.spring.boot.SpringBootVersion.CURRENT;
+import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_2_2_1;
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContextTest.newConfigurationProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
+import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.getBindConstructor;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isBoundProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static io.microsphere.spring.core.env.EnvironmentUtils.getProperties;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 
 /**
@@ -99,5 +108,30 @@ class BindUtilsTest {
         Map<String, String> properties = getProperties(this.environment, "server.port");
         ServerProperties serverProperties = bind(properties, "server", ServerProperties.class);
         assertServerPropertiesPort(this.environment, serverProperties);
+    }
+
+    @Test
+    void testGetBindConstructor() {
+        assertNull(getBindConstructor(of(ServerProperties.class), false));
+        assertNull(getBindConstructor(of(ServerProperties.class), true));
+
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false) == null);
+        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true) == null);
+    }
+
+    @Test
+    void testIsBoundProperty() {
+        assertFalse(isBoundProperty(null));
+
+        BindContext context = mock(BindContext.class);
+        when(context.getDepth()).thenReturn(0);
+        assertFalse(isBoundProperty(context));
+
+        when(context.getDepth()).thenReturn(1);
+        when(context.getConfigurationProperty()).thenReturn(null);
+        assertFalse(isBoundProperty(context));
+
+        when(context.getConfigurationProperty()).thenReturn(newConfigurationProperty("server.port", "12345"));
+        assertTrue(isBoundProperty(context));
     }
 }

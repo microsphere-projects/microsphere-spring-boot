@@ -17,34 +17,45 @@
 package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
+import io.microsphere.spring.boot.context.properties.TestConfigurationProperties;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
+import io.microsphere.util.ValueHolder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.Bindable;
-import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.core.annotation.AnnotationAttributes;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.mock.env.MockPropertySource;
+import org.springframework.test.context.TestPropertySource;
 
-import static java.lang.Integer.valueOf;
-import static java.util.Locale.SIMPLIFIED_CHINESE;
+import java.util.Map;
+
+import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.collection.MapUtils.ofMap;
+import static io.microsphere.spring.beans.BeanUtils.generateBeanName;
+import static io.microsphere.spring.core.annotation.AnnotationUtils.tryGetMergedAnnotationAttributes;
+import static io.microsphere.util.ArrayUtils.ofArray;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
+import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.DEFINED_PORT;
 
 /**
  * {@link EventPublishingConfigurationPropertiesBeanPropertyChangedListener} Test
@@ -57,10 +68,25 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
         ListenableConfigurationPropertiesBindHandlerAdvisor.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class,
         EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest.class
-}, webEnvironment = DEFINED_PORT)
+})
+@TestPropertySource(properties = {
+        // TestConfigurationProperties
+        "test.name=test-name",
+        "test.properties.key-1=value-1",
+        "test.properties.key-2=value-2",
+        "test.properties[key-3]=value-3",
+        "test.aliases[0]=a",
+        "test.aliases[1]=b",
+        "test.aliases[2]=c",
+        "test.ports=7070,8080,9090"
+})
 @EnableAutoConfiguration
-@EnableConfigurationProperties
-public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
+@EnableConfigurationProperties(
+        value = {
+                TestConfigurationProperties.class
+        }
+)
+class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private ConfigurableListableBeanFactory beanFactory;
@@ -68,94 +94,72 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
     @Autowired
     private ConfigurableApplicationContext context;
 
-    @Autowired
-    private JacksonProperties jacksonProperties;
+    private ConfigurableEnvironment environment;
 
     @Autowired
-    private ServerProperties serverProperties;
+    private TestConfigurationProperties testConfigurationProperties;
 
     @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
 
     private MockPropertySource mockPropertySource;
 
+    private ValueHolder<ConfigurationPropertiesBeanPropertyChangedEvent> eventHolder;
+
     @BeforeEach
     void setUp() {
-        MutablePropertySources propertySources = context.getEnvironment().getPropertySources();
-        mockPropertySource = new MockPropertySource();
-        propertySources.addFirst(mockPropertySource);
+        this.environment = this.context.getEnvironment();
+        MutablePropertySources propertySources = this.environment.getPropertySources();
+        this.mockPropertySource = new MockPropertySource();
+        this.eventHolder = new ValueHolder<>();
+        propertySources.addFirst(this.mockPropertySource);
+
+        this.context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
+            this.eventHolder.setValue(event);
+        });
     }
 
     @Test
-    public void testJacksonProperties(int index) {
+    void testTestConfigurationProperties(int index) {
         if (index > 0) {
             return;
         }
-        assertNull(jacksonProperties.getLocale());
 
-        context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
-            ConfigurationProperty configurationProperty = event.getConfigurationProperty();
-            String propertyName = event.getPropertyName();
-            if ("locale".equals(propertyName)) {
-                assertEquals(jacksonProperties, event.getSource());
-                assertNull(event.getOldValue());
-                assertEquals(SIMPLIFIED_CHINESE, event.getNewValue());
-                assertEquals("spring.jackson.locale", configurationProperty.getName().toString());
-                assertEquals(event.getNewValue().toString(), configurationProperty.getValue());
-            }
-        });
+        Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
+        assertEquals("test-name", testConfigurationProperties.getName());
+        assertEquals(properties, testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
 
-        mockPropertySource.setProperty("spring.jackson.locale", "zh_CN");
-        beanFactory.destroyBean(jacksonProperties);
-        beanFactory.initializeBean(jacksonProperties, getBeanName(jacksonProperties));
-        assertEquals(SIMPLIFIED_CHINESE, jacksonProperties.getLocale());
-    }
+        this.eventHolder.reset();
 
-    @Test
-    public void testServerProperties(int index) {
-        if (index > 0) {
-            return;
-        }
-        assertNull(serverProperties.getPort());
+        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
 
-        String newPortPropertyValue = "9527";
-
-        context.addApplicationListener((ApplicationListener<ConfigurationPropertiesBeanPropertyChangedEvent>) event -> {
-            ConfigurationProperty configurationProperty = event.getConfigurationProperty();
-            String propertyName = event.getPropertyName();
-            if ("port".equals(propertyName)) {
-                assertEquals(serverProperties, event.getSource());
-                assertNull(event.getOldValue());
-                assertEquals(valueOf(newPortPropertyValue), event.getNewValue());
-                assertEquals(valueOf((String) configurationProperty.getValue()), event.getNewValue());
-            }
-        });
-
-        mockPropertySource.setProperty("server.port", newPortPropertyValue);
-        beanFactory.destroyBean(serverProperties);
-        beanFactory.initializeBean(serverProperties, getBeanName(serverProperties));
+        ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
+        assertSame(this.testConfigurationProperties, event.getSource());
+        assertNotNull(event.getConfigurationProperty());
+        assertEquals(Map.class, event.getPropertyType().resolve());
+        assertEquals(properties, event.getOldValue());
+        assertEquals(ofMap("key-1", "value-x", "key-2", "value-2", "key-3", "value-3"), event.getNewValue());
 
     }
 
-    @Test
-    void testSetConfigurationPropertiesBeanPropertyOnFailed() {
-        ConfigurationPropertyName name = of("test-name");
-        Bindable<?> target = ofInstance(this.serverProperties);
-        BindContext context = mock(BindContext.class);
-        Object result = null;
-        when(context.getConfigurationProperty()).thenReturn(null);
-        this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
+    void setProperty(String configurationPropertyName, String propertyValue, Object configurationPropertiesBean) {
+        this.mockPropertySource.setProperty(configurationPropertyName, propertyValue);
+        this.beanFactory.destroyBean(configurationPropertiesBean);
 
-        ConfigurationProperty configurationProperty = new ConfigurationProperty(name, "test-value", null);
-        when(context.getConfigurationProperty()).thenReturn(configurationProperty);
-        when(context.getDepth()).thenReturn(0);
-        this.listener.setConfigurationPropertiesBeanProperty(name, target, context, result);
+        Class<?> configurationPropertiesBeanClass = configurationPropertiesBean.getClass();
+        AnnotationAttributes annotationAttributes = tryGetMergedAnnotationAttributes(configurationPropertiesBeanClass, ConfigurationProperties.class, this.environment, false);
+        String prefix = annotationAttributes.getString("prefix");
+        String suffix = generateBeanName(configurationPropertiesBeanClass);
+        String beanName = prefix + "-" + suffix;
+        this.beanFactory.initializeBean(configurationPropertiesBean, beanName);
     }
 
     @Test
     void testInitConfigurationPropertiesBeanContextOnNullValue() {
         ConfigurationPropertyName name = of("test-name");
-        Bindable<?> target = Bindable.of(ServerProperties.class);
+        Bindable<?> target = of(ServerProperties.class);
         target = target.withSuppliedValue(() -> null);
 
         BindContext context = mock(BindContext.class);
@@ -164,9 +168,8 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTe
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
     }
 
-    private String getBeanName(Object configurationPropertiesBean) {
-        Class<?> beanClass = configurationPropertiesBean.getClass();
-        String[] beanNames = this.context.getBeanNamesForType(beanClass);
-        return beanNames[0];
+    @Test
+    void testNewConfigurationPropertiesBeanContextOnMissingConfigurationProperties() {
+        assertNull(this.listener.newConfigurationPropertiesBeanContext(of(String.class), "test"));
     }
 }

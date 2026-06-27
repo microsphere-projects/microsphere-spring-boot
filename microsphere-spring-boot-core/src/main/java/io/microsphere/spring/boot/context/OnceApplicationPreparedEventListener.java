@@ -45,7 +45,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
  **/
 public abstract class OnceApplicationPreparedEventListener implements ApplicationListener<ApplicationPreparedEvent>, Ordered {
 
-    private static Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = newConcurrentHashMap();
+    private static final Map<Class<? extends ApplicationListener>, Set<String>> listenerProcessedContextIds = newConcurrentHashMap();
 
     protected final Logger logger = getLogger(getClass());
 
