@@ -17,6 +17,8 @@
 package io.microsphere.spring.boot.context.properties.source.util;
 
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
+import io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanProperty;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
@@ -26,11 +28,16 @@ import org.springframework.boot.context.properties.source.ConfigurationPropertyN
 import java.util.Map;
 
 import static io.microsphere.collection.Maps.ofMap;
+import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.MethodUtils.findMethod;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.EMPTY;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
@@ -41,6 +48,7 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @since 1.0.0
  */
+@SpringLoggingTest
 class ConfigurationPropertyUtilsTest {
 
     @Test
@@ -78,6 +86,30 @@ class ConfigurationPropertyUtilsTest {
         assertSame(EMPTY, getParent(EMPTY));
         assertEquals(of("test"), getParent(of("test.name")));
         assertEquals(of("test.name"), getParent(of("test.name.1")));
+    }
+
+    @Test
+    void testNewConfigurationPropertiesBeanProperty() {
+        String prefix = "server";
+        Map<String, String> properties = ofMap(prefix + ".port", "12345");
+        ServerProperties serverProperties = bind(properties, prefix, ServerProperties.class, new BindListener() {
+            @Override
+            public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
+                ConfigurationPropertiesBeanProperty property = newConfigurationPropertiesBeanProperty(target);
+                if (prefix.equals(name.toString())) {
+                    assertNull(property);
+                } else {
+                    assertEquals(ServerProperties.class, property.getDeclaringClassType().resolve());
+                    assertEquals("port", property.getName());
+                    assertEquals(findMethod(ServerProperties.class, "getPort"), property.getGetter());
+                    assertEquals(findMethod(ServerProperties.class, "setPort", Integer.class), property.getSetter());
+                    assertEquals(findField(ServerProperties.class, "port"), property.getField());
+                    assertNull(property.getValue());
+                    assertEquals(Integer.class, property.getType().resolve());
+                }
+            }
+        });
+        assertNotNull(serverProperties);
     }
 
     void assertToDashedForm(String name) {
