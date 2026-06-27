@@ -21,7 +21,6 @@ import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter;
 import io.microsphere.util.Utils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.bind.BindConstructorProvider;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.boot.context.properties.bind.Bindable;
