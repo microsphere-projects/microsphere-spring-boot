@@ -125,6 +125,9 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
     private TestConfigurationProperties testConfigurationProperties;
 
     @Autowired
+    private TestConstructorBindingConfigurationProperties testConstructorBindingConfigurationProperties;
+
+    @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
 
     private MockPropertySource mockPropertySource;
