@@ -112,7 +112,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
                             name, target, context.getDepth());
                 }
             } else {
-                configurationPropertiesBeanContext.initialize(bean);
+                configurationPropertiesBeanContext.setBean(bean);
                 if (logger.isTraceEnabled()) {
                     logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : {} , depth : {} , bean : '{}']",
                             name, target, context.getDepth(), bean);
@@ -245,6 +245,9 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      */
     @Override
     public void afterSingletonsInstantiated() {
+        for (ConfigurationPropertiesBeanContext beanContext : this.beanContexts.values()) {
+            beanContext.initialize();
+        }
         bound = true;
     }
 

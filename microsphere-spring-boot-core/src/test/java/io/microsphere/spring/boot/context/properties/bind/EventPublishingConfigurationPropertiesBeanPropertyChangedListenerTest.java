@@ -92,6 +92,9 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         "test.aliases[1]=b",
         "test.aliases[2]=c",
         "test.ports=7070,8080,9090",
+        "test.projects.project-1[0].build.location=META-INF/build-info.properties",
+        "test.projects.project-1[1].build.encoding=UTF-8",
+        "test.projects.project-2[0].git.location=my-git.properties",
 
         // TestConstructorBindingConfigurationProperties
         "test.constructor.binding.name=test-constructor-binding-name",
