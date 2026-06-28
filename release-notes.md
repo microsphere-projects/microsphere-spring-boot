@@ -308,4 +308,39 @@ For a complete list of changes, please see the [full changelog](#).
 
 Full Changelog: [View here](link-to-full-changelog)
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.23...0.2.24
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.23...0.2.24## v0.2.25
+
+# Release Notes: Version 0.2.25
+
+## New Features
+- Added support for publishing change events for constructor-bound properties. ([ad1c82c](https://github.com/your-repo/commit/ad1c82c))
+- Introduced tracking of property values in bean context. ([ed4e72e](https://github.com/your-repo/commit/ed4e72e))
+
+## Bug Fixes
+- Fixed configuration properties context prefix validation. ([64ca5ea](https://github.com/your-repo/commit/64ca5ea))
+- Hardened configuration property parent lookup. ([576f437](https://github.com/your-repo/commit/576f437))
+- Corrected issues with mismatched configuration bean types. ([60be436](https://github.com/your-repo/commit/60be436))
+- Fixed property assignment type checks. ([cf33ad9](https://github.com/your-repo/commit/cf33ad9))
+- Resolved context test issues for configuration properties. ([96540e0](https://github.com/your-repo/commit/96540e0))
+- Ensured cloning of mutable property values before binding. ([149b9df](https://github.com/your-repo/commit/149b9df))
+- Fixed bean property cloning in bind metadata. ([c20497d](https://github.com/your-repo/commit/c20497d))
+
+## Documentation
+- Added Javadoc examples for exclusion APIs. ([fc87971](https://github.com/your-repo/commit/fc87971))
+
+## Test Improvements
+- Added tests for bean property accessors. ([ab152c9](https://github.com/your-repo/commit/ab152c9))
+- Added tests for map change events in test properties. ([b2085c4](https://github.com/your-repo/commit/b2085c4))
+- Removed unused actuator test setup. ([bb8d79d](https://github.com/your-repo/commit/bb8d79d))
+
+## Other Changes
+- Applied minor core code cleanups. ([149065e](https://github.com/your-repo/commit/149065e))
+- Simplified configuration property set logic. ([29a5423](https://github.com/your-repo/commit/29a5423))
+- Refactored configuration properties binding logic. ([b32dbac](https://github.com/your-repo/commit/b32dbac))
+- Used `ResolvableType` for more robust instance checks. ([2c82025](https://github.com/your-repo/commit/2c82025))
+- Introduced `BindUtils` for constructor lookup and helper methods. ([e71e0fc](https://github.com/your-repo/commit/e71e0fc), [d671698](https://github.com/your-repo/commit/d671698))
+- Guarded bound-property checks with configuration values. ([8554686](https://github.com/your-repo/commit/8554686))
+
+For details, see the [full changelog](https://github.com/your-repo/compare/0.2.24...0.2.25).
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.24...0.2.25

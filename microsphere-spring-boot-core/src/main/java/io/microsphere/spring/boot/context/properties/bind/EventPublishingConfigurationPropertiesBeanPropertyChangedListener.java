@@ -101,10 +101,6 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     void initConfigurationPropertiesBeanContext(ConfigurationPropertyName name, Bindable<?> target, BindContext context) {
         ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
         if (configurationPropertiesBeanContext == null) {
-            if (logger.isWarnEnabled()) {
-                logger.warn("No ConfigurationPropertiesBeanContext was found[name : '{}' , target : {} , depth : {}]",
-                        name, target, context.getDepth());
-            }
             return;
         }
         if (isConfigurationPropertiesBean(context)) {
@@ -131,7 +127,15 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
     private ConfigurationPropertiesBeanContext getConfigurationPropertiesBeanContext(ConfigurationPropertyName name,
                                                                                      Bindable<?> target, BindContext context) {
         String prefix = getPrefix(name, context);
-        return beanContexts.computeIfAbsent(prefix, p -> newConfigurationPropertiesBeanContext(target, p));
+        ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = this.beanContexts.computeIfAbsent(prefix,
+                p -> newConfigurationPropertiesBeanContext(target, p));
+        if (configurationPropertiesBeanContext == null) {
+            if (logger.isWarnEnabled()) {
+                logger.warn("No ConfigurationPropertiesBeanContext was found[name : '{}' , target : {} , depth : {}]",
+                        name, target, context.getDepth());
+            }
+        }
+        return configurationPropertiesBeanContext;
     }
 
     ConfigurationPropertiesBeanContext newConfigurationPropertiesBeanContext(Bindable<?> target, String prefix) {
@@ -170,6 +174,9 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
         if (isBoundProperty(context)) {
             ConfigurationProperty property = context.getConfigurationProperty();
             ConfigurationPropertiesBeanContext configurationPropertiesBeanContext = getConfigurationPropertiesBeanContext(name, target, context);
+            if (configurationPropertiesBeanContext == null) {
+                return;
+            }
             configurationPropertiesBeanContext.setProperty(property, result, isBound());
             if (logger.isTraceEnabled()) {
                 logger.trace("binding Bean property is finished , configuration property : '{}' , type : '{}' , depth : {} , result : '{}'", property, target.getType(), context.getDepth(), result);
