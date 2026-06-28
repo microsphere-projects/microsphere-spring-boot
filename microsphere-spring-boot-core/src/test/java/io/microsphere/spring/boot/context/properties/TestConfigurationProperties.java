@@ -17,6 +17,7 @@
 
 package io.microsphere.spring.boot.context.properties;
 
+import org.springframework.boot.autoconfigure.info.ProjectInfoProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
@@ -39,6 +40,8 @@ public class TestConfigurationProperties {
     private String[] aliases;
 
     private List<Integer> ports;
+
+    private Map<String, List<ProjectInfoProperties>> projects;
 
     public String getName() {
         return name;
@@ -70,5 +73,13 @@ public class TestConfigurationProperties {
 
     public void setPorts(List<Integer> ports) {
         this.ports = ports;
+    }
+
+    public Map<String, List<ProjectInfoProperties>> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(Map<String, List<ProjectInfoProperties>> projects) {
+        this.projects = projects;
     }
 }

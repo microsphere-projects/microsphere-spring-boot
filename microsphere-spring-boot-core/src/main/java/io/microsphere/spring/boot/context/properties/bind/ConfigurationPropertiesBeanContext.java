@@ -44,6 +44,7 @@ import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
+import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
@@ -61,7 +62,6 @@ import static java.util.Objects.deepEquals;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
-import static org.springframework.core.ResolvableType.forInstance;
 import static org.springframework.util.ClassUtils.isAssignableValue;
 import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
 
@@ -100,6 +100,7 @@ class ConfigurationPropertiesBeanContext {
     @Nullable
     private volatile Object initializedBean;
 
+    @Nullable
     private volatile BeanWrapper beanWrapper;
 
     /**
@@ -125,7 +126,7 @@ class ConfigurationPropertiesBeanContext {
         this.beanProperties = newHashMap();
     }
 
-    void initialize(Object bean) {
+    void setBean(Object bean) {
         if (!this.beanType.isInstance(bean)) {
             if (logger.isWarnEnabled()) {
                 Class<?> beanClass = bean.getClass();
@@ -135,9 +136,10 @@ class ConfigurationPropertiesBeanContext {
             return;
         }
         this.initializedBean = bean;
-        this.beanWrapper = new BeanWrapperImpl(bean);
-        initBeanProperties(bean);
+    }
 
+    void initialize() {
+        initBeanProperties();
         if (logger.isTraceEnabled()) {
             StringJoiner beanInfo = new StringJoiner(LINE_SEPARATOR);
             for (Map.Entry<ConfigurationPropertyName, ConfigurationPropertiesBeanProperty> entry : this.beanProperties.entrySet()) {
@@ -150,10 +152,10 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private void initBeanProperties(Object bean) {
-        String prefix = this.prefix;
-        ConfigurationPropertyName prefixName = of(prefix);
-        initBeanProperties(forInstance(bean), prefixName, null);
+    private void initBeanProperties() {
+        Object bean = getBean();
+        this.beanWrapper = new BeanWrapperImpl(bean);
+        initBeanProperties(this.beanType, of(this.prefix), null);
     }
 
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
@@ -168,6 +170,37 @@ class ConfigurationPropertiesBeanContext {
                 initBeanProperties(beanType, fields, prefixName, nestedPath);
             }
         }
+    }
+
+    Object getBean() {
+        Object bean = this.initializedBean;
+        if (bean == null) {
+            // Get the bean from the Spring context by its name
+            String beanName = getBeanName();
+            bean = this.context.getBean(beanName, getBeanClass());
+            this.initializedBean = bean;
+        }
+        return bean;
+    }
+
+    String getBeanName() {
+        Class<?> beanClass = getBeanClass();
+        ConfigurableApplicationContext context = this.context;
+        String beanName = deduceBeanName(beanClass);
+        if (context.containsBean(beanName)) {
+            return beanName;
+        } else {
+            String[] beanNames = context.getBeanNamesForType(beanClass, true, false);
+            return beanNames[0];
+        }
+    }
+
+    String deduceBeanName(Class<?> beanClass) {
+        return this.prefix + HYPHEN + beanClass.getName();
+    }
+
+    Class<?> getBeanClass() {
+        return this.beanType.getRawClass();
     }
 
     private Constructor<?> getBindConstructor(ResolvableType beanType) {
@@ -247,7 +280,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     Object readFieldValue(Field field, @Nullable String nestedPath) {
-        Object instance = getInstance(this.initializedBean, nestedPath);
+        Object instance = getInstance(getBean(), nestedPath);
         if (instance == null) {
             return null;
         }
@@ -395,7 +428,7 @@ class ConfigurationPropertiesBeanContext {
                       Object oldValue, Object newValue) {
         String propertyName = configurationPropertiesBeanProperty.getName();
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-        this.context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(initializedBean, propertyName,
+        this.context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(getBean(), propertyName,
                 propertyType, oldValue, newValue, property));
     }
 }

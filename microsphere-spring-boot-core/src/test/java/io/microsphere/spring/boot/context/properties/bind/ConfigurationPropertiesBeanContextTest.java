@@ -67,12 +67,12 @@ public class ConfigurationPropertiesBeanContextTest {
     }
 
     @Test
-    void testInitialize() {
+    void testSetBean() {
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.initialize(serverProperties);
+        this.beanContext.setBean(serverProperties);
         assertNull(serverProperties.getPort());
 
-        this.beanContext.initialize(new JacksonProperties());
+        this.beanContext.setBean(new JacksonProperties());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class ConfigurationPropertiesBeanContextTest {
         ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
 
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.initialize(serverProperties);
+        this.beanContext.setBean(serverProperties);
 
         this.beanContext.setProperty(property, propertyValue, false);
 
@@ -96,7 +96,7 @@ public class ConfigurationPropertiesBeanContextTest {
     @Test
     void testGetPropertyValueOnFailed() {
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
-        this.beanContext.initialize(new ServerProperties());
+        this.beanContext.setBean(new ServerProperties());
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
     }
 
