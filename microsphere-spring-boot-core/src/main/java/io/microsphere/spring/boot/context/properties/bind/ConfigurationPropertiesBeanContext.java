@@ -24,8 +24,8 @@ import io.microsphere.reflect.MemberUtils;
 import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
@@ -51,6 +51,7 @@ import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.FieldUtils.findField;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
+import static io.microsphere.spring.beans.factory.config.BeanDefinitionUtils.getResolvableType;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
@@ -534,8 +535,8 @@ class ConfigurationPropertiesBeanContext {
         String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
         Map<String, ConfigurationPropertiesBeanContext> beanContexts = newHashMap();
         for (String beanName : beanDefinitionNames) {
-            BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
-            ResolvableType beanType = beanDefinition.getResolvableType();
+            RootBeanDefinition beanDefinition = (RootBeanDefinition) beanFactory.getMergedBeanDefinition(beanName);
+            ResolvableType beanType = getResolvableType(beanDefinition);
             Class<?> beanClass = beanType.resolve();
             ConfigurationProperties annotation = beanClass == null ? null : beanClass.getAnnotation(CONFIGURATION_PROPERTIES_CLASS);
             if (annotation != null) {
