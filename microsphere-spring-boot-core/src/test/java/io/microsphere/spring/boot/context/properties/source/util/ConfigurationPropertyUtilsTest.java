@@ -42,6 +42,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.boot.context.properties.bind.Bindable.ofInstance;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.EMPTY;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 
@@ -111,5 +112,11 @@ class ConfigurationPropertyUtilsTest {
             }
         });
         assertNotNull(serverProperties);
+    }
+
+    @Test
+    void testNewConfigurationPropertiesBeanPropertyOnNull() {
+        Bindable<String> bindable = ofInstance("test");
+        assertNull(newConfigurationPropertiesBeanProperty(bindable));
     }
 }
