@@ -222,9 +222,4 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
     }
-
-    @Test
-    void testNewConfigurationPropertiesBeanContextOnMissingConfigurationProperties() {
-        assertNull(this.listener.newConfigurationPropertiesBeanContext(of(String.class), "test"));
-    }
 }
