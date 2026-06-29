@@ -194,7 +194,7 @@ class ConfigurationPropertiesBeanContext {
             for (Map.Entry<ConfigurationPropertyName, ConfigurationPropertiesBeanProperty> entry : this.beanProperties.entrySet()) {
                 ConfigurationPropertyName propertyName = entry.getKey();
                 ConfigurationPropertiesBeanProperty property = entry.getValue();
-                beanInfo.add(format("Configuration Property Name : '{}' => Java Bean Property : {}", propertyName, property));
+                beanInfo.add(format("Configuration Property Name : '{}' => Bean Property : {}", propertyName, property));
             }
             logger.trace("The ConfigurationPropertiesBeanContext is initialized, bean type : {} , prefix : '{}' , properties : {}",
                     this.beanType, this.prefix, beanInfo);
@@ -456,8 +456,8 @@ class ConfigurationPropertiesBeanContext {
             // Set the new value if it is different from the old value
             beanProperty.setValue(actualNewValue);
             changed = true;
-            if (logger.isInfoEnabled()) {
-                logger.info("Set property [path : '{}'] from '{}' to '{}'(actual : '{}') , Bean Property : {}",
+            if (logger.isTraceEnabled()) {
+                logger.trace("Set property [path : '{}'] from '{}' to '{}'(actual : '{}') , Bean Property : {}",
                         beanProperty.getName(), oldValue, newValue, actualNewValue, beanProperty);
             }
         }
