@@ -159,15 +159,6 @@ class ConfigurationPropertiesBeanContext {
     }
 
     /**
-     * Is the bean a constructor binding bean ?
-     *
-     * @return if the bean is a constructor binding bean , return {@code true} , else return {@code false}
-     */
-    boolean isConstructorBindingBean() {
-        return this.bindConstructor != null;
-    }
-
-    /**
      * Get the prefix
      *
      * @return the prefix
