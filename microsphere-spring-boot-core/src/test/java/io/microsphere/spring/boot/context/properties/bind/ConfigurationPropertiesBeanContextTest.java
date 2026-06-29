@@ -62,8 +62,8 @@ public class ConfigurationPropertiesBeanContextTest {
         context.refresh();
         ConfigurationProperties annotation = beanInfo.getAnnotation();
         AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
-        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), annotationAttributes,
-                beanInfo.getPrefix(), context);
+        this.beanContext = new ConfigurationPropertiesBeanContext("server", forRawClass(ServerProperties.class),
+                annotationAttributes, context);
     }
 
     @Test
@@ -85,12 +85,12 @@ public class ConfigurationPropertiesBeanContextTest {
         ServerProperties serverProperties = new ServerProperties();
         this.beanContext.setBean(serverProperties);
 
-        this.beanContext.setProperty(property, propertyValue, false);
+        this.beanContext.setProperty(property, propertyValue);
 
         Bindable<String> bindable = ofInstance("Mercy");
-        this.beanContext.initProperty(property.getName(), bindable);
-        this.beanContext.setProperty(property, propertyValue, true);
-        this.beanContext.setProperty(property, propertyValue, true);
+        // this.beanContext.initProperty(property.getName(), bindable);
+        this.beanContext.setProperty(property, propertyValue);
+        this.beanContext.setProperty(property, propertyValue);
     }
 
     @Test
