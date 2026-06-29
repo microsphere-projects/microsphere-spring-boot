@@ -137,14 +137,14 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         }
 
         Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
-        assertEquals("test-name", testConfigurationProperties.getName());
-        assertEquals(properties, testConfigurationProperties.getProperties());
-        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
-        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
+        assertEquals("test-name", this.testConfigurationProperties.getName());
+        assertEquals(properties, this.testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), this.testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), this.testConfigurationProperties.getPorts());
 
         this.eventHolder.reset();
 
-        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
+        setProperty("test.properties.key-1", "value-x", this.testConfigurationProperties);
 
         ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
         assertSame(this.testConfigurationProperties, event.getSource());
@@ -153,6 +153,15 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         assertEquals(properties, event.getOldValue());
         assertEquals(ofMap("key-1", "value-x", "key-2", "value-2", "key-3", "value-3"), event.getNewValue());
 
+    }
+
+    @Test
+    void testTestConstructorBindingConfigurationProperties(int index) {
+        if (index > 0) {
+            return;
+        }
+        assertEquals("test-constructor-binding-name", this.testConstructorBindingConfigurationProperties.getName());
+        assertEquals("test-constructor-binding-value", this.testConstructorBindingConfigurationProperties.getValue());
     }
 
     void setProperty(String configurationPropertyName, String propertyValue, Object configurationPropertiesBean) {
