@@ -18,6 +18,7 @@
 package io.microsphere.spring.boot.context.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConstructorBinding;
 
 /**
  * {@link ConfigurationProperties @ConfigurationProperties} for testing
@@ -31,12 +32,32 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("test.constructor.binding")
 public class TestConstructorBindingConfigurationProperties {
 
-    private final String name;
+    private String name;
 
-    private final String value;
+    private String value;
 
+    @ConstructorBinding
     public TestConstructorBindingConfigurationProperties(String name, String value) {
         this.name = name;
+        this.value = value;
+    }
+
+    public TestConstructorBindingConfigurationProperties() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
         this.value = value;
     }
 }
