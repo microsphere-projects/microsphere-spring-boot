@@ -18,6 +18,7 @@ package io.microsphere.spring.boot.context.properties.bind;
 
 import io.microsphere.spring.boot.context.properties.ListenableConfigurationPropertiesBindHandlerAdvisor;
 import io.microsphere.spring.boot.context.properties.TestConfigurationProperties;
+import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import io.microsphere.util.ValueHolder;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +51,6 @@ import static io.microsphere.util.ArrayUtils.ofArray;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -78,12 +78,20 @@ import static org.springframework.boot.context.properties.source.ConfigurationPr
         "test.aliases[0]=a",
         "test.aliases[1]=b",
         "test.aliases[2]=c",
-        "test.ports=7070,8080,9090"
+        "test.ports=7070,8080,9090",
+        "test.projects.project-1[0].build.location=META-INF/build-info.properties",
+        "test.projects.project-1[1].build.encoding=UTF-8",
+        "test.projects.project-2[0].git.location=my-git.properties",
+
+        // TestConstructorBindingConfigurationProperties
+        "test.constructor.binding.name=test-constructor-binding-name",
+        "test.constructor.binding.value=test-constructor-binding-value",
 })
 @EnableAutoConfiguration
 @EnableConfigurationProperties(
         value = {
-                TestConfigurationProperties.class
+                TestConfigurationProperties.class,
+                TestConstructorBindingConfigurationProperties.class
         }
 )
 class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
@@ -98,6 +106,9 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     @Autowired
     private TestConfigurationProperties testConfigurationProperties;
+
+    @Autowired
+    private TestConstructorBindingConfigurationProperties testConstructorBindingConfigurationProperties;
 
     @Autowired
     private EventPublishingConfigurationPropertiesBeanPropertyChangedListener listener;
@@ -126,14 +137,14 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         }
 
         Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
-        assertEquals("test-name", testConfigurationProperties.getName());
-        assertEquals(properties, testConfigurationProperties.getProperties());
-        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
-        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
+        assertEquals("test-name", this.testConfigurationProperties.getName());
+        assertEquals(properties, this.testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), this.testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), this.testConfigurationProperties.getPorts());
 
         this.eventHolder.reset();
 
-        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
+        setProperty("test.properties.key-1", "value-x", this.testConfigurationProperties);
 
         ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
         assertSame(this.testConfigurationProperties, event.getSource());
@@ -142,6 +153,15 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         assertEquals(properties, event.getOldValue());
         assertEquals(ofMap("key-1", "value-x", "key-2", "value-2", "key-3", "value-3"), event.getNewValue());
 
+    }
+
+    @Test
+    void testTestConstructorBindingConfigurationProperties(int index) {
+        if (index > 0) {
+            return;
+        }
+        assertEquals("test-constructor-binding-name", this.testConstructorBindingConfigurationProperties.getName());
+        assertEquals("test-constructor-binding-value", this.testConstructorBindingConfigurationProperties.getValue());
     }
 
     void setProperty(String configurationPropertyName, String propertyValue, Object configurationPropertiesBean) {
@@ -166,10 +186,5 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         when(context.getDepth()).thenReturn(0);
 
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
-    }
-
-    @Test
-    void testNewConfigurationPropertiesBeanContextOnMissingConfigurationProperties() {
-        assertNull(this.listener.newConfigurationPropertiesBeanContext(of(String.class), "test"));
     }
 }

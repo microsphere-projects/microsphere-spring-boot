@@ -110,6 +110,13 @@ public class ConfigurationPropertiesBeanProperty {
     }
 
     public String getName() {
+        if (this.name == null) {
+            return resolveName();
+        }
+        return this.name;
+    }
+
+    String resolveName() {
         Field field = this.field;
         if (field != null) {
             return field.getName();
@@ -142,6 +149,6 @@ public class ConfigurationPropertiesBeanProperty {
 
     @Override
     public String toString() {
-        return format("{} {}.{} = {}", getType(), getDeclaringClassType(), getName(), getValue());
+        return format("{} {}.{} = {}", getType(), getDeclaringClassType(), resolveName(), getValue());
     }
 }

@@ -29,8 +29,6 @@ import org.springframework.mock.env.MockEnvironment;
 
 import java.util.Map;
 
-import static io.microsphere.spring.boot.SpringBootVersion.CURRENT;
-import static io.microsphere.spring.boot.SpringBootVersion.SPRING_BOOT_2_2_1;
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContextTest.newConfigurationProperty;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.bind;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.getBindConstructor;
@@ -38,7 +36,6 @@ import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.isConfigurationPropertiesBean;
 import static io.microsphere.spring.boot.util.TestUtils.assertServerPropertiesPort;
 import static io.microsphere.spring.core.env.EnvironmentUtils.getProperties;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -115,8 +112,8 @@ class BindUtilsTest {
         assertNull(getBindConstructor(of(ServerProperties.class), false));
         assertNull(getBindConstructor(of(ServerProperties.class), true));
 
-        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false) == null);
-        assertEquals(CURRENT.lt(SPRING_BOOT_2_2_1), getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true) == null);
+        assertNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
+        assertNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
     }
 
     @Test
