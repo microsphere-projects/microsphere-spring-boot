@@ -153,16 +153,16 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         }
 
         // assert the configured values
-        assertEquals(US, webProperties.getLocale());
-        assertEquals(FIXED, webProperties.getLocaleResolver());
+        assertEquals(US, this.webProperties.getLocale());
+        assertEquals(FIXED, this.webProperties.getLocaleResolver());
 
-        WebProperties.Resources resources = webProperties.getResources();
+        WebProperties.Resources resources = this.webProperties.getResources();
         String[] staticLocations = resources.getStaticLocations();
         assertArrayEquals(ofArray("/static/", "/public/", "/resources/"), staticLocations);
 
         this.eventHolder.reset();
 
-        setProperty("spring.web.locale", "zh_CN", webProperties);
+        setProperty("spring.web.locale", "zh_CN", this.webProperties);
 
         ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
         assertSame(this.webProperties, event.getSource());
@@ -180,14 +180,14 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         }
 
         Map<String, String> properties = ofMap("key-1", "value-1", "key-2", "value-2", "key-3", "value-3");
-        assertEquals("test-name", testConfigurationProperties.getName());
-        assertEquals(properties, testConfigurationProperties.getProperties());
-        assertArrayEquals(ofArray("a", "b", "c"), testConfigurationProperties.getAliases());
-        assertEquals(ofList(7070, 8080, 9090), testConfigurationProperties.getPorts());
+        assertEquals("test-name", this.testConfigurationProperties.getName());
+        assertEquals(properties, this.testConfigurationProperties.getProperties());
+        assertArrayEquals(ofArray("a", "b", "c"), this.testConfigurationProperties.getAliases());
+        assertEquals(ofList(7070, 8080, 9090), this.testConfigurationProperties.getPorts());
 
         this.eventHolder.reset();
 
-        setProperty("test.properties.key-1", "value-x", testConfigurationProperties);
+        setProperty("test.properties.key-1", "value-x", this.testConfigurationProperties);
 
         ConfigurationPropertiesBeanPropertyChangedEvent event = this.eventHolder.getValue();
         assertSame(this.testConfigurationProperties, event.getSource());
