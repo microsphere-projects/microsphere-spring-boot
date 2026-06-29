@@ -228,7 +228,11 @@ class ConfigurationPropertiesBeanContext {
      * @see Binder#bind(String, Bindable)
      */
     void bindPropertyValues() {
-        this.beanProperties.values().forEach(this::bindPropertyValue);
+        if (this.bindConstructor == null) {
+            this.beanProperties.values().forEach(this::bindPropertyValue);
+        } else {
+            initBeanProperties();
+        }
     }
 
     boolean bindPropertyValue(ConfigurationPropertiesBeanProperty beanProperty) {
