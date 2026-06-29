@@ -372,4 +372,34 @@ For more details on the changes, refer to the commit history.
 
 **Note:** This release focused primarily on improving bean binding behavior, configuration property handling, and increasing test robustness.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.24...0.1.25
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.24...0.1.25## v0.1.26
+
+# Release Notes: Version 0.1.26
+
+## New Features
+- **Constructor Binding Compatibility**: Added support for `@ConstructorBinding` to improve compatibility. [#4f0267b](https://github.com/mercyblitz/project/commit/4f0267b)
+
+## Bug Fixes
+- Fixed bean type resolution for configuration properties. [#7c52cfc](https://github.com/mercyblitz/project/commit/7c52cfc)
+- Guarded against `null` bean context during property binding. [#62a289b](https://github.com/mercyblitz/project/commit/62a289b)
+
+## Dependency Updates
+- Upgraded `microsphere-spring` to the latest version. [#1a72ab9](https://github.com/mercyblitz/project/commit/1a72ab9)
+- Bumped `microsphere-build` parent to version `0.3.5`. [#d971d06](https://github.com/mercyblitz/project/commit/d971d06)
+
+## Test Improvements
+- Added test case for `null` bean property handling. [#740bd89](https://github.com/mercyblitz/project/commit/740bd89)
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` to stay up-to-date with the latest releases. [#36b0ea6](https://github.com/mercyblitz/project/commit/36b0ea6)
+
+## Other Changes
+- Simplified constructor binding null assertions for cleaner code. [#eecd173](https://github.com/mercyblitz/project/commit/eecd173)
+- Refined configuration property change tracking. [#b5a8597](https://github.com/mercyblitz/project/commit/b5a8597)
+- Updated README references to reflect new version numbers. [#7f621ca](https://github.com/mercyblitz/project/commit/7f621ca)
+
+---
+
+**Full Changelog**: [Compare 0.1.25...0.1.26](https://github.com/mercyblitz/project/compare/0.1.25...0.1.26)
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.25...0.1.26
