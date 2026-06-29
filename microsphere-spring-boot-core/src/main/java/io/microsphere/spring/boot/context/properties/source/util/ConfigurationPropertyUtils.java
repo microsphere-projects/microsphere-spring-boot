@@ -151,22 +151,19 @@ public abstract class ConfigurationPropertyUtils {
     }
 
     /**
-     * Create a new {@link ConfigurationPropertiesBeanProperty} from the specified {@link Bindable}
+     * Init the specified {@link ConfigurationPropertiesBeanProperty} from the specified {@link Bindable}
      *
+     * @param property the specified {@link ConfigurationPropertiesBeanProperty}
      * @param bindable the specified {@link Bindable}
-     * @return the new {@link ConfigurationPropertiesBeanProperty} , may be {@code null}
      */
-    @Nullable
-    public static ConfigurationPropertiesBeanProperty newConfigurationPropertiesBeanProperty(Bindable<?> bindable) {
+    public static void initConfigurationPropertiesBeanProperty(ConfigurationPropertiesBeanProperty property, Bindable<?> bindable) {
         Supplier<?> value = bindable.getValue();
         if (value == null) {
             if (logger.isWarnEnabled()) {
                 logger.warn("The value from Bindable[{}] is null", bindable);
             }
-            return null;
         }
         Class<?> valueClass = value.getClass();
-        ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
 
         doWithFields(valueClass, valueField -> {
             Object beanProperty = getFieldValue(value, valueField);
@@ -183,10 +180,7 @@ public abstract class ConfigurationPropertyUtils {
             if (logger.isWarnEnabled()) {
                 logger.warn("The value of Bindable[{}] can't resolve the JavaBeanBinder.BeanProperty", bindable);
             }
-            return null;
         }
-
-        return property;
     }
 
     private ConfigurationPropertyUtils() {

@@ -16,7 +16,10 @@
  */
 package io.microsphere.spring.boot.context.properties.util;
 
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.core.ResolvableType;
 
@@ -79,6 +82,25 @@ public abstract class ConfigurationPropertiesUtils {
             configurationProperties = findAnnotation(bindableType, CONFIGURATION_PROPERTIES_CLASS);
         }
         return configurationProperties;
+    }
+
+    /**
+     * Determine whether the specified bean is a {@link ConfigurationProperties @ConfigurationProperties} Bean.
+     *
+     * @param beanFactory {@link ConfigurableListableBeanFactory}
+     * @param beanName    the bean name
+     * @return {@code true} if the specified bean is a {@link ConfigurationProperties @ConfigurationProperties} Bean,
+     * {@code false} otherwise
+     * @see ConfigurationPropertiesBean#isConfigurationPropertiesBean(ConfigurableListableBeanFactory, String)
+     */
+    public static boolean isConfigurationPropertiesBean(ConfigurableListableBeanFactory beanFactory, String beanName) {
+        if (!beanFactory.containsBeanDefinition(beanName)) {
+            return false;
+        }
+        BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
+        ResolvableType resolvableType = beanDefinition.getResolvableType();
+        Class<?> beanClass = resolvableType.resolve();
+        return beanClass.isAnnotationPresent(CONFIGURATION_PROPERTIES_CLASS);
     }
 
     private ConfigurationPropertiesUtils() {

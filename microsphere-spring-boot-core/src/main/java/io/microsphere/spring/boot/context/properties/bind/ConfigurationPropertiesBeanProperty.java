@@ -110,17 +110,19 @@ public class ConfigurationPropertiesBeanProperty {
     }
 
     public String getName() {
-        Field field = this.field;
-        if (field != null) {
-            return field.getName();
-        }
-        Method setterOrGetter = this.setter;
-        if (setterOrGetter == null) {
-            setterOrGetter = this.getter;
-        }
-        if (setterOrGetter != null) {
-            String methodName = setterOrGetter.getName();
-            return decapitalize(methodName.substring(3));
+        if (this.name == null) {
+            Field field = this.field;
+            if (field != null) {
+                return field.getName();
+            }
+            Method setterOrGetter = this.setter;
+            if (setterOrGetter == null) {
+                setterOrGetter = this.getter;
+            }
+            if (setterOrGetter != null) {
+                String methodName = setterOrGetter.getName();
+                return decapitalize(methodName.substring(3));
+            }
         }
         return this.name;
     }

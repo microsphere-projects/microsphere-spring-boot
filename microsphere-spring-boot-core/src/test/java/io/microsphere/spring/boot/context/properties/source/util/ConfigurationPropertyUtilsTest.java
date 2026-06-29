@@ -34,7 +34,7 @@ import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getPrefix;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getSource;
-import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
+import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.initConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -90,13 +90,14 @@ class ConfigurationPropertyUtilsTest {
     }
 
     @Test
-    void testNewConfigurationPropertiesBeanProperty() {
+    void testInitConfigurationPropertiesBeanProperty() {
         String prefix = "server";
         Map<String, String> properties = ofMap(prefix + ".port", "12345");
         ServerProperties serverProperties = bind(properties, prefix, ServerProperties.class, new BindListener() {
             @Override
             public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
-                ConfigurationPropertiesBeanProperty property = newConfigurationPropertiesBeanProperty(target);
+                ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
+                initConfigurationPropertiesBeanProperty(property,target);
                 if (prefix.equals(name.toString())) {
                     assertNull(property);
                 } else {

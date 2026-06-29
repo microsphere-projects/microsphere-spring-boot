@@ -24,8 +24,12 @@ import io.microsphere.reflect.MemberUtils;
 import io.microsphere.spring.boot.context.properties.bind.util.BindUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.ConfigurationPropertiesBean;
 import org.springframework.boot.context.properties.bind.Bindable;
+import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.boot.context.properties.source.ConfigurationPropertyName;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -44,14 +48,14 @@ import static io.microsphere.collection.MapUtils.newHashMap;
 import static io.microsphere.constants.SeparatorConstants.LINE_SEPARATOR;
 import static io.microsphere.constants.SymbolConstants.DOT;
 import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
-import static io.microsphere.constants.SymbolConstants.HYPHEN;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
-import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.newConfigurationPropertiesBeanProperty;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.toDashedForm;
+import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
+import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.Assert.assertNotBlank;
 import static io.microsphere.util.Assert.assertNotNull;
@@ -59,7 +63,9 @@ import static io.microsphere.util.ClassUtils.isConcreteClass;
 import static io.microsphere.util.StringUtils.isBlank;
 import static io.microsphere.util.StringUtils.replace;
 import static java.util.Objects.deepEquals;
+import static org.springframework.beans.BeanUtils.copyProperties;
 import static org.springframework.beans.BeanUtils.getPropertyDescriptors;
+import static org.springframework.beans.BeanUtils.instantiateClass;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
 import static org.springframework.boot.context.properties.source.ConfigurationPropertyName.of;
 import static org.springframework.util.ClassUtils.isAssignableValue;
@@ -70,6 +76,7 @@ import static org.springframework.util.ClassUtils.isPrimitiveOrWrapper;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
  * @see ConfigurationProperties
+ * @see ConfigurationPropertiesBean
  * @see org.springframework.boot.context.properties.bind.JavaBeanBinder
  * @see org.springframework.boot.context.properties.bind.JavaBeanBinder.BeanProperty
  * @since 1.0.0
@@ -79,7 +86,12 @@ class ConfigurationPropertiesBeanContext {
     private static final Logger logger = getLogger(ConfigurationPropertiesBeanContext.class);
 
     @Nonnull
+    private final String beanName;
+
+    @Nonnull
     private final ResolvableType beanType;
+
+    private final Constructor<?> bindConstructor;
 
     @Nonnull
     private final AnnotationAttributes annotationAttributes;
@@ -98,32 +110,83 @@ class ConfigurationPropertiesBeanContext {
     private final Map<ConfigurationPropertyName, ConfigurationPropertiesBeanProperty> beanProperties;
 
     @Nullable
-    private volatile Object initializedBean;
+    private volatile Object bean;
 
     @Nullable
     private volatile BeanWrapper beanWrapper;
 
     /**
-     * Constructor
+     * Construct a {@link ConfigurationPropertiesBeanContext} with the specified parameters
      *
+     * @param beanName             the bean name
      * @param beanType             the bean type
      * @param annotationAttributes the {@link AnnotationAttributes} of {@link ConfigurationProperties}
-     * @param prefix               {@link ConfigurationProperties#prefix() the prefix}
      * @param context              {@link ConfigurableApplicationContext}
      * @throws IllegalArgumentException If <code>beanClass</code> or <code>annotation</code> or <code>context</code> argument is null,
      *                                  or the <code>prefix</code> is blank
      */
-    ConfigurationPropertiesBeanContext(ResolvableType beanType, AnnotationAttributes annotationAttributes, String prefix,
+    ConfigurationPropertiesBeanContext(String beanName, ResolvableType beanType, AnnotationAttributes annotationAttributes,
                                        ConfigurableApplicationContext context) throws IllegalArgumentException {
+        assertNotBlank(beanName, () -> "The 'beanName' must not be blank!");
         assertNotNull(beanType, () -> "The 'beanType' must not be null!");
         assertNotNull(annotationAttributes, () -> "The 'annotationAttributes' must not be null!");
-        assertNotBlank(prefix, () -> "The 'prefix' must not be black!");
-        assertNotNull(context, () -> "The 'assertNotNull' must not be null!");
+        assertNotNull(context, () -> "The 'context' must not be null!");
+        this.beanName = beanName;
         this.beanType = beanType;
+        this.bindConstructor = getBindConstructor(beanType);
         this.annotationAttributes = annotationAttributes;
-        this.prefix = prefix;
+        this.prefix = annotationAttributes.getString("prefix");
         this.context = context;
         this.beanProperties = newHashMap();
+    }
+
+    /**
+     * Get the bean name
+     *
+     * @return the bean name
+     */
+    @Nonnull
+    String getBeanName() {
+        return this.beanName;
+    }
+
+    /**
+     * Get the bean type
+     *
+     * @return the bean type
+     */
+    @Nonnull
+    ResolvableType getBeanType() {
+        return this.beanType;
+    }
+
+    /**
+     * Is the bean a constructor binding bean ?
+     *
+     * @return if the bean is a constructor binding bean , return {@code true} , else return {@code false}
+     */
+    boolean isConstructorBindingBean() {
+        return this.bindConstructor != null;
+    }
+
+    /**
+     * Get the prefix
+     *
+     * @return the prefix
+     */
+    @Nonnull
+    String getPrefix() {
+        return this.prefix;
+    }
+
+    /**
+     * Get the bean class
+     *
+     * @return the bean class
+     */
+    @Nonnull
+    Class<?> getBeanClass() {
+        return getBeanType().getRawClass();
     }
 
     void setBean(Object bean) {
@@ -135,33 +198,132 @@ class ConfigurationPropertiesBeanContext {
             }
             return;
         }
-        this.initializedBean = bean;
-    }
-
-    void initialize() {
+        this.bean = bean;
+        this.beanWrapper = new BeanWrapperImpl(bean);
         initBeanProperties();
         if (logger.isTraceEnabled()) {
+            logger.trace("The @ConfigurationProperties bean[{}] is set to ConfigurationPropertiesBeanContext[{}]", bean, this);
             StringJoiner beanInfo = new StringJoiner(LINE_SEPARATOR);
             for (Map.Entry<ConfigurationPropertyName, ConfigurationPropertiesBeanProperty> entry : this.beanProperties.entrySet()) {
                 ConfigurationPropertyName propertyName = entry.getKey();
-                ConfigurationPropertiesBeanProperty property = entry.getValue();
-                beanInfo.add(format("Configuration Property Name : '{}' => Java Bean Property : {}", propertyName, property));
+                ConfigurationPropertiesBeanProperty beanProperty = entry.getValue();
+                beanInfo.add(format("Configuration Property Name : '{}' => Bean Property : {}", propertyName, beanProperty));
             }
             logger.trace("The ConfigurationPropertiesBeanContext is initialized, bean type : {} , prefix : '{}' , properties : {}",
                     this.beanType, this.prefix, beanInfo);
         }
     }
 
-    private void initBeanProperties() {
+    Object getBean() {
+        Object bean = this.bean;
+        if (bean == null) {
+            // Get the bean from the Spring context by its name
+            String beanName = getBeanName();
+            bean = this.context.getBean(beanName, getBeanClass());
+            this.bean = bean;
+        }
+        return bean;
+    }
+
+    /**
+     * Initialize the property values of the bean after {@link Binder#bind(String, Bindable) binding}.
+     *
+     * @see Binder#bind(String, Bindable)
+     */
+    void initializePropertyValues() {
+        this.beanProperties.values().forEach(this::initializePropertyValue);
+    }
+
+    boolean initializePropertyValue(ConfigurationPropertiesBeanProperty beanProperty) {
+        String propertyPath = beanProperty.getName();
+        Object newValue = getPropertyValue(this.beanWrapper, propertyPath);
+        return setPropertyValue0(beanProperty, newValue);
+    }
+
+    void setPropertyValue(ConfigurationProperty property, Object newValue) {
+        ConfigurationPropertyName name = property.getName();
+
+        ConfigurationPropertiesBeanProperty beanProperty = null;
+
+        if (name.isLastElementIndexed()) { // name is numerically indexed or non-numerically indexed
+            name = getParent(name);
+        }
+
+        beanProperty = getBeanProperty(name);
+        // name is not indexed or Map-typed
+        if (beanProperty == null) { // name is Map-typed
+            name = getParent(name);
+            beanProperty = getBeanProperty(name);
+        }
+
+        if (beanProperty == null) {
+            return;
+        }
+
+        ResolvableType propertyType = beanProperty.getType();
+        Class<?> propertyClass = propertyType.resolve();
+        if (isAssignableValue(propertyClass, newValue)) {
+            Object oldValue = beanProperty.getValue();
+            if (setPropertyValue(beanProperty, newValue)) {
+                publishEvent(property, beanProperty, oldValue, newValue);
+            }
+        }
+    }
+
+    boolean setPropertyValue(ConfigurationPropertiesBeanProperty beanProperty, Object newValue) {
+        boolean changed = false;
+        if (isConstructorBindingBean()) {
+
+        } else {
+            String propertyPath = beanProperty.getName();
+            BeanWrapper clonedBeanWrapper = new BeanWrapperImpl(cloneBean());
+            // Invoke setter method, the actual value may not be the same as the new value
+            if (clonedBeanWrapper.isWritableProperty(propertyPath)) {
+                clonedBeanWrapper.setPropertyValue(propertyPath, newValue);
+            }
+            Object actualValue = clonedBeanWrapper.getPropertyValue(propertyPath);
+            changed = setPropertyValue0(beanProperty, actualValue);
+        }
+        return changed;
+    }
+
+    Object cloneBean() {
         Object bean = getBean();
-        this.beanWrapper = new BeanWrapperImpl(bean);
+        Object clnoedBean = null;
+        Class<?> beanClass = getBeanClass();
+        Constructor<?> bindConstructor = this.bindConstructor;
+        if (bindConstructor == null) {
+            clnoedBean = instantiateClass(beanClass);
+            copyProperties(bean, clnoedBean);
+        } else {
+            clnoedBean = bean;
+        }
+        return clnoedBean;
+    }
+
+    boolean setPropertyValue0(ConfigurationPropertiesBeanProperty beanProperty, Object newValue) {
+        boolean changed = false;
+        Object oldValue = beanProperty.getValue();
+        if (!deepEquals(oldValue, newValue)) {
+            // Set the new value if it is different from the old value
+            beanProperty.setValue(newValue);
+            changed = true;
+            if (logger.isInfoEnabled()) {
+                logger.info("Set property [path : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {}",
+                        beanProperty.getName(), oldValue, newValue, beanProperty);
+            }
+        }
+        return changed;
+    }
+
+    private void initBeanProperties() {
         initBeanProperties(this.beanType, of(this.prefix), null);
     }
 
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
         Class<?> beanClass = beanType.getRawClass();
         if (isCandidateClass(beanClass)) {
-            Constructor<?> bindConstructor = getBindConstructor(beanType);
+            Constructor<?> bindConstructor = this.bindConstructor;
             if (bindConstructor == null) {
                 PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
                 initBeanProperties(beanType, descriptors, prefixName, nestedPath);
@@ -172,38 +334,7 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    Object getBean() {
-        Object bean = this.initializedBean;
-        if (bean == null) {
-            // Get the bean from the Spring context by its name
-            String beanName = getBeanName();
-            bean = this.context.getBean(beanName, getBeanClass());
-            this.initializedBean = bean;
-        }
-        return bean;
-    }
-
-    String getBeanName() {
-        Class<?> beanClass = getBeanClass();
-        ConfigurableApplicationContext context = this.context;
-        String beanName = deduceBeanName(beanClass);
-        if (context.containsBean(beanName)) {
-            return beanName;
-        } else {
-            String[] beanNames = context.getBeanNamesForType(beanClass, true, false);
-            return beanNames[0];
-        }
-    }
-
-    String deduceBeanName(Class<?> beanClass) {
-        return this.prefix + HYPHEN + beanClass.getName();
-    }
-
-    Class<?> getBeanClass() {
-        return this.beanType.getRawClass();
-    }
-
-    private Constructor<?> getBindConstructor(ResolvableType beanType) {
+    static Constructor<?> getBindConstructor(ResolvableType beanType) {
         return BindUtils.getBindConstructor(of(beanType), true);
     }
 
@@ -222,7 +353,7 @@ class ConfigurationPropertiesBeanContext {
                 ConfigurationPropertiesBeanProperty newProperty = new ConfigurationPropertiesBeanProperty();
                 Method getter = descriptor.getReadMethod();
                 Method setter = descriptor.getWriteMethod();
-                Object value = getPropertyValue(nestedPath, propertyPath);
+                Object value = getPropertyValue(this.beanWrapper, nestedPath, propertyPath);
                 newProperty.setDeclaringClassType(beanType);
                 newProperty.setName(propertyPath);
                 newProperty.setGetter(getter);
@@ -234,9 +365,9 @@ class ConfigurationPropertiesBeanContext {
         }
     }
 
-    private Object getPropertyValue(@Nullable String nestedPath, String propertyPath) {
+    private Object getPropertyValue(BeanWrapper beanWrapper, @Nullable String nestedPath, String propertyPath) {
         if (!isBlank(nestedPath)) {
-            Object parent = getPropertyValue(nestedPath);
+            Object parent = getPropertyValue(beanWrapper, nestedPath);
             if (parent == null) {
                 if (logger.isTraceEnabled()) {
                     logger.trace("The instance is null in nested path : '{}' , property path : {}", nestedPath, propertyPath);
@@ -244,16 +375,21 @@ class ConfigurationPropertiesBeanContext {
                 return null;
             }
         }
-        return getPropertyValue(propertyPath);
+        return getPropertyValue(beanWrapper, propertyPath);
     }
 
     Object getPropertyValue(String propertyPath) {
-        return execute(() -> this.beanWrapper.getPropertyValue(propertyPath), e -> {
+        return getPropertyValue(this.beanWrapper, propertyPath);
+    }
+
+    Object getPropertyValue(BeanWrapper beanWrapper, String propertyPath) {
+        Object value = execute(() -> beanWrapper.getPropertyValue(propertyPath), e -> {
             if (logger.isTraceEnabled()) {
                 logger.trace("Failed to get property value for property path : {}", propertyPath, e);
             }
             return null;
         });
+        return clone(value);
     }
 
     private void initBeanProperties(ResolvableType beanType, Set<Field> fields, ConfigurationPropertyName prefixName, String nestedPath) {
@@ -284,7 +420,7 @@ class ConfigurationPropertiesBeanContext {
         if (instance == null) {
             return null;
         }
-        return FieldUtils.getFieldValue(instance, field);
+        return clone(FieldUtils.getFieldValue(instance, field));
     }
 
     static Object getInstance(Object bean, @Nullable String nestedPath) {
@@ -365,10 +501,10 @@ class ConfigurationPropertiesBeanContext {
         if (propertyName.isLastElementIndexed()) {
             propertyName = getParent(propertyName);
         }
-        return this.beanProperties.computeIfAbsent(propertyName, n -> newConfigurationPropertiesBeanProperty(bindable));
+        return null;
     }
 
-    ConfigurationPropertiesBeanProperty getProperty(ConfigurationPropertyName propertyName) {
+    ConfigurationPropertiesBeanProperty getBeanProperty(ConfigurationPropertyName propertyName) {
         ConfigurationPropertiesBeanProperty property = this.beanProperties.get(propertyName);
         if (property == null) {
             if (logger.isWarnEnabled()) {
@@ -378,50 +514,17 @@ class ConfigurationPropertiesBeanContext {
         return property;
     }
 
-    void setProperty(ConfigurationProperty property, Object newValue, boolean publishedEvent) {
-        ConfigurationPropertyName name = property.getName();
-
-        ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty = null;
-
-        if (name.isLastElementIndexed()) { // name is numerically indexed or non-numerically indexed
-            name = getParent(name);
+    /**
+     * Clone object to avoid the newValue is changed by other code, which will cause the oldValue and newValue are same.
+     *
+     * @param value the value to be cloned
+     * @return the cloned value
+     */
+    Object clone(Object value) {
+        if (value instanceof Cloneable) {
+            value = invokeMethod(value, "clone");
         }
-
-        configurationPropertiesBeanProperty = getProperty(name);
-        // name is not indexed or Map-typed
-        if (configurationPropertiesBeanProperty == null) { // name is Map-typed
-            name = getParent(name);
-            configurationPropertiesBeanProperty = getProperty(name);
-        }
-
-        if (configurationPropertiesBeanProperty == null) {
-            return;
-        }
-
-        ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
-        Class<?> propertyClass = propertyType.resolve();
-        if (isAssignableValue(propertyClass, newValue)) {
-            Object oldValue = configurationPropertiesBeanProperty.getValue();
-            if (!deepEquals(oldValue, newValue)) {
-                setProperty(property, configurationPropertiesBeanProperty, name, oldValue, newValue, publishedEvent);
-            }
-        }
-    }
-
-    void setProperty(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
-                     ConfigurationPropertyName name, Object oldValue, Object newValue, boolean publishedEvent) {
-        if (newValue instanceof Cloneable) {
-            // Use clone object to avoid the newValue is changed by other code, which will cause the oldValue and newValue are same
-            newValue = invokeMethod(newValue, "clone");
-        }
-        configurationPropertiesBeanProperty.setValue(newValue);
-        if (logger.isInfoEnabled()) {
-            logger.info("Set property [name : '{}'] from '{}' to '{}' , ConfigurationPropertiesBeanProperty : {} , Source : {}",
-                    name, oldValue, newValue, configurationPropertiesBeanProperty, property);
-        }
-        if (publishedEvent) {
-            publishEvent(property, configurationPropertiesBeanProperty, oldValue, newValue);
-        }
+        return value;
     }
 
     void publishEvent(ConfigurationProperty property, ConfigurationPropertiesBeanProperty configurationPropertiesBeanProperty,
@@ -430,5 +533,23 @@ class ConfigurationPropertiesBeanContext {
         ResolvableType propertyType = configurationPropertiesBeanProperty.getType();
         this.context.publishEvent(new ConfigurationPropertiesBeanPropertyChangedEvent(getBean(), propertyName,
                 propertyType, oldValue, newValue, property));
+    }
+
+    static Map<String, ConfigurationPropertiesBeanContext> buildConfigurationPropertiesBeanContexts(ConfigurableApplicationContext context) {
+        ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
+        String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+        Map<String, ConfigurationPropertiesBeanContext> beanContexts = newHashMap();
+        for (String beanName : beanDefinitionNames) {
+            BeanDefinition beanDefinition = beanFactory.getMergedBeanDefinition(beanName);
+            ResolvableType beanType = beanDefinition.getResolvableType();
+            Class<?> beanClass = beanType.resolve();
+            ConfigurationProperties annotation = beanClass == null ? null : beanClass.getAnnotation(CONFIGURATION_PROPERTIES_CLASS);
+            if (annotation != null) {
+                AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
+                ConfigurationPropertiesBeanContext beanContext = new ConfigurationPropertiesBeanContext(beanName, beanType, annotationAttributes, context);
+                beanContexts.put(beanContext.getPrefix(), beanContext);
+            }
+        }
+        return beanContexts;
     }
 }

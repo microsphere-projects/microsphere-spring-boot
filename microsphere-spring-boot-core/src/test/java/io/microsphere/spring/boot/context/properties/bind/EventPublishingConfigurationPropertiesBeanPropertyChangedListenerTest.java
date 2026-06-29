@@ -55,7 +55,6 @@ import static java.util.Locale.US;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -221,10 +220,5 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
         when(context.getDepth()).thenReturn(0);
 
         this.listener.initConfigurationPropertiesBeanContext(name, target, context);
-    }
-
-    @Test
-    void testNewConfigurationPropertiesBeanContextOnMissingConfigurationProperties() {
-        assertNull(this.listener.newConfigurationPropertiesBeanContext(of(String.class), "test"));
     }
 }
