@@ -210,7 +210,7 @@ class ConfigurationPropertiesBeanContext {
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
         Class<?> beanClass = beanType.getRawClass();
         if (isCandidateClass(beanClass)) {
-            Constructor<?> bindConstructor = getBindConstructor(beanType);
+            Constructor<?> bindConstructor = this.bindConstructor;
             if (bindConstructor == null) {
                 PropertyDescriptor[] descriptors = getPropertyDescriptors(beanClass);
                 initBeanProperties(beanType, descriptors, prefixName, nestedPath);
@@ -227,7 +227,11 @@ class ConfigurationPropertiesBeanContext {
      * @see Binder#bind(String, Bindable)
      */
     void bindPropertyValues() {
-        this.beanProperties.values().forEach(this::bindPropertyValue);
+        if (this.bindConstructor == null) {
+            this.beanProperties.values().forEach(this::bindPropertyValue);
+        } else {
+            initBeanProperties();
+        }
     }
 
     boolean bindPropertyValue(ConfigurationPropertiesBeanProperty beanProperty) {
@@ -519,8 +523,7 @@ class ConfigurationPropertiesBeanContext {
         return value;
     }
 
-    static Map<String, ConfigurationPropertiesBeanContext> buildConfigurationPropertiesBeanContexts
-            (ConfigurableApplicationContext context) {
+    static Map<String, ConfigurationPropertiesBeanContext> buildConfigurationPropertiesBeanContexts(ConfigurableApplicationContext context) {
         ConfigurableListableBeanFactory beanFactory = context.getBeanFactory();
         String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
         Map<String, ConfigurationPropertiesBeanContext> beanContexts = newHashMap();
