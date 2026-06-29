@@ -198,6 +198,15 @@ class EventPublishingConfigurationPropertiesBeanPropertyChangedListenerTest {
 
     }
 
+    @Test
+    void testTestConstructorBindingConfigurationProperties(int index) {
+        if (index > 0) {
+            return;
+        }
+        assertEquals("test-constructor-binding-name", this.testConstructorBindingConfigurationProperties.getName());
+        assertEquals("test-constructor-binding-value", this.testConstructorBindingConfigurationProperties.getValue());
+    }
+
     void setProperty(String configurationPropertyName, String propertyValue, Object configurationPropertiesBean) {
         this.mockPropertySource.setProperty(configurationPropertyName, propertyValue);
         this.beanFactory.destroyBean(configurationPropertiesBean);
