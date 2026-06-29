@@ -343,4 +343,35 @@ Full Changelog: [View here](link-to-full-changelog)
 
 For details, see the [full changelog](https://github.com/your-repo/compare/0.2.24...0.2.25).
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.24...0.2.25
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.24...0.2.25## v0.2.26
+
+# Release Notes for v0.2.26  
+
+## New Features  
+- Added support for constructor binding property assertions.  
+- Introduced projects map to test configuration properties for enhanced flexibility.  
+
+## Bug Fixes  
+- Fixed issue with constructor-bound properties rebinding to improve consistency.  
+- Guarded null bean context during property binding to prevent potential errors.  
+
+## Dependency Updates  
+- Bumped `microsphere-spring` to v0.2.33.  
+- Bumped `microsphere-build` to v0.3.5.  
+- Updated `org.junit:junit-bom` from v6.1.0 to v6.1.1.  
+
+## Test Improvements  
+- Added test cases for null bean properties to improve coverage.  
+- Enhanced constructor-binding test wiring.  
+
+## Build and Workflow Enhancements  
+- Merged updates from the main branch. ([skip ci])  
+
+## Other Changes  
+- Removed unused test assertion imports.  
+- Updated README to reflect the latest version references.  
+- Deferred bean context initialization until singletons are ready for better startup behavior.  
+- Refined bean property logging details for improved visibility.  
+- Enhanced configuration properties change tracking for more precise monitoring.  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.25...0.2.26
