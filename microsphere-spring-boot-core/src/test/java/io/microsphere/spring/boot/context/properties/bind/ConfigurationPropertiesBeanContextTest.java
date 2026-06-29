@@ -62,8 +62,8 @@ public class ConfigurationPropertiesBeanContextTest {
         context.refresh();
         ConfigurationProperties annotation = beanInfo.getAnnotation();
         AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
-        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), annotationAttributes,
-                beanInfo.getPrefix(), context);
+        this.beanContext = new ConfigurationPropertiesBeanContext("test", forRawClass(ServerProperties.class),
+                annotationAttributes, context);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class ConfigurationPropertiesBeanContextTest {
     }
 
     @Test
-    void testSetProperty() {
+    void testSetPropertyValue() {
         // String type field
         String propertyName = "test.name";
         Object propertyValue = "Mercy";
@@ -85,16 +85,15 @@ public class ConfigurationPropertiesBeanContextTest {
         ServerProperties serverProperties = new ServerProperties();
         this.beanContext.setBean(serverProperties);
 
-        this.beanContext.setProperty(property, propertyValue, false);
+        this.beanContext.setPropertyValue(property, propertyValue);
 
         Bindable<String> bindable = ofInstance("Mercy");
-        this.beanContext.initProperty(property.getName(), bindable);
-        this.beanContext.setProperty(property, propertyValue, true);
-        this.beanContext.setProperty(property, propertyValue, true);
+        this.beanContext.setPropertyValue(property, propertyValue);
+        this.beanContext.setPropertyValue(property, propertyValue);
     }
 
     @Test
-    void testGetPropertyValueOnFailed() {
+    void testGetBeanPropertyValueOnFailed() {
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
         this.beanContext.setBean(new ServerProperties());
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
