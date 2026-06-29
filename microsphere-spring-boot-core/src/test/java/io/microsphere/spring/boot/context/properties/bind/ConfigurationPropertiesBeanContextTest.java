@@ -62,17 +62,17 @@ public class ConfigurationPropertiesBeanContextTest {
         context.refresh();
         ConfigurationProperties annotation = beanInfo.getAnnotation();
         AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
-        this.beanContext = new ConfigurationPropertiesBeanContext(forRawClass(ServerProperties.class), annotationAttributes,
-                beanInfo.getPrefix(), context);
+        this.beanContext = new ConfigurationPropertiesBeanContext("server", forRawClass(ServerProperties.class),
+                annotationAttributes, context);
     }
 
     @Test
-    void testInitialize() {
+    void testSetBean() {
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.initialize(serverProperties);
+        this.beanContext.setBean(serverProperties);
         assertNull(serverProperties.getPort());
 
-        this.beanContext.initialize(new JacksonProperties());
+        this.beanContext.setBean(new JacksonProperties());
     }
 
     @Test
@@ -83,20 +83,20 @@ public class ConfigurationPropertiesBeanContextTest {
         ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
 
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.initialize(serverProperties);
+        this.beanContext.setBean(serverProperties);
 
-        this.beanContext.setProperty(property, propertyValue, false);
+        this.beanContext.setProperty(property, propertyValue);
 
         Bindable<String> bindable = ofInstance("Mercy");
-        this.beanContext.initProperty(property.getName(), bindable);
-        this.beanContext.setProperty(property, propertyValue, true);
-        this.beanContext.setProperty(property, propertyValue, true);
+        // this.beanContext.initProperty(property.getName(), bindable);
+        this.beanContext.setProperty(property, propertyValue);
+        this.beanContext.setProperty(property, propertyValue);
     }
 
     @Test
     void testGetPropertyValueOnFailed() {
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
-        this.beanContext.initialize(new ServerProperties());
+        this.beanContext.setBean(new ServerProperties());
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
     }
 

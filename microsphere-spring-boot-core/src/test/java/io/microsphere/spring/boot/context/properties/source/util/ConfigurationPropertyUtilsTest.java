@@ -62,10 +62,10 @@ class ConfigurationPropertyUtilsTest {
             @Override
             public void onSuccess(ConfigurationPropertyName name, Bindable<?> target, BindContext context, Object result) {
                 assertEquals(prefix, getPrefix(name, context));
-                assertEquals(prefix, ConfigurationPropertyUtils.getSource(name));
+                assertEquals(prefix, getSource(name));
             }
         });
-        assertEquals((Integer) 12345, serverProperties.getPort());
+        assertEquals(12345, serverProperties.getPort());
 
         BindContext context = mock(BindContext.class);
         when(context.getDepth()).thenReturn(1);
