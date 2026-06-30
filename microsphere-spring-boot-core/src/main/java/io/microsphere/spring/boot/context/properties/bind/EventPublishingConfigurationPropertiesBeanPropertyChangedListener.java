@@ -50,7 +50,8 @@ import static io.microsphere.spring.context.ApplicationContextUtils.asConfigurab
  * @see ConfigurationPropertiesBeanPropertyChangedEvent
  * @since 1.0.0
  */
-public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener implements BindListener, ApplicationContextAware, InitializingBean, SmartInitializingSingleton {
+public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener implements BindListener,
+        ApplicationContextAware, InitializingBean, SmartInitializingSingleton {
 
     private static final Logger logger = getLogger(EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
 
@@ -106,7 +107,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
                             name, target, context.getDepth());
                 }
             } else {
-                configurationPropertiesBeanContext.setBean(bean);
+                configurationPropertiesBeanContext.initializeBean(bean);
                 if (logger.isTraceEnabled()) {
                     logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : {} , depth : {} , bean : '{}']",
                             name, target, context.getDepth(), bean);
