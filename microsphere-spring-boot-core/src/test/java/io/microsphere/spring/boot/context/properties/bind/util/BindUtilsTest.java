@@ -19,8 +19,10 @@ package io.microsphere.spring.boot.context.properties.bind.util;
 
 import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -43,6 +45,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
+import static org.springframework.core.ResolvableType.forClass;
 
 /**
  * {@link BindUtils} Test
@@ -51,6 +54,7 @@ import static org.springframework.boot.context.properties.bind.Bindable.of;
  * @see BindUtils
  * @since 1.0.0
  */
+@SpringLoggingTest
 class BindUtilsTest {
 
     private Bindable<ServerProperties> bindable;
@@ -110,11 +114,14 @@ class BindUtilsTest {
 
     @Test
     void testGetBindConstructor() {
-        assertNull(getBindConstructor(of(ServerProperties.class), false));
-        assertNull(getBindConstructor(of(ServerProperties.class), true));
+        assertNull(getBindConstructor(forClass(ServerProperties.class)));
+        assertNull(getBindConstructor(forClass(ServerProperties.class), true));
 
-        assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
-        assertNotNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
+        assertNotNull(getBindConstructor(forClass(TestConstructorBindingConfigurationProperties.class)));
+        assertNotNull(getBindConstructor(forClass(TestConstructorBindingConfigurationProperties.class), true));
+
+        assertNull(getBindConstructor(forClass(TestBindConstructorClass.class)));
+        assertNull(getBindConstructor(forClass(TestBindConstructorClass.class), true));
     }
 
     @Test
@@ -131,5 +138,17 @@ class BindUtilsTest {
 
         when(context.getConfigurationProperty()).thenReturn(newConfigurationProperty("server.port", "12345"));
         assertTrue(isBoundProperty(context));
+    }
+
+
+    static class TestBindConstructorClass {
+
+        private ServerProperties serverProperties;
+
+        @Autowired
+        public TestBindConstructorClass(ServerProperties serverProperties) {
+            this.serverProperties = serverProperties;
+        }
+
     }
 }

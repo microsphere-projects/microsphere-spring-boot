@@ -17,6 +17,7 @@
 package io.microsphere.spring.boot.context.properties.bind.util;
 
 import io.microsphere.annotation.Nullable;
+import io.microsphere.logging.Logger;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
 import io.microsphere.spring.boot.context.properties.bind.ListenableBindHandlerAdapter;
 import io.microsphere.util.Utils;
@@ -27,12 +28,15 @@ import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.bind.Binder;
 import org.springframework.boot.context.properties.source.ConfigurationPropertySource;
 import org.springframework.boot.context.properties.source.MapConfigurationPropertySource;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.env.Environment;
 
 import java.lang.reflect.Constructor;
 import java.util.Map;
 
 import static io.microsphere.collection.Lists.ofList;
+import static io.microsphere.lang.function.ThrowableSupplier.execute;
+import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.spring.boot.context.properties.util.ConfigurationPropertiesUtils.CONFIGURATION_PROPERTIES_CLASS;
 import static org.springframework.boot.context.properties.bind.BindConstructorProvider.DEFAULT;
 import static org.springframework.boot.context.properties.bind.Bindable.of;
@@ -46,6 +50,8 @@ import static org.springframework.boot.context.properties.bind.Binder.get;
  * @since 1.0.0
  */
 public abstract class BindUtils implements Utils {
+
+    private static final Logger logger = getLogger(BindUtils.class);
 
     /**
      * Checks if the given {@link Bindable} target and {@link BindContext} represent a bean
@@ -230,6 +236,23 @@ public abstract class BindUtils implements Utils {
     }
 
     /**
+     * Return the bind constructor to use for the given bean type, or {@code null} if
+     * constructor binding is not supported.
+     *
+     * @param beanType the bean type to check
+     * @return the bind constructor or {@code null}
+     */
+    @Nullable
+    public static Constructor<?> getBindConstructor(ResolvableType beanType) {
+        return getBindConstructor(beanType, false);
+    }
+
+    @Nullable
+    public static Constructor<?> getBindConstructor(ResolvableType beanType, boolean isNestedConstructorBinding) {
+        return getBindConstructor(of(beanType), isNestedConstructorBinding);
+    }
+
+    /**
      * Return the bind constructor to use for the given bindable, or {@code null} if
      * constructor binding is not supported.
      *
@@ -240,7 +263,12 @@ public abstract class BindUtils implements Utils {
      */
     @Nullable
     public static Constructor<?> getBindConstructor(Bindable<?> bindable, boolean isNestedConstructorBinding) {
-        return DEFAULT.getBindConstructor(bindable, isNestedConstructorBinding);
+        return execute(() -> DEFAULT.getBindConstructor(bindable, isNestedConstructorBinding), e -> {
+            if (logger.isWarnEnabled()) {
+                logger.warn("Failed to get bind constructor for Bindable: {}", bindable, e);
+            }
+            return null;
+        });
     }
 
     /**
