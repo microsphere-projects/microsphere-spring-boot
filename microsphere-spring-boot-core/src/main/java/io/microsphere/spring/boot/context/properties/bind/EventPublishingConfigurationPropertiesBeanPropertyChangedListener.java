@@ -106,7 +106,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
                             name, target, context.getDepth());
                 }
             } else {
-                configurationPropertiesBeanContext.setBean(bean);
+                configurationPropertiesBeanContext.initializeBean(bean);
                 if (logger.isTraceEnabled()) {
                     logger.trace("The ConfigurationPropertiesBean binding is finished[name : '{}' , target : {} , depth : {} , bean : '{}']",
                             name, target, context.getDepth(), bean);
