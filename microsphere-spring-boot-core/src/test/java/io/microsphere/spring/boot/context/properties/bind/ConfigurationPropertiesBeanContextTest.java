@@ -27,6 +27,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Bindable;
 import org.springframework.boot.context.properties.source.ConfigurationProperty;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAttributes;
 
 import java.beans.PropertyDescriptor;
@@ -34,6 +35,7 @@ import java.beans.PropertyDescriptor;
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.getInstance;
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
 import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
@@ -53,26 +55,40 @@ import static org.springframework.core.ResolvableType.forRawClass;
 @SpringLoggingTest
 public class ConfigurationPropertiesBeanContextTest {
 
+    private static String beanName = "server-org.springframework.boot.autoconfigure.web.ServerProperties";
+
+    private static ResolvableType beanType = forRawClass(ServerProperties.class);
+
+    private static ConfigurationProperties annotation = new ConfigurationPropertiesBeanInfo(ServerProperties.class).getAnnotation();
+
+    private static AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
+
+    private GenericApplicationContext context;
+
     private ConfigurationPropertiesBeanContext beanContext;
 
     @BeforeEach
     void setUp() {
-        ConfigurationPropertiesBeanInfo beanInfo = new ConfigurationPropertiesBeanInfo(ServerProperties.class);
-        GenericApplicationContext context = new GenericApplicationContext();
+        this.context = new GenericApplicationContext();
         context.refresh();
-        ConfigurationProperties annotation = beanInfo.getAnnotation();
-        AnnotationAttributes annotationAttributes = getAnnotationAttributes(annotation);
-        this.beanContext = new ConfigurationPropertiesBeanContext("server", forRawClass(ServerProperties.class),
-                annotationAttributes, context);
+        this.beanContext = new ConfigurationPropertiesBeanContext(beanName, beanType, annotationAttributes, context);
     }
 
     @Test
-    void testSetBean() {
+    void testGetter() {
+        assertSame(beanName, this.beanContext.getBeanName());
+        assertSame(beanType, this.beanContext.getBeanType());
+        assertEquals("server", this.beanContext.getPrefix());
+        assertSame(ServerProperties.class, this.beanContext.getBeanClass());
+    }
+
+    @Test
+    void testInitializeBean() {
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.setBean(serverProperties);
+        this.beanContext.initializeBean(serverProperties);
         assertNull(serverProperties.getPort());
 
-        this.beanContext.setBean(new JacksonProperties());
+        this.beanContext.initializeBean(new JacksonProperties());
     }
 
     @Test
@@ -83,7 +99,7 @@ public class ConfigurationPropertiesBeanContextTest {
         ConfigurationProperty property = newConfigurationProperty(propertyName, propertyValue);
 
         ServerProperties serverProperties = new ServerProperties();
-        this.beanContext.setBean(serverProperties);
+        this.beanContext.initializeBean(serverProperties);
 
         this.beanContext.setProperty(property, propertyValue);
 
@@ -94,10 +110,25 @@ public class ConfigurationPropertiesBeanContextTest {
     }
 
     @Test
-    void testGetPropertyValueOnFailed() {
+    void testSetAndGetPropertyValue() {
+        Integer port = 8080;
+        assertFalse(this.beanContext.setPropertyValue("port", port));
+        ServerProperties serverProperties = new ServerProperties();
+        this.beanContext.initializeBean(serverProperties);
+        assertNull(this.beanContext.getPropertyValue("port"));
+        assertTrue(this.beanContext.setPropertyValue("port", port));
+        assertEquals(port, this.beanContext.getPropertyValue("port"));
+    }
+
+    @Test
+    void testSetAndGetPropertyValueOnFailed() {
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
-        this.beanContext.setBean(new ServerProperties());
+        this.beanContext.initializeBean(new ServerProperties());
         assertNull(this.beanContext.getPropertyValue("invalid.property.name"));
+        assertNull(this.beanContext.getPropertyValue("ssl.enabled"));
+        assertNull(this.beanContext.getPropertyValue(null));
+        assertFalse(this.beanContext.setPropertyValue("s", null));
+        assertFalse(this.beanContext.setPropertyValue(null, null));
     }
 
     @Test
