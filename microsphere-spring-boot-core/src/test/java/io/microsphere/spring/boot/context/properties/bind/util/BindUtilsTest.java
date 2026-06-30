@@ -19,8 +19,10 @@ package io.microsphere.spring.boot.context.properties.bind.util;
 
 import io.microsphere.spring.boot.context.properties.TestConstructorBindingConfigurationProperties;
 import io.microsphere.spring.boot.context.properties.bind.BindListener;
+import io.microsphere.spring.test.junit.jupiter.SpringLoggingTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.context.properties.bind.BindContext;
 import org.springframework.boot.context.properties.bind.Bindable;
@@ -50,6 +52,7 @@ import static org.springframework.boot.context.properties.bind.Bindable.of;
  * @see BindUtils
  * @since 1.0.0
  */
+@SpringLoggingTest
 class BindUtilsTest {
 
     private Bindable<ServerProperties> bindable;
@@ -114,6 +117,9 @@ class BindUtilsTest {
 
         assertNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), false));
         assertNull(getBindConstructor(of(TestConstructorBindingConfigurationProperties.class), true));
+
+//        assertNotNull(getBindConstructor(forClass(TestBindConstructorClass.class)));
+//        assertNotNull(getBindConstructor(forClass(TestBindConstructorClass.class), true));
     }
 
     @Test
@@ -130,5 +136,17 @@ class BindUtilsTest {
 
         when(context.getConfigurationProperty()).thenReturn(newConfigurationProperty("server.port", "12345"));
         assertTrue(isBoundProperty(context));
+    }
+
+
+    static class TestBindConstructorClass {
+
+        private ServerProperties serverProperties;
+
+        @Autowired
+        public TestBindConstructorClass(ServerProperties serverProperties) {
+            this.serverProperties = serverProperties;
+        }
+
     }
 }

@@ -402,4 +402,15 @@ For more details on the changes, refer to the commit history.
 
 **Full Changelog**: [Compare 0.1.25...0.1.26](https://github.com/mercyblitz/project/compare/0.1.25...0.1.26)
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.25...0.1.26
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.25...0.1.26## v0.1.27
+
+# Release Notes: Version 0.1.27
+
+## Bug Fixes
+- Hardened configuration property binding to improve application stability. ([#143](https://github.com/mercyblitz/dev-1.x/pull/143))
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` into `dev-1.x` branch to sync updates.  
+- Bumped version to `0.1.27` post-release of `0.1.26`.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.26...0.1.27
