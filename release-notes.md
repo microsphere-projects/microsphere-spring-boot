@@ -374,4 +374,21 @@ For details, see the [full changelog](https://github.com/your-repo/compare/0.2.2
 - Refined bean property logging details for improved visibility.  
 - Enhanced configuration properties change tracking for more precise monitoring.  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.25...0.2.26
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.25...0.2.26## v0.2.27
+
+# Release Notes - Version 0.2.27
+
+## 🛠️ Bug Fixes
+- Harden property binding bean updates to improve resilience. (#d1584d7)
+
+## 📚 Documentation
+- Updated README with the latest version matrix. (#7a4e47a)
+
+## 🏗️ Build and Workflow Enhancements
+- Merged main into release branch. ([#f8b7228](#), [#2587062](#))
+- Merged release branch into main. (#bcd160b)
+- Bumped version to prepare for 0.2.27 release. (#d8f81a0)
+
+--- 
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.26...0.2.27
