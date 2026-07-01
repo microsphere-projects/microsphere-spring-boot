@@ -391,4 +391,24 @@ For details, see the [full changelog](https://github.com/your-repo/compare/0.2.2
 
 --- 
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.26...0.2.27
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.26...0.2.27## v0.2.28
+
+# Release Notes: Version 0.2.28
+
+## Bug Fixes
+- Hardened property descriptor checks to prevent potential issues. (#6d5c502)
+- Added guard for `null` in candidate class detection to enhance stability. (#233e6dd)
+- Improved bean class resolution using `ResolvableType.resolve`. (#8f14522)
+
+## Documentation
+- Updated README to reflect the latest version numbers. (#2f2bd2e)
+
+## Build and Workflow Enhancements
+- Merged main into release branches multiple times to maintain consistency. (#ce7656b, #8934031, #ce9a99a, #1b62136)
+- Bumped version to prepare for the next patch release after 0.2.27. (#50965f5)
+
+---
+
+No new features or dependency updates were introduced in this release.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.27...0.2.28
