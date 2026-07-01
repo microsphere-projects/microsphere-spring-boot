@@ -543,8 +543,14 @@ class ConfigurationPropertiesBeanContext {
      * @return {@code true} if the property is a binding candidate, {@code false} otherwise
      */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
+        if (descriptor == null) {
+            return false;
+        }
         Method readMethod = descriptor.getReadMethod();
-        return readMethod == null || !Object.class.equals(readMethod.getDeclaringClass());
+        if (readMethod == null) {
+            return false;
+        }
+        return !Object.class.equals(readMethod.getDeclaringClass());
     }
 
     /**
