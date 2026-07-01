@@ -31,8 +31,10 @@ import org.springframework.core.ResolvableType;
 import org.springframework.core.annotation.AnnotationAttributes;
 
 import java.beans.PropertyDescriptor;
+import java.util.concurrent.TimeUnit;
 
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.getInstance;
+import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateClass;
 import static io.microsphere.spring.boot.context.properties.bind.ConfigurationPropertiesBeanContext.isCandidateProperty;
 import static io.microsphere.spring.core.annotation.AnnotationUtils.getAnnotationAttributes;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -144,11 +146,33 @@ public class ConfigurationPropertiesBeanContextTest {
 
     @Test
     void testIsCandidateProperty() {
+        assertFalse(isCandidateProperty(null));
         PropertyDescriptor descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "name");
-        assertTrue(isCandidateProperty(descriptor));
+        assertFalse(isCandidateProperty(descriptor));
+
+        descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "not-found");
+        assertFalse(isCandidateProperty(descriptor));
 
         descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "class");
         assertFalse(isCandidateProperty(descriptor));
+
+        descriptor = getPropertyDescriptor(ServerProperties.class, "port");
+        assertTrue(isCandidateProperty(descriptor));
+    }
+
+    @Test
+    void testIsCandidateClass() {
+        // null
+        assertFalse(isCandidateClass(null));
+        // primitive type and wrapper type are not candidate class
+        assertFalse(isCandidateClass(int.class));
+        assertFalse(isCandidateClass(Integer.class));
+        // enumeration type
+        assertFalse(isCandidateClass(TimeUnit.class));
+        // String is candidate class,but is under java.lang package.
+        assertFalse(isCandidateClass(String.class));
+        // current class
+        assertTrue(isCandidateClass(getClass()));
     }
 
     public void setName(String name) {

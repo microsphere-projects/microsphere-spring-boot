@@ -176,7 +176,7 @@ class ConfigurationPropertiesBeanContext {
      */
     @Nonnull
     Class<?> getBeanClass() {
-        return getBeanType().getRawClass();
+        return getBeanType().resolve();
     }
 
     void initializeBean(Object bean) {
@@ -209,7 +209,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
-        Class<?> beanClass = beanType.getRawClass();
+        Class<?> beanClass = beanType.resolve();
         if (isCandidateClass(beanClass)) {
             Constructor<?> bindConstructor = this.bindConstructor;
             if (bindConstructor == null) {
@@ -544,8 +544,14 @@ class ConfigurationPropertiesBeanContext {
      * @return {@code true} if the property is a binding candidate, {@code false} otherwise
      */
     static boolean isCandidateProperty(PropertyDescriptor descriptor) {
+        if (descriptor == null) {
+            return false;
+        }
         Method readMethod = descriptor.getReadMethod();
-        return readMethod == null || !Object.class.equals(readMethod.getDeclaringClass());
+        if (readMethod == null) {
+            return false;
+        }
+        return !Object.class.equals(readMethod.getDeclaringClass());
     }
 
     /**
@@ -563,6 +569,9 @@ class ConfigurationPropertiesBeanContext {
      * @return {@code true} if the class is a binding candidate, {@code false} otherwise
      */
     static boolean isCandidateClass(Class<?> beanClass) {
+        if (beanClass == null) {
+            return false;
+        }
         if (isPrimitiveOrWrapper(beanClass) || beanClass.isEnum()) {
             return false;
         }

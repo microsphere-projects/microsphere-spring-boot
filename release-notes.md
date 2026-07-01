@@ -413,4 +413,19 @@ For more details on the changes, refer to the commit history.
 - Merged `release-1.x` into `dev-1.x` branch to sync updates.  
 - Bumped version to `0.1.27` post-release of `0.1.26`.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.26...0.1.27
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.26...0.1.27## v0.1.28
+
+# Release Notes: Version 0.1.28
+
+## Bug Fixes
+- Improved candidate checks in the bean context to enhance robustness. (#144)
+
+## Documentation
+- Updated `README` with the latest release versions for better clarity. (#30f609f)
+
+## Other Changes
+- Migrated codebase updates from `release-1.x` to `dev-1.x`. (#69b400d)
+- Transitioned to using `ResolvableType.resolve` for resolving bean classes. (#e12cbfc)
+- Incremented patch version post publishing `0.1.27`. (#ece42aa) 
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.27...0.1.28
