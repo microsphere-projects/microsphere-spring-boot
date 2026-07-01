@@ -146,11 +146,18 @@ public class ConfigurationPropertiesBeanContextTest {
 
     @Test
     void testIsCandidateProperty() {
+        assertFalse(isCandidateProperty(null));
         PropertyDescriptor descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "name");
-        assertTrue(isCandidateProperty(descriptor));
+        assertFalse(isCandidateProperty(descriptor));
+
+        descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "not-found");
+        assertFalse(isCandidateProperty(descriptor));
 
         descriptor = getPropertyDescriptor(ConfigurationPropertiesBeanContextTest.class, "class");
         assertFalse(isCandidateProperty(descriptor));
+
+        descriptor = getPropertyDescriptor(ServerProperties.class, "port");
+        assertTrue(isCandidateProperty(descriptor));
     }
 
     @Test
