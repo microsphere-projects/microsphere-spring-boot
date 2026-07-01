@@ -110,8 +110,8 @@ Choose the version that matches your Spring Boot generation:
 
 | Branch | Spring Boot Compatibility | Latest Version |
 |--------|---------------------------|----------------|
-| `main` | 3.0.x – 3.5.x, 4.1.x      | `0.2.27`       |
-| `1.x`  | 2.0.x – 2.7.x             | `0.1.27`       |
+| `main` | 3.0.x – 3.5.x, 4.1.x      | `0.2.28`       |
+| `1.x`  | 2.0.x – 2.7.x             | `0.1.28`       |
 
 ### Add Module Dependencies
 
