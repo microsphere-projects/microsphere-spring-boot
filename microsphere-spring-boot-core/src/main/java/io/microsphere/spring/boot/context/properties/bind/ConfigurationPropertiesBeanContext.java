@@ -562,6 +562,9 @@ class ConfigurationPropertiesBeanContext {
      * @return {@code true} if the class is a binding candidate, {@code false} otherwise
      */
     static boolean isCandidateClass(Class<?> beanClass) {
+        if (beanClass == null) {
+            return false;
+        }
         if (isPrimitiveOrWrapper(beanClass) || beanClass.isEnum()) {
             return false;
         }
