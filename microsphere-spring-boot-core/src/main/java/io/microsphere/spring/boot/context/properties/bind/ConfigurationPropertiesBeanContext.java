@@ -176,7 +176,7 @@ class ConfigurationPropertiesBeanContext {
      */
     @Nonnull
     Class<?> getBeanClass() {
-        return getBeanType().getRawClass();
+        return getBeanType().resolve();
     }
 
     void initializeBean(Object bean) {
@@ -209,7 +209,7 @@ class ConfigurationPropertiesBeanContext {
     }
 
     private void initBeanProperties(ResolvableType beanType, ConfigurationPropertyName prefixName, String nestedPath) {
-        Class<?> beanClass = beanType.getRawClass();
+        Class<?> beanClass = beanType.resolve();
         if (isCandidateClass(beanClass)) {
             Constructor<?> bindConstructor = this.bindConstructor;
             if (bindConstructor == null) {
