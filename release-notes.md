@@ -411,4 +411,30 @@ For details, see the [full changelog](https://github.com/your-repo/compare/0.2.2
 
 No new features or dependency updates were introduced in this release.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.27...0.2.28
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.27...0.2.28## v0.2.29
+
+# Release Notes - Version 0.2.29
+
+## New Features
+- Added `microsphere-spring-boot-test` module. (#812b894)
+- Introduced reusable auto-configuration test base. (#e6f0a0a)
+- Added actuator endpoint presence condition. (#7a1e8c9)
+
+## Documentation
+- Updated README with Spring Boot version ranges. (#7b32110)
+- Updated README with the latest release versions. (#2847e11)
+- Added Javadoc reference for `ConfigurationMetadata`. (#8ce3a57)
+
+## Dependency Updates
+- Set Spring Boot 3.5 as default profile. (#09172e8)
+- Defaulted to Spring Boot 4.1 and updated HTTP test. (#69043b2)
+
+## Build and Workflow Enhancements
+- Merged `main` branch into `release`. [skip ci] (#5f881df, #8a0b20f, #1bac768, #baa1114)
+- Bumped version to the next patch after publishing 0.2.28. [skip ci] (#5608718)
+
+---
+
+For a complete list of changes, refer to the full changelog.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.28...0.2.29
