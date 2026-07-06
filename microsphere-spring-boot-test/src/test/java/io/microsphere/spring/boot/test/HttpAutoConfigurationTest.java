@@ -17,23 +17,19 @@
 
 package io.microsphere.spring.boot.test;
 
-import org.springframework.boot.autoconfigure.web.servlet.HttpEncodingAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Set;
 
 /**
- * {@link AutoConfigurationTest} Test for {@link HttpEncodingAutoConfiguration}
+ * {@link AutoConfigurationTest} Test for {@link HttpAutoConfiguration}
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
- * @see HttpEncodingAutoConfiguration
  * @since 1.0.0
  */
-@SpringBootTest(classes = {
-        HttpEncodingAutoConfigurationTest.class
-})
-public class HttpEncodingAutoConfigurationTest extends WebAutoConfigurationTest<HttpEncodingAutoConfiguration> {
+@SpringBootTest(classes = HttpAutoConfigurationTest.class)
+public class HttpAutoConfigurationTest extends WebAutoConfigurationTest<HttpAutoConfiguration> {
 
     @Override
     protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
@@ -42,7 +38,7 @@ public class HttpEncodingAutoConfigurationTest extends WebAutoConfigurationTest<
 
     @Override
     protected void configureGlobalDisabledPropertyValues(Set<String> globalDisabledPropertyValues) {
-        globalDisabledPropertyValues.add("server.servlet.encoding.enabled=false");
+        globalDisabledPropertyValues.add("server.http.enabled=false");
     }
 
     @Override
