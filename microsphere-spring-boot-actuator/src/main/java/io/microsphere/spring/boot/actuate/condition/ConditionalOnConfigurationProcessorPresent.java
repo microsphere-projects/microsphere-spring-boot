@@ -33,6 +33,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Conditional
+ * @see org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata
  * @since 1.0.0
  */
 @Target({TYPE, METHOD})
