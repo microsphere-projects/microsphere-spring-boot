@@ -36,10 +36,10 @@ import java.lang.annotation.Target;
  * {@link org.springframework.context.annotation.Import @Import}).
  *
  * @author Phillip Webb
- * @since 2.2.0
  * @see ConfigurationProperties
+ * @since 2.2.0
  */
-@Target({ ElementType.TYPE, ElementType.CONSTRUCTOR })
+@Target({ElementType.TYPE, ElementType.CONSTRUCTOR})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface ConstructorBinding {

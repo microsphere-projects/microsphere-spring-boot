@@ -428,4 +428,23 @@ For more details on the changes, refer to the commit history.
 - Transitioned to using `ResolvableType.resolve` for resolving bean classes. (#e12cbfc)
 - Incremented patch version post publishing `0.1.27`. (#ece42aa) 
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.27...0.1.28
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.27...0.1.28## v0.1.29
+
+# Release Notes: v0.1.29
+
+## Documentation
+- Updated **README** to include Spring Boot version matrix. (3a1cbda)
+
+## Test Improvements
+- Added tests for `HttpAutoConfiguration` and renamed existing tests. (bb0399c)  
+- Introduced a dedicated test module and actuator endpoint condition. (debfc7b)  
+- Switched test module to use `javax.servlet` API. (b2ccf93)  
+
+## Build and Workflow Enhancements
+- Bumped version to the next patch after publishing v0.1.28. (04a7100)  
+- Merged `release-1.x` into `dev-1.x`. (a07666c)  
+
+## Other Changes
+- Tidied up `@ConstructorBinding` annotation formatting. (9ba70aa)  
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.28...0.1.29
