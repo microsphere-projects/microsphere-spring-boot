@@ -28,17 +28,17 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * {@link Conditional @Conditional} that checks whether the artifact "org.springframework.boot:spring-boot-configuration-processor"
- * is present
+ * {@link Conditional @Conditional} that checks whether the Spring Boot Actuator
+ * {@link org.springframework.boot.actuate.endpoint.annotation.Endpoint @Endpoint} API is present
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy<a/>
  * @see Conditional
- * @see org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata
+ * @see org.springframework.boot.actuate.endpoint.annotation.Endpoint
  * @since 1.0.0
  */
 @Target({TYPE, METHOD})
 @Retention(RUNTIME)
 @Documented
-@ConditionalOnClass(name = "org.springframework.boot.configurationprocessor.metadata.ConfigurationMetadata")
-public @interface ConditionalOnConfigurationProcessorPresent {
+@ConditionalOnClass(name = "org.springframework.boot.actuate.endpoint.annotation.Endpoint")
+public @interface ConditionalOnActuatorEndpointPresent {
 }
