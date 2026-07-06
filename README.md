@@ -80,11 +80,11 @@ Microsphere Spring Boot provides production-ready enhancements for Spring Boot a
 
 ### Prerequisites
 
-| Requirement | Version                                                             |
-|-------------|---------------------------------------------------------------------|
-| Java        | 17+                                                                 |
-| Maven       | 3.9+ (or use the included `mvnw` wrapper)                           |
-| Spring Boot | 3.0.x – 3.5.x, 4.0.x (`main` branch) / 2.0.x – 2.7.x (`1.x` branch) |
+| Requirement | Version                                                                     |
+|-------------|-----------------------------------------------------------------------------|
+| Java        | 17+                                                                         |
+| Maven       | 3.9+ (or use the included `mvnw` wrapper)                                   |
+| Spring Boot | 3.0.x – 3.5.x, 4.0.x - 4.1.x (`main` branch) / 2.0.x – 2.7.x (`1.x` branch) |
 
 ### Add the BOM
 
@@ -108,10 +108,10 @@ Import the Microsphere Spring Boot BOM into your `pom.xml` so all module version
 
 Choose the version that matches your Spring Boot generation:
 
-| Branch | Spring Boot Compatibility | Latest Version |
-|--------|---------------------------|----------------|
-| `main` | 3.0.x – 3.5.x, 4.1.x      | `0.2.29`       |
-| `1.x`  | 2.0.x – 2.7.x             | `0.1.29`       |
+| Branch | Spring Boot Compatibility    | Latest Version |
+|--------|------------------------------|----------------|
+| `main` | 3.0.x – 3.5.x, 4.0.x - 4.1.x | `0.2.29`       |
+| `1.x`  | 2.0.x – 2.7.x                | `0.1.29`       |
 
 ### Add Module Dependencies
 
