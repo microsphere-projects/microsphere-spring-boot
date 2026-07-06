@@ -58,6 +58,7 @@
         <module>microsphere-spring-boot-parent</module>
         <module>microsphere-spring-boot-dependencies</module>
         <module>microsphere-spring-boot-compatible</module>
+        <module>microsphere-spring-boot-test</module>
         <module>microsphere-spring-boot-core</module>
         <module>microsphere-spring-boot-webmvc</module>
         <module>microsphere-spring-boot-webflux</module>
