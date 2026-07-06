@@ -111,6 +111,9 @@
 
         <profile>
             <id>spring-boot-3.5</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <spring-boot.version>3.5.13</spring-boot.version>
             </properties>
@@ -125,9 +128,6 @@
 
         <profile>
             <id>spring-boot-4.1</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
             <properties>
                 <spring-boot.version>4.1.0</spring-boot.version>
             </properties>
