@@ -33,10 +33,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
  * @since 1.0.0
  */
 @ConditionalOnClass(name = {
-        "io.microsphere.spring.context.annotation.BeanCapableImportCandidate"
+        "io.microsphere.spring.context.annotation.BeanCapableImportCandidate"                      // Microsphere Spring Context API
 })
 @AutoConfigureBefore(name = {
-        "org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration"
+        "org.springframework.boot.autoconfigure.context.ConfigurationPropertiesAutoConfiguration"  // Spring Boot API
 })
 @EnableConfigurationPropertiesExtension
 public class ConfigurationPropertiesAutoConfiguration {
