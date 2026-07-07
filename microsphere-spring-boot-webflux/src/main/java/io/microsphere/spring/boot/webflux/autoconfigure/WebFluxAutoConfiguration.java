@@ -31,8 +31,8 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
  */
 @ConditionalOnWebFluxAvailable
 @AutoConfiguration(afterName = {
-        "org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration", // Spring Boot [2.0, 4.0)
-        "org.springframework.boot.webflux.autoconfigure.WebFluxAutoConfiguration"       // Spring Boot  [4.0,)
+        "org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration", // Spring Boot API [2.0, 4.0)
+        "org.springframework.boot.webflux.autoconfigure.WebFluxAutoConfiguration"       // Spring Boot APP [4.0,)
 })
 @EnableWebFluxExtension(reversedProxyHandlerMapping = true)
 public class WebFluxAutoConfiguration {
