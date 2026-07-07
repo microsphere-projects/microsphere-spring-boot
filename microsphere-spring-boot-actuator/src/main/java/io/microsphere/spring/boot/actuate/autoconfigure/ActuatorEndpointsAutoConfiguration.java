@@ -16,6 +16,7 @@
  */
 package io.microsphere.spring.boot.actuate.autoconfigure;
 
+import io.microsphere.spring.boot.actuate.condition.ConditionalOnActuatorEndpointPresent;
 import io.microsphere.spring.boot.actuate.condition.ConditionalOnConfigurationProcessorPresent;
 import io.microsphere.spring.boot.actuate.endpoint.ArtifactsEndpoint;
 import io.microsphere.spring.boot.actuate.endpoint.ConfigurationMetadataEndpoint;
@@ -40,9 +41,7 @@ import org.springframework.context.annotation.Import;
  * @see Endpoint
  * @since 1.0.0
  */
-@ConditionalOnClass(name = {
-        "org.springframework.boot.actuate.endpoint.annotation.Endpoint"
-})
+@ConditionalOnActuatorEndpointPresent
 @Import(value = {ActuatorEndpointsAutoConfiguration.ConfigurationProcessorConfiguration.class})
 public class ActuatorEndpointsAutoConfiguration implements BeanClassLoaderAware {
 
