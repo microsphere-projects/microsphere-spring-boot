@@ -437,4 +437,32 @@ No new features or dependency updates were introduced in this release.
 
 For a complete list of changes, refer to the full changelog.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.28...0.2.29
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.28...0.2.29## v0.2.30
+
+# Release Notes for Version 0.2.30
+
+## Dependency Updates
+- **microsphere-spring** bumped to `0.2.35`. [f8ce07c](https://example.com/commit/f8ce07c)
+- **microsphere-build** parent updated to:
+  - `0.3.8`. [64b3d43](https://example.com/commit/64b3d43)
+  - `0.3.7`. [8e40682](https://example.com/commit/8e40682)
+  - `0.3.6`. [aaf78d2](https://example.com/commit/aaf78d2)
+
+## Documentation
+- Clarified Spring Boot version comments in code. [f57b920](https://example.com/commit/f57b920)
+- Updated README with the latest release versions. [6aa1a25](https://example.com/commit/6aa1a25)
+
+## Test Improvements
+- Refactored auto-configuration property tests. [890cb5a](https://example.com/commit/890cb5a)
+- Aligned test dependencies across Spring Boot modules. [96f2c0a](https://example.com/commit/96f2c0a)
+
+## Build and Workflow Enhancements
+- Merged `main` into `release` branch for sync. [177dae0](https://example.com/commit/177dae0), [6b2c843](https://example.com/commit/6b2c843), etc.
+
+## Other Changes
+- Removed `spring.factories` entry for actuator. [c1d37ed](https://example.com/commit/c1d37ed)
+- Annotated API sources in the auto-config class. [97a1cf0](https://example.com/commit/97a1cf0)
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.29...0.2.30
