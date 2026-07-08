@@ -5,7 +5,7 @@
     <parent>
         <groupId>io.github.microsphere-projects</groupId>
         <artifactId>microsphere-build</artifactId>
-        <version>0.3.5</version>
+        <version>0.3.8</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -51,7 +51,7 @@
     </scm>
 
     <properties>
-        <revision>0.1.30-SNAPSHOT</revision>
+        <revision>0.1.31-SNAPSHOT</revision>
     </properties>
 
     <modules>

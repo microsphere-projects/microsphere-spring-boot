@@ -20,18 +20,18 @@
 
     <dependencies>
 
-        <!-- Microsphere Spring Boot -->
-        <dependency>
-            <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-spring-boot-core</artifactId>
-            <version>${revision}</version>
-        </dependency>
-
         <!-- Microsphere Annotation Processor -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-annotation-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Microsphere Spring Boot -->
+        <dependency>
+            <groupId>io.github.microsphere-projects</groupId>
+            <artifactId>microsphere-spring-boot-core</artifactId>
+            <version>${revision}</version>
         </dependency>
 
         <!-- Microsphere Spring Web MVC -->
@@ -79,10 +79,18 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Microsphere Spring Test -->
+        <!-- Microsphere Spring Boot Test -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
-            <artifactId>microsphere-spring-test</artifactId>
+            <artifactId>microsphere-spring-boot-test</artifactId>
+            <version>${revision}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Jackson -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
             <scope>test</scope>
         </dependency>
 

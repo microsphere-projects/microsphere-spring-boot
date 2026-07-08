@@ -447,4 +447,26 @@ For more details on the changes, refer to the commit history.
 ## Other Changes
 - Tidied up `@ConstructorBinding` annotation formatting. (9ba70aa)  
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.28...0.1.29
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.28...0.1.29## v0.1.30
+
+# Release Notes - Version 0.1.30
+
+## Dependency Updates
+- Upgraded `microsphere-spring` to versions **0.1.34** and **0.1.35**.  
+- Updated `microsphere-build` parent to versions **0.3.6**, **0.3.7**, and **0.3.8**.
+
+## Documentation
+- Enhanced README to reflect latest module versions for better clarity.
+
+## Test Improvements
+- Aligned auto-configuration tests and improved dependency setup for consistent behavior.
+
+## Build and Workflow Enhancements
+- Merged `release-1.x` branch into `dev-1.x`.  
+- Updated project patch version post-0.1.29 publication.  
+
+---
+
+*No new features or bug fixes introduced in this release.*
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.29...0.1.30
