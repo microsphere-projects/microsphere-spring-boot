@@ -22,14 +22,13 @@ import io.microsphere.spring.boot.context.properties.ListenableConfigurationProp
 import io.microsphere.spring.boot.context.properties.TestConfigurationPropertiesBindHandlerAdvisor;
 import io.microsphere.spring.boot.context.properties.bind.EventPublishingConfigurationPropertiesBeanPropertyChangedListener;
 import io.microsphere.spring.boot.context.properties.bind.TestBindListener;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import io.microsphere.spring.boot.test.AutoConfigurationTest;
+import io.microsphere.spring.context.annotation.BeanCapableImportCandidate;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static io.microsphere.spring.beans.BeanUtils.isBeanPresent;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.Set;
+
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.NONE;
 
 /**
  * {@link ConfigurationPropertiesAutoConfiguration} Test
@@ -38,18 +37,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * @see ConfigurationPropertiesAutoConfiguration
  * @since 1.0.0
  */
-@SpringJUnitConfig
-@EnableAutoConfiguration
-class ConfigurationPropertiesAutoConfigurationTest {
+@SpringBootTest(
+        classes = ConfigurationPropertiesAutoConfigurationTest.class,
+        webEnvironment = NONE
+)
+class ConfigurationPropertiesAutoConfigurationTest extends AutoConfigurationTest<ConfigurationPropertiesAutoConfiguration> {
 
-    @Autowired
-    private ConfigurableApplicationContext context;
+    @Override
+    protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
+        autoConfiguredClasses.add(ListenableConfigurationPropertiesBindHandlerAdvisor.class);
+        autoConfiguredClasses.add(EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class);
+        autoConfiguredClasses.add(TestBindListener.class);
+        autoConfiguredClasses.add(TestConfigurationPropertiesBindHandlerAdvisor.class);
+    }
 
-    @Test
-    void test() {
-        assertTrue(isBeanPresent(this.context, ListenableConfigurationPropertiesBindHandlerAdvisor.class));
-        assertTrue(isBeanPresent(this.context, EventPublishingConfigurationPropertiesBeanPropertyChangedListener.class));
-        assertTrue(isBeanPresent(this.context, TestBindListener.class));
-        assertTrue(isBeanPresent(this.context, TestConfigurationPropertiesBindHandlerAdvisor.class));
+    @Override
+    protected void configureGlobalDisabledPropertyValues(Set<String> globalDisabledPropertyValues) {
+    }
+
+    @Override
+    protected void configureGlobalMissingClasses(Set<Class<?>> globalMissingClasses) {
+        globalMissingClasses.add(BeanCapableImportCandidate.class);
     }
 }
