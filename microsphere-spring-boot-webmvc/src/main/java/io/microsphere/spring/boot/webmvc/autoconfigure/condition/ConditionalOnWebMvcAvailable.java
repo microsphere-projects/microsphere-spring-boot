@@ -17,15 +17,9 @@
 
 package io.microsphere.spring.boot.webmvc.autoconfigure.condition;
 
-import io.microsphere.spring.web.method.support.HandlerMethodInterceptor;
-import io.microsphere.spring.webmvc.annotation.EnableWebMvcExtension;
-import jakarta.servlet.Servlet;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.DispatcherServlet;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -49,13 +43,13 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
 @Retention(RUNTIME)
 @Documented
 @ConditionalOnWebApplication(type = SERVLET)
-@ConditionalOnClass(value = {
-        Servlet.class,                   // Servlet API
-        ApplicationContext.class,        // Spring Context API
-        HandlerMethod.class,             // Spring Web API
-        DispatcherServlet.class,         // Spring Web MVC API
-        HandlerMethodInterceptor.class,  // Microsphere Spring Web API
-        EnableWebMvcExtension.class      // Microsphere Spring Web MVC API
+@ConditionalOnClass(name = {
+        "jakarta.servlet.Servlet",                                             // Servlet API
+        "org.springframework.context.ApplicationContext",                      // Spring Context API
+        "org.springframework.web.method.HandlerMethod",                        // Spring Web API
+        "org.springframework.web.servlet.DispatcherServlet",                   // Spring Web MVC API
+        "io.microsphere.spring.web.method.support.HandlerMethodInterceptor",   // Microsphere Spring Web API
+        "io.microsphere.spring.webmvc.annotation.EnableWebMvcExtension"        // Microsphere Spring Web MVC API
 })
 @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME, matchIfMissing = true)
 public @interface ConditionalOnWebMvcAvailable {

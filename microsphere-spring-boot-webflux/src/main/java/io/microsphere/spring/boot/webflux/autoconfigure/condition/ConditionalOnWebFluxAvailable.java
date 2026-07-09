@@ -17,15 +17,9 @@
 
 package io.microsphere.spring.boot.webflux.autoconfigure.condition;
 
-import io.microsphere.spring.web.method.support.HandlerMethodInterceptor;
-import io.microsphere.spring.webflux.annotation.EnableWebFluxExtension;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.reactive.DispatcherHandler;
-import reactor.core.publisher.Flux;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -49,13 +43,13 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
 @Retention(RUNTIME)
 @Documented
 @ConditionalOnWebApplication(type = REACTIVE)
-@ConditionalOnClass(value = {
-        Flux.class,                       // Reactor API
-        ApplicationContext.class,         // Spring Context API
-        HandlerMethod.class,              // Spring Web API
-        DispatcherHandler.class,          // Spring WebFlux API
-        HandlerMethodInterceptor.class,   // Microsphere Spring Web API
-        EnableWebFluxExtension.class      // Microsphere Spring WebFlux API
+@ConditionalOnClass(name = {
+        "reactor.core.publisher.Flux",                                         // Reactor API
+        "org.springframework.context.ApplicationContext",                      // Spring Context API
+        "org.springframework.web.method.HandlerMethod",                        // Spring Web API
+        "org.springframework.web.reactive.DispatcherHandler",                  // Spring WebFlux API
+        "io.microsphere.spring.web.method.support.HandlerMethodInterceptor",   // Microsphere Spring Web API
+        "io.microsphere.spring.webflux.annotation.EnableWebFluxExtension"      // Microsphere Spring WebFlux API
 })
 @ConditionalOnProperty(name = MICROSPHERE_SPRING_BOOT_WEBFLUX_ENALBED_PROPERTY_NAME, matchIfMissing = true)
 public @interface ConditionalOnWebFluxAvailable {
