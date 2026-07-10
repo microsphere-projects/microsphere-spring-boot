@@ -17,6 +17,7 @@
 
 package io.microsphere.spring.boot.test;
 
+import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -38,7 +39,7 @@ public class ReactiveWebApplicationAutoConfigurationTest extends ReactiveWebAuto
 
     @Override
     protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
-        autoConfiguredClasses.add(ServerProperties.class);
+        autoConfiguredClasses.add(MessageSourceProperties.class);
     }
 
     @Override
@@ -48,6 +49,6 @@ public class ReactiveWebApplicationAutoConfigurationTest extends ReactiveWebAuto
 
     @Override
     protected void configureGlobalMissingClasses(Set<Class<?>> globalMissingClasses) {
-        globalMissingClasses.add(ServerProperties.class);
+        globalMissingClasses.add(MessageSourceProperties.class);
     }
 }
