@@ -17,34 +17,37 @@
 
 package io.microsphere.spring.boot.test;
 
+import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.Set;
 
 /**
- * {@link AutoConfigurationTest} Test for {@link HttpAutoConfiguration}
+ * {@link ReactiveWebApplicationAutoConfiguration} Test
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ReactiveWebApplicationAutoConfiguration
  * @since 1.0.0
  */
 @SpringBootTest(
-        classes = HttpAutoConfigurationTest.class
+        classes = {
+                ReactiveWebApplicationAutoConfigurationTest.class
+        }
 )
-public class HttpAutoConfigurationTest extends WebAutoConfigurationTest<HttpAutoConfiguration> {
+public class ReactiveWebApplicationAutoConfigurationTest extends ReactiveWebAutoConfigurationTest<ReactiveWebApplicationAutoConfiguration> {
 
     @Override
     protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
-        autoConfiguredClasses.add(CharacterEncodingFilter.class);
+        autoConfiguredClasses.add(JacksonProperties.class);
     }
 
     @Override
     protected void configureGlobalDisabledPropertyValues(Set<String> globalDisabledPropertyValues) {
-        globalDisabledPropertyValues.add("server.http.enabled=false");
+        globalDisabledPropertyValues.add("reactive.web-app.enabled=false");
     }
 
     @Override
     protected void configureGlobalMissingClasses(Set<Class<?>> globalMissingClasses) {
-        globalMissingClasses.add(CharacterEncodingFilter.class);
+        globalMissingClasses.add(JacksonProperties.class);
     }
 }

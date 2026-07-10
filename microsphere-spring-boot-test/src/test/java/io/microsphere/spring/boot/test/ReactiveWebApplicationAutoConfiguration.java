@@ -17,34 +17,24 @@
 
 package io.microsphere.spring.boot.test;
 
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
+import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-import java.util.Set;
+import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.REACTIVE;
 
 /**
- * {@link AutoConfigurationTest} Test for {@link HttpAutoConfiguration}
+ * Reactive Web Auto-Configuration for Spring Boot
  *
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see ConditionalOnWebApplication
  * @since 1.0.0
  */
-@SpringBootTest(
-        classes = HttpAutoConfigurationTest.class
-)
-public class HttpAutoConfigurationTest extends WebAutoConfigurationTest<HttpAutoConfiguration> {
-
-    @Override
-    protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
-        autoConfiguredClasses.add(CharacterEncodingFilter.class);
-    }
-
-    @Override
-    protected void configureGlobalDisabledPropertyValues(Set<String> globalDisabledPropertyValues) {
-        globalDisabledPropertyValues.add("server.http.enabled=false");
-    }
-
-    @Override
-    protected void configureGlobalMissingClasses(Set<Class<?>> globalMissingClasses) {
-        globalMissingClasses.add(CharacterEncodingFilter.class);
-    }
+@ConditionalOnWebApplication(type = REACTIVE)
+@ConditionalOnClass(value = JacksonProperties.class)
+@ConditionalOnProperty(name = "reactive.web-app.enabled", matchIfMissing = true)
+@EnableConfigurationProperties(value = JacksonProperties.class)
+public class ReactiveWebApplicationAutoConfiguration {
 }
