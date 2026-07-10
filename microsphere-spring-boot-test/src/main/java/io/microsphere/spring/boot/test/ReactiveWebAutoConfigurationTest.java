@@ -18,33 +18,17 @@
 package io.microsphere.spring.boot.test;
 
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.web.filter.CharacterEncodingFilter;
-
-import java.util.Set;
+import org.springframework.boot.test.context.runner.ReactiveWebApplicationContextRunner;
 
 /**
- * {@link AutoConfigurationTest} Test for {@link HttpAutoConfiguration}
+ * Abstract class for a Reactive based auto-configuration class tests
  *
+ * @param <A> the type of auto-configuration class
  * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @see AbstractAutoConfigurationTest
+ * @see ReactiveWebApplicationContextRunner
+ * @see SpringBootTest
  * @since 1.0.0
  */
-@SpringBootTest(
-        classes = HttpAutoConfigurationTest.class
-)
-public class HttpAutoConfigurationTest extends WebAutoConfigurationTest<HttpAutoConfiguration> {
-
-    @Override
-    protected void configureAutoConfiguredClasses(Set<Class<?>> autoConfiguredClasses) {
-        autoConfiguredClasses.add(CharacterEncodingFilter.class);
-    }
-
-    @Override
-    protected void configureGlobalDisabledPropertyValues(Set<String> globalDisabledPropertyValues) {
-        globalDisabledPropertyValues.add("server.http.enabled=false");
-    }
-
-    @Override
-    protected void configureGlobalMissingClasses(Set<Class<?>> globalMissingClasses) {
-        globalMissingClasses.add(CharacterEncodingFilter.class);
-    }
+public abstract class ReactiveWebAutoConfigurationTest<A> extends AbstractAutoConfigurationTest<A, ReactiveWebApplicationContextRunner> {
 }
