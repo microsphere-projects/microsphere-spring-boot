@@ -17,13 +17,10 @@
 
 package io.microsphere.spring.boot.test;
 
-import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
-import org.springframework.boot.autoconfigure.jmx.JmxProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.REACTIVE;
@@ -36,8 +33,8 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
  * @since 1.0.0
  */
 @ConditionalOnWebApplication(type = REACTIVE)
-@ConditionalOnClass(value = JmxProperties.class)
+@ConditionalOnClass(value = JacksonProperties.class)
 @ConditionalOnProperty(name = "reactive.web-app.enabled", matchIfMissing = true)
-@EnableConfigurationProperties(value = JmxProperties.class)
+@EnableConfigurationProperties(value = JacksonProperties.class)
 public class ReactiveWebApplicationAutoConfiguration {
 }
