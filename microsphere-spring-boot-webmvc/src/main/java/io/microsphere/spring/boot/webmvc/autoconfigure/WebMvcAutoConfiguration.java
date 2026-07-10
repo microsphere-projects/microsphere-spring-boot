@@ -25,7 +25,7 @@ import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationList
 import io.microsphere.spring.webmvc.interceptor.LoggingMethodHandlerInterceptor;
 import io.microsphere.spring.webmvc.interceptor.LoggingPageRenderContextHandlerInterceptor;
 import io.microsphere.spring.webmvc.method.support.LoggingHandlerMethodArgumentResolverAdvice;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
@@ -44,7 +44,7 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
  * @since 1.0.0
  */
 @ConditionalOnWebMvcAvailable
-@AutoConfiguration(afterName = {
+@AutoConfigureAfter(name = {
         "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration", // Spring Boot API [2.0, 4.0)
         "org.springframework.boot.webmvc.autoconfigure.WebMvcAutoConfiguration"       // Spring Boot API [4.0,)
 })
