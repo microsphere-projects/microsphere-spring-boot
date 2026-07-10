@@ -24,6 +24,7 @@ import io.microsphere.spring.webmvc.config.ConfigurableContentNegotiationManager
 import io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicationListener;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -39,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 @SpringBootTest(classes = {
         WebMvcAutoConfigurationTest.class
 })
+@EnableAutoConfiguration
 class WebMvcAutoConfigurationTest extends AbstractWebMvcAutoConfigurationTest {
 
     @Autowired

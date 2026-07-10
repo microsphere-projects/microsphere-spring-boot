@@ -54,7 +54,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
         TestController.class,           // Test Controller
         RouterFunctionTestConfig.class  // Test RouterFunction
 })
-@EnableAutoConfiguration
 class AbstractWebMvcAutoConfigurationTest {
 
     @Autowired
