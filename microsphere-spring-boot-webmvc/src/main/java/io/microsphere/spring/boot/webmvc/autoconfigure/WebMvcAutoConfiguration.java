@@ -43,7 +43,9 @@ import static io.microsphere.spring.webmvc.context.ExclusiveViewResolverApplicat
  * @since 1.0.0
  */
 @ConditionalOnWebMvcAvailable
-@AutoConfigureAfter(name = "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration") // Spring Boot API
+@AutoConfigureAfter(name = {
+        "org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration", // Spring Boot API [2.0, 4.0)
+})
 @EnableWebMvcExtension(
         registerHandlerInterceptors = true,
         reversedProxyHandlerMapping = true

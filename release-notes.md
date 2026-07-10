@@ -469,4 +469,31 @@ For more details on the changes, refer to the commit history.
 
 *No new features or bug fixes introduced in this release.*
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.29...0.1.30
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.29...0.1.30## v0.1.31
+
+# Release Notes for Version 0.1.31
+
+## New Features
+- Added Boot annotation processors to module POMs for enhanced configuration. (#85688dc)
+
+## Dependency Updates
+- Cleaned up POM dependencies and added annotation processor. (#18030e7)
+- Dropped JUnit 4 test dependencies in the `webmvc` module. (#b364b5e)
+
+## Test Improvements
+- Refactored auto-configuration tests for runner types. (#2c85736)
+- Used `JacksonProperties` in reactive test configuration. (#2a20d4b)
+- Used `CacheProperties` in reactive test configuration. (#b95650c)
+
+## Documentation
+- Updated README with the latest version numbers. (#5a9eb70)
+
+## Other Changes
+- Merged `release-1.x` branch into `dev-1.x`. (#5a3c44d)
+- Bumped version to next patch after publishing 0.1.30. (#0db762e)
+
+---
+
+For the full list of changes, refer to the commit history.
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.30...0.1.31
