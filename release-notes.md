@@ -465,4 +465,30 @@ For a complete list of changes, refer to the full changelog.
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.29...0.2.30
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.29...0.2.30## v0.2.31
+
+# Release Notes - Version 0.2.31
+
+## Test Improvements
+- Unified auto-configuration test runners and added reactive test cases. [eae9ade]
+- Scoped auto-configuration to concrete WebFlux tests. [c674539]
+- Scoped test auto-configuration using `AutoConfigureAfter`. [c60adc9]
+- Updated reactive test configuration class conditions. [e2f58c2]
+- Used `JmxProperties`, `JacksonProperties`, and `CacheProperties` in reactive auto-configuration tests for consistency. [d0f5320], [9fbeccc], [ec476bf], [8093e1b], [7d88e4f]
+- Removed unused imports from auto-configuration tests. [0580d72]
+
+## Dependency Updates
+- Added Boot processor dependencies to module POMs for better alignment. [6e5316e]
+- Aligned module POM dependencies and updated comments. [eff01fe]
+
+## Documentation
+- Updated `README` branch version matrix. [6989c9a]
+
+## Other Changes
+- Used string class names in WebMVC and WebFlux availability conditions for improved readability. [46215e7], [d610bc1]
+
+---
+
+*Full changelog between version 0.2.30 and 0.2.31 can be found [here](#).*
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.30...0.2.31
