@@ -18,7 +18,6 @@
 package io.microsphere.spring.boot.test;
 
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
-import org.springframework.boot.autoconfigure.web.ServerProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Set;
