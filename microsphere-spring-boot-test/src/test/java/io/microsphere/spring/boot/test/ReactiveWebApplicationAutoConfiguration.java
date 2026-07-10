@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.context.MessageSourceProperties;
 import org.springframework.boot.autoconfigure.jackson.JacksonProperties;
+import org.springframework.boot.autoconfigure.jmx.JmxProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type.REACTIVE;
@@ -35,8 +36,8 @@ import static org.springframework.boot.autoconfigure.condition.ConditionalOnWebA
  * @since 1.0.0
  */
 @ConditionalOnWebApplication(type = REACTIVE)
-@ConditionalOnClass(value = JacksonProperties.class)
+@ConditionalOnClass(value = JmxProperties.class)
 @ConditionalOnProperty(name = "reactive.web-app.enabled", matchIfMissing = true)
-@EnableConfigurationProperties(value = JacksonProperties.class)
+@EnableConfigurationProperties(value = JmxProperties.class)
 public class ReactiveWebApplicationAutoConfiguration {
 }
