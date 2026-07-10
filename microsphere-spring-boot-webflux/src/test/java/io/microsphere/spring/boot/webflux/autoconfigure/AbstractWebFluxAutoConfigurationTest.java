@@ -55,7 +55,6 @@ import static reactor.core.publisher.Mono.just;
         TestController.class,           // Test Controller
         RouterFunctionTestConfig.class  // Test RouterFunction
 })
-@EnableAutoConfiguration
 abstract class AbstractWebFluxAutoConfigurationTest {
 
     @Autowired
