@@ -27,7 +27,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- Microsphere Spring Boot -->
+        <!-- Microsphere Spring Boot Core -->
         <dependency>
             <groupId>io.github.microsphere-projects</groupId>
             <artifactId>microsphere-spring-boot-core</artifactId>
