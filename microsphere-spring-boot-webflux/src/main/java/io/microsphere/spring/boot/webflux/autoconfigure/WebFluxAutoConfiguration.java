@@ -19,7 +19,7 @@ package io.microsphere.spring.boot.webflux.autoconfigure;
 
 import io.microsphere.spring.boot.webflux.autoconfigure.condition.ConditionalOnWebFluxAvailable;
 import io.microsphere.spring.webflux.annotation.EnableWebFluxExtension;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 
 /**
  * MicroSphere Spring Boot WebMVC Auto-Configuration
@@ -30,7 +30,7 @@ import org.springframework.boot.autoconfigure.AutoConfiguration;
  * @since 1.0.0
  */
 @ConditionalOnWebFluxAvailable
-@AutoConfiguration(afterName = {
+@AutoConfigureAfter(name = {
         "org.springframework.boot.autoconfigure.web.reactive.WebFluxAutoConfiguration", // Spring Boot API [2.0, 4.0)
         "org.springframework.boot.webflux.autoconfigure.WebFluxAutoConfiguration"       // Spring Boot APP [4.0,)
 })
