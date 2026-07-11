@@ -496,4 +496,20 @@ For more details on the changes, refer to the commit history.
 
 For the full list of changes, refer to the commit history.
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.30...0.1.31
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.30...0.1.31## v0.1.32
+
+# Release Notes - Version 0.1.32  
+
+## Dependency Updates  
+- Bumped `microsphere-spring` to version `0.1.36`.  
+- Removed unused `java-core` dependency.  
+
+## Documentation  
+- Updated README version matrix for better clarity.  
+
+## Other Changes  
+- Merged `release-1.x` into `dev-1.x`.  
+
+---
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.31...0.1.32
