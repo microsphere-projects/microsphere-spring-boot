@@ -491,4 +491,21 @@ For a complete list of changes, refer to the full changelog.
 
 *Full changelog between version 0.2.30 and 0.2.31 can be found [here](#).*
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.30...0.2.31
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.30...0.2.31## v0.2.32
+
+# Release Notes for v0.2.32
+
+## Dependency Updates
+- Bumped `microsphere-spring` to `0.2.36`. [15604c7]
+- Removed unused `microsphere-java-core` dependency. [224f9e4]
+
+## Documentation
+- Updated `README` with the latest version numbers. [b4721a1]
+
+## Build and Workflow Enhancements
+- Used `AutoConfigureAfter` for WebFlux configuration. [908b866]
+- Updated `pom.xml` configuration. [3d4ae7a]
+- Merged main into release branches (`[skip ci]`). [9de94a7, cc4d2fc, 40805ba, 39e1fbe]
+- Bumped version to the next patch after publishing `0.2.31`. [143d3f6]
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.31...0.2.32
