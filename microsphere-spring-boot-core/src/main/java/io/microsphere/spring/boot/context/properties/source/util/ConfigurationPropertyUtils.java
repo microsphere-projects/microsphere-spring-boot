@@ -112,8 +112,8 @@ public abstract class ConfigurationPropertyUtils {
      */
     @Nonnull
     public static String getSource(ConfigurationPropertyName name) {
-        Object elements = getFieldValue(name, "elements");
-        return getFieldValue(elements, "source");
+        Object elements = getFieldValue(true, name, "elements");
+        return getFieldValue(true, elements, "source");
     }
 
     /**
