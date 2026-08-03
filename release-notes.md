@@ -512,4 +512,20 @@ For the full list of changes, refer to the commit history.
 
 ---
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.31...0.1.32
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.31...0.1.32## v0.1.33
+
+_Release notes generation failed. Raw commits since 0.1.32:_
+
+```
+42ed506 Update version numbers in README.md
+313c252 Merge pull request #150 from mercyblitz/dev-1.x
+c2a6180 Adapt reflection calls to force-access overloads
+670d690 Bump microsphere-spring to 0.1.38
+189c657 Update pom.xml
+b41bec6 Bump microsphere-build parent to 0.3.11
+e4b73d0 Update pom.xml
+ecd3516 chore: merge release-1.x into dev-1.x [skip ci]
+38c2bfc chore: bump version to next patch after publishing 0.1.32
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.32...0.1.33
