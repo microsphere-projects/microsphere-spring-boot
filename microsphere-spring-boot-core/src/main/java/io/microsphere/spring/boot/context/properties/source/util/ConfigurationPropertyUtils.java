@@ -120,8 +120,8 @@ public abstract class ConfigurationPropertyUtils {
      */
     @Nonnull
     public static String getSource(ConfigurationPropertyName name) {
-        Object elements = getFieldValue(name, "elements");
-        return getFieldValue(elements, "source");
+        Object elements = getFieldValue(true, name, "elements");
+        return getFieldValue(true, elements, "source");
     }
 
     /**
@@ -203,12 +203,12 @@ public abstract class ConfigurationPropertyUtils {
         ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
 
         doWithFields(valueClass, valueField -> {
-            Object beanProperty = getFieldValue(value, valueField);
+            Object beanProperty = getFieldValue(true, value, valueField);
             if (beanProperty != null) {
                 doWithFields(BEAN_PROPERTY_CLASS, f -> {
-                    Object fieldValue = getFieldValue(beanProperty, f);
+                    Object fieldValue = getFieldValue(true, beanProperty, f);
                     Field targetField = findField(property, f.getName());
-                    setFieldValue(property, targetField, fieldValue);
+                    setFieldValue(true, property, targetField, fieldValue);
                 });
             }
         }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
