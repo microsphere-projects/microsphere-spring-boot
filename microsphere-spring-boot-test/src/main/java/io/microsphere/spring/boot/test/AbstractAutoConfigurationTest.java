@@ -31,9 +31,9 @@ import org.springframework.core.ResolvableType;
 import java.util.Set;
 
 import static io.microsphere.collection.SetUtils.newLinkedHashSet;
+import static io.microsphere.reflect.ConstructorUtils.newInstance;
 import static io.microsphere.text.FormatUtils.format;
 import static io.microsphere.util.ArrayUtils.EMPTY_CLASS_ARRAY;
-import static io.microsphere.util.ClassUtils.newInstance;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
