@@ -430,7 +430,7 @@ class ConfigurationPropertiesBeanContext {
      */
     static Object clone(Object value) {
         if (value instanceof Cloneable) {
-            value = invokeMethod(value, "clone");
+            value = invokeMethod(true, value, "clone");
         }
         return value;
     }

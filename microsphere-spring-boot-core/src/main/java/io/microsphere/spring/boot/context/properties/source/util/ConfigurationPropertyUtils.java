@@ -169,12 +169,12 @@ public abstract class ConfigurationPropertyUtils {
         ConfigurationPropertiesBeanProperty property = new ConfigurationPropertiesBeanProperty();
 
         doWithFields(valueClass, valueField -> {
-            Object beanProperty = getFieldValue(value, valueField);
+            Object beanProperty = getFieldValue(true, value, valueField);
             if (beanProperty != null) {
                 doWithFields(BEAN_PROPERTY_CLASS, f -> {
-                    Object fieldValue = getFieldValue(beanProperty, f);
+                    Object fieldValue = getFieldValue(true, beanProperty, f);
                     Field targetField = findField(property, f.getName());
-                    setFieldValue(property, targetField, fieldValue);
+                    setFieldValue(true, property, targetField, fieldValue);
                 });
             }
         }, f -> BEAN_PROPERTY_CLASS.equals(f.getType()));
