@@ -19,7 +19,6 @@ package io.microsphere.spring.boot.context.properties.bind;
 import io.microsphere.annotation.Nonnull;
 import io.microsphere.annotation.Nullable;
 import io.microsphere.logging.Logger;
-import io.microsphere.reflect.FieldUtils;
 import io.microsphere.reflect.MemberUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -49,7 +48,7 @@ import static io.microsphere.constants.SymbolConstants.DOT_CHAR;
 import static io.microsphere.lang.function.ThrowableSupplier.execute;
 import static io.microsphere.logging.LoggerFactory.getLogger;
 import static io.microsphere.reflect.FieldUtils.findAllDeclaredFields;
-import static io.microsphere.reflect.FieldUtils.findField;
+import static io.microsphere.reflect.FieldUtils.getFieldValue;
 import static io.microsphere.reflect.MethodUtils.invokeMethod;
 import static io.microsphere.spring.boot.context.properties.bind.util.BindUtils.getBindConstructor;
 import static io.microsphere.spring.boot.context.properties.source.util.ConfigurationPropertyUtils.getParent;
@@ -369,7 +368,7 @@ class ConfigurationPropertiesBeanContext {
         if (instance == null) {
             return null;
         }
-        return getFieldValue(instance, field);
+        return getFieldValue(true, instance, field);
     }
 
     ConfigurationPropertiesBeanProperty getProperty(ConfigurationPropertyName propertyName) {
@@ -430,7 +429,7 @@ class ConfigurationPropertiesBeanContext {
      */
     static Object clone(Object value) {
         if (value instanceof Cloneable) {
-            value = invokeMethod(value, "clone");
+            value = invokeMethod(true, value, "clone");
         }
         return value;
     }
@@ -499,30 +498,15 @@ class ConfigurationPropertiesBeanContext {
         }
         int index = nestedPath.indexOf(DOT_CHAR);
         if (index == -1) {
-            return getFieldValue(bean, nestedPath);
+            return getFieldValue(true, bean, nestedPath);
         }
         String fieldName = nestedPath.substring(0, index);
-        Object instance = getFieldValue(bean, fieldName);
+        Object instance = getFieldValue(true, bean, fieldName);
         if (instance == null) {
             return null;
         }
         String subNestedPath = nestedPath.substring(index + 1);
-        return getFieldValue(instance, subNestedPath);
-    }
-
-    static Object getFieldValue(Object instance, String fieldName) {
-        Field field = findField(instance, fieldName);
-        return getFieldValue(instance, field);
-    }
-
-    static Object getFieldValue(Object instance, Field field) {
-        Object fieldValue = FieldUtils.getFieldValue(instance, field);
-        if (fieldValue == null) {
-            if (logger.isTraceEnabled()) {
-                logger.trace("The field['{}'] value can't be found in the instance : '{}'", field, instance);
-            }
-        }
-        return clone(fieldValue);
+        return getFieldValue(true, instance, subNestedPath);
     }
 
     static String buildPropertyPath(String propertyName, @Nullable String nestedPath) {

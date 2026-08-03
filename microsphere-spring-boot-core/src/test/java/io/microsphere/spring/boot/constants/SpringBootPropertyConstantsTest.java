@@ -39,7 +39,7 @@ class SpringBootPropertyConstantsTest {
         assertEquals("spring.autoconfigure.exclude", SPRING_AUTO_CONFIGURE_EXCLUDE_PROPERTY_NAME);
 
         assertEquals("configurationProperties", ATTACHED_PROPERTY_SOURCE_NAME);
-        assertEquals(getStaticFieldValue(ConfigurationPropertySources.class, "ATTACHED_PROPERTY_SOURCE_NAME"), ATTACHED_PROPERTY_SOURCE_NAME);
+        assertEquals(getStaticFieldValue(true, ConfigurationPropertySources.class, "ATTACHED_PROPERTY_SOURCE_NAME"), ATTACHED_PROPERTY_SOURCE_NAME);
     }
 
 }
