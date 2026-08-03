@@ -508,4 +508,28 @@ For a complete list of changes, refer to the full changelog.
 - Merged main into release branches (`[skip ci]`). [9de94a7, cc4d2fc, 40805ba, 39e1fbe]
 - Bumped version to the next patch after publishing `0.2.31`. [143d3f6]
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.31...0.2.32
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.31...0.2.32## v0.2.33
+
+_Release notes generation failed. Raw commits since 0.2.32:_
+
+```
+67cce51 Update README.md
+dab585a chore: merge main into release [skip ci]
+3d3d7ac Merge pull request #149 from microsphere-projects/dependabot/maven/org.junit-junit-bom-6.1.2
+7647ae6 chore: merge main into release [skip ci]
+397a08d Unify reflective field reads in property utils
+ae15eb8 Fix reflective access to non-public members
+552c9e2 Update AbstractAutoConfigurationTest.java
+c6c210e chore: merge main into release [skip ci]
+8a76dff Bump microsphere-spring to 0.2.37
+5d1238a Bump microsphere-build parent to 0.3.11
+0fb744d chore: merge main into release [skip ci]
+9600fc0 Bump JUnit Jupiter to 6.1.2
+dad7f22 chore: merge main into release [skip ci]
+230b775 Update pom.xml
+881b504 Bump org.junit:junit-bom from 6.1.1 to 6.1.2
+604286c chore: merge release into main [skip ci]
+b7a0314 chore: bump version to next patch after publishing 0.2.32
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.32...0.2.33
