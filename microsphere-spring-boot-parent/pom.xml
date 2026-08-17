@@ -20,7 +20,7 @@
 
     <properties>
         <microsphere-spring.version>0.2.38</microsphere-spring.version>
-        <jolokia.version>2.6.0</jolokia.version>
+        <jolokia.version>2.6.1</jolokia.version>
         <!-- Testing -->
         <junit-jupiter.version>6.1.2</junit-jupiter.version>
     </properties>
