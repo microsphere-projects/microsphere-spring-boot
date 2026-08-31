@@ -528,4 +528,20 @@ ecd3516 chore: merge release-1.x into dev-1.x [skip ci]
 38c2bfc chore: bump version to next patch after publishing 0.1.32
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.32...0.1.33
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.32...0.1.33## v0.1.34
+
+_Release notes generation failed. Raw commits since 0.1.33:_
+
+```
+072a7b1 Update version numbers in README.md
+8ba7861 Merge pull request #155 from mercyblitz/dev-1.x
+252a969 Bump microsphere-spring to 0.1.39
+91d4afd Bump microsphere-build to 0.3.14
+4efe59a Invoke legacy starting() in adapter hook
+054d852 Bump microsphere-build parent to 0.3.12
+7b9909b Add workflow to sync fork branches upstream
+7721595 chore: merge release-1.x into dev-1.x [skip ci]
+3568e4a chore: bump version to next patch after publishing 0.1.33
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.1.33...0.1.34
