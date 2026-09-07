@@ -532,4 +532,33 @@ dad7f22 chore: merge main into release [skip ci]
 b7a0314 chore: bump version to next patch after publishing 0.2.32
 ```
 
-**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.32...0.2.33
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.32...0.2.33## v0.2.34
+
+_Release notes generation failed. Raw commits since 0.2.33:_
+
+```
+978a187 Update version numbers in README.md
+023be18 chore: merge main into release [skip ci]
+ad192ff Bump Spring Boot versions
+b059adf Bump microsphere-spring to 0.2.39
+f0f0272 chore: merge main into release [skip ci]
+8ba0540 chore: merge main into release [skip ci]
+a4a0823 chore: merge main into release [skip ci]
+cda4529 Merge pull request #154 from microsphere-projects/dependabot/maven/org.springframework.boot-spring-boot-dependencies-4.1.1
+57596c7 Merge pull request #152 from microsphere-projects/dependabot/maven/org.apache.maven-apache-maven-3.9.16
+2938aa3 Merge pull request #153 from microsphere-projects/dependabot/maven/org.jolokia-jolokia-core-2.6.1
+8599ce5 chore: merge main into release [skip ci]
+07daf5c Merge pull request #151 from microsphere-projects/dependabot/maven/org.junit-junit-bom-6.1.3
+891afb6 chore: merge main into release [skip ci]
+99e8344 Bump microsphere-build parent version
+5dafe37 Bump org.springframework.boot:spring-boot-dependencies
+76e884e Bump org.jolokia:jolokia-core from 2.6.0 to 2.6.1
+5eeb665 Bump org.apache.maven:apache-maven from 3.9.15 to 3.9.16
+d294e6e chore: merge main into release [skip ci]
+6f2b98f Bump microsphere-build parent to 0.3.12
+8d8eaca Bump org.junit:junit-bom from 6.1.2 to 6.1.3
+1805f92 chore: merge release into main [skip ci]
+30fa88e chore: bump version to next patch after publishing 0.2.33
+```
+
+**Full Changelog**: https://github.com/microsphere-projects/microsphere-spring-boot/compare/0.2.33...0.2.34
