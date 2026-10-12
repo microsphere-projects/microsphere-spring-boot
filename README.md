@@ -29,6 +29,7 @@ multi-module Maven project that follows Spring Boot's conventions while providin
     - [Actuator Endpoints](#actuator-endpoints)
     - [Monitored Task Scheduler](#monitored-task-scheduler)
     - [Classpath Artifact Detection](#classpath-artifact-detection)
+- [Documentation](#documentation)
 - [Building from Source](#building-from-source)
 - [Getting Help](#getting-help)
 - [Contributing](#contributing)
@@ -246,6 +247,27 @@ The collision detector (`ArtifactsCollisionDiagnosisListener`) also checks for d
 and raises `ArtifactsCollisionException` with full classpath details so you can fix the conflict before the application
 reaches production.
 
+## Documentation
+
+The full documentation set lives in [`docs/`](./docs/README.md). It is organised by audience, then by maintained
+release branch, then by Maven module, and is published in English (default) and Chinese:
+
+| Document | English | 中文 |
+|---|---|---|
+| Documentation home (index of everything) | [docs/README.md](./docs/README.md) | [中文](./docs/zh/README.md) |
+| **User Guide** — per-module API, code examples, version and compatibility ranges | [docs/user-guide/README.md](./docs/user-guide/README.md) | [中文](./docs/user-guide/zh/README.md) |
+| **Developer Guide** — architecture, source analysis, design patterns, flow diagrams, build and release pipeline | [docs/developer-guide/README.md](./docs/developer-guide/README.md) | [中文](./docs/developer-guide/zh/README.md) |
+
+Inside each guide, the branch directories are:
+
+| Branch | Version line | Spring Boot | User Guide | Developer Guide |
+|---|---|---|---|---|
+| `release` | `0.2.x` | 3.0 – 4.1 | [current/](./docs/user-guide/current/README.md) | [current/](./docs/developer-guide/current/README.md) |
+| `release-1.x` | `0.1.x` | 2.1 – 2.7 | [1.x/](./docs/user-guide/1.x/README.md) | [1.x/](./docs/developer-guide/1.x/README.md) |
+
+`docs/` documents the two maintained release branches; this README describes the `main` branch, and
+[user-guide.md](./user-guide.md) is the single-file quick guide for the current code line.
+
 ## Building from Source
 
 You don't need to build from source unless you want to try out the latest code or contribute to the project.
@@ -286,6 +308,8 @@ cd microsphere-spring-boot
 | **User Guide (DeepWiki)** | https://deepwiki.com/microsphere-projects/microsphere-spring-boot      |
 | **User Guide (ZRead)**    | https://zread.ai/microsphere-projects/microsphere-spring-boot          |
 | **User Guide (Github)**   | [User Guide](./user-guide.md)                                          |
+| **User Guide (by branch)**| [docs/user-guide](./docs/user-guide/README.md) · [中文](./docs/user-guide/zh/README.md) |
+| **Developer Guide**       | [docs/developer-guide](./docs/developer-guide/README.md) · [中文](./docs/developer-guide/zh/README.md) |
 | **GitHub Wiki**           | https://github.com/microsphere-projects/microsphere-spring-boot/wiki   |
 | **Issue Tracker**         | https://github.com/microsphere-projects/microsphere-spring-boot/issues |
 
