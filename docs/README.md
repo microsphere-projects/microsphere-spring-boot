@@ -15,9 +15,20 @@ languages.
 |---|---|---|---|
 | User Guide | [`user-guide/`](./user-guide/README.md) · [中文](./user-guide/zh/README.md) | Application and library users | Per-module API explanations, runnable code examples taken from the modules' test cases, installation snippets, property reference tables, version and compatibility ranges |
 | Developer Guide | [`developer-guide/`](./developer-guide/README.md) · [中文](./developer-guide/zh/README.md) | Contributors and maintainers | Package layout, source analysis of the load-bearing classes, design patterns, Mermaid flow/sequence diagrams of the startup and runtime paths, build system, CI and release pipeline, contribution recipes |
+| Source Diff | [`diff/source/`](#source-diff-reports) | Contributors and maintainers | Module-by-module source comparisons between the two version lines (per tag pair or branch pair), `src/main` and `src/test` reported separately, with the cause of each difference explained |
 
 Each set contains one directory per branch and one file per Maven module, mirrored in Chinese under a `zh/`
 sub-directory.
+
+### Source diff reports
+
+| Comparison | Scope | English | 中文 |
+|---|---|---|---|
+| Tags `0.2.34` vs `0.1.34` | `src/main` | [`diff/source/main-diff-0.2.34-vs-0.1.34.md`](./diff/source/main-diff-0.2.34-vs-0.1.34.md) | [中文](./diff/source/zh/main-diff-0.2.34-vs-0.1.34.md) |
+| Tags `0.2.34` vs `0.1.34` | `src/test` | [`diff/source/test-diff-0.2.34-vs-0.1.34.md`](./diff/source/test-diff-0.2.34-vs-0.1.34.md) | [中文](./diff/source/zh/test-diff-0.2.34-vs-0.1.34.md) |
+
+All reports exclude Java 8 vs Java 17 syntax/API differences and Java EE vs Jakarta EE API differences, and ignore
+modules that do not match by name between the two sides.
 
 ---
 
