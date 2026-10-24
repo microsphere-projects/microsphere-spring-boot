@@ -187,7 +187,7 @@ Bean 方法与嵌套块：
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX` | `38` | `microsphere.spring.boot.webmvc.` | — | 命名空间根 |
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME` | `63-68` | `microsphere.spring.boot.webmvc.enabled` | `true`（`:43`） | `ConditionalOnWebMvcAvailable.java:54` |
 | `FILTER_PROPERTY_NAME_PREFIX` | `73` | `microsphere.spring.boot.webmvc.filter.` | — | 子命名空间 |
-| `MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME` | `78-83` | `microsphere.spring.boot.webmvc.filter.enabled` | `true`（`:48`） | `WebMvcAutoConfiguration.java:60` |
+| `MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED_PROPERTY_NAME` | `78-83` | `microsphere.spring.boot.webmvc.filter.enabled` | `true`（`:48`） | `WebMvcAutoConfiguration.java:60` |
 | `LOGGING_PROPERTY_NAME_PREFIX` | `105` | `microsphere.spring.boot.webmvc.logging.` | — | 子命名空间 |
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENALBED_PROPERTY_NAME` | `110-115` | `microsphere.spring.boot.webmvc.logging.enabled` | `true`（`:53`） | `WebMvcAutoConfiguration.java:78` |
 | `CONTENT_NEGOTIATION_PROPERTY_NAME_PREFIX` | `90` | `microsphere.spring.webmvc.content-negotiation.` | — | 子命名空间，*非 boot* |
