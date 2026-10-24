@@ -68,5 +68,8 @@ compiler/.gradle/*
 # vscode
 .vscode/
 
+# sonar
+.sonar/
+
 # others
 build.txt
