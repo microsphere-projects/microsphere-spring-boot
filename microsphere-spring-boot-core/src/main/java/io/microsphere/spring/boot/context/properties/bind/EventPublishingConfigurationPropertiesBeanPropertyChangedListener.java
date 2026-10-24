@@ -70,8 +70,7 @@ public class EventPublishingConfigurationPropertiesBeanPropertyChangedListener i
      */
     @Override
     public <T> void onStart(ConfigurationPropertyName name, Bindable<T> target, BindContext context) {
-        if (isBound()) {
-        } else {
+        if (!isBound()) {
             initConfigurationPropertiesBeanContext(name, target, context);
         }
     }
