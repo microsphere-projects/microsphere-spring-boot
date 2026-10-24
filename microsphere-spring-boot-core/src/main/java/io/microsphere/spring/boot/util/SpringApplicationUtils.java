@@ -167,24 +167,12 @@ public abstract class SpringApplicationUtils implements Utils {
         String level = getLoggingLevel(context);
 
         switch (level) {
-            case "TRACE" -> {
-                if (logger.isTraceEnabled()) {
-                    logger.trace(messagePattern, arguments);
-                }
-            }
-            case "DEBUG" -> {
-                if (logger.isDebugEnabled()) {
-                    logger.debug(messagePattern, arguments);
-                }
-            }
+            case "TRACE" -> logger.trace(messagePattern, arguments);
+            case "DEBUG" -> logger.debug(messagePattern, arguments);
             case "INFO" -> logger.info(messagePattern, arguments);
             case "WARN" -> logger.warn(messagePattern, arguments);
             case "ERROR" -> logger.error(messagePattern, arguments);
-            default -> {
-                if (logger.isTraceEnabled()) {
-                    logger.trace("The logger is off");
-                }
-            }
+            default -> logger.trace("The logger is off");
         }
     }
 
