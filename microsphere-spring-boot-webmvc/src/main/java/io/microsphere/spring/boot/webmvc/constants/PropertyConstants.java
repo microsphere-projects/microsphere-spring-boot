@@ -80,7 +80,7 @@ public interface PropertyConstants {
             defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED,
             source = APPLICATION_SOURCE
     )
-    String MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME = FILTER_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
+    String MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED_PROPERTY_NAME = FILTER_PROPERTY_NAME_PREFIX + ENABLED_PROPERTY_NAME;
 
     /**
      * The property name prefix of Microsphere Spring Web MVC Content Negotiation : "microsphere.spring.webmvc.content-negotiation."

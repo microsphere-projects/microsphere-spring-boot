@@ -405,7 +405,7 @@ void assertContentNegotiationManager(ContentNegotiationManager contentNegotiatio
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_PROPERTY_NAME_PREFIX` | `microsphere.spring.boot.webmvc.` |
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_ENALBED_PROPERTY_NAME` | `microsphere.spring.boot.webmvc.enabled` |
 | `FILTER_PROPERTY_NAME_PREFIX` | `microsphere.spring.boot.webmvc.filter.` |
-| `MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENALBED_PROPERTY_NAME` | `microsphere.spring.boot.webmvc.filter.enabled` |
+| `MICROSPHERE_SPRING_BOOT_WEBMVC_FILTER_ENABLED_PROPERTY_NAME` | `microsphere.spring.boot.webmvc.filter.enabled` |
 | `LOGGING_PROPERTY_NAME_PREFIX` | `microsphere.spring.boot.webmvc.logging.` |
 | `MICROSPHERE_SPRING_BOOT_WEBMVC_LOGGING_ENALBED_PROPERTY_NAME` | `microsphere.spring.boot.webmvc.logging.enabled` |
 | `CONTENT_NEGOTIATION_PROPERTY_NAME_PREFIX` | `microsphere.spring.webmvc.content-negotiation.` |
