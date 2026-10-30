@@ -239,71 +239,287 @@ public enum SpringBootVersion {
 
     private final Version version;
 
+    /**
+     * Creates a new instance of {@link SpringBootVersion} with the resolved version from enumeration name.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion current = SpringBootVersion.CURRENT;
+     *   System.out.println("Current version: " + current.getVersion());
+     * }</pre>
+     */
     SpringBootVersion() {
         this.version = resolveVersion(name());
     }
 
+    /**
+     * Creates a new instance of {@link SpringBootVersion} with the specified version.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v = of("3.0.0");
+     *   SpringBootVersion springBootVersion = new SpringBootVersion(v);
+     *   System.out.println("Version: " + springBootVersion.getVersion());
+     * }</pre>
+     *
+     * @param version the version to set, not null
+     */
     SpringBootVersion(Version version) {
         this.version = version;
     }
 
+    /**
+     * Resolves a version string from the enumeration name by extracting the version part
+     * after removing the "SPRING_BOOT_" or "CURRENT" prefix and converting underscores to dots.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   Version v1 = SpringBootVersion.resolveVersion("SPRING_BOOT_3_0_0"); // 3.0.0
+     *   Version v2 = SpringBootVersion.resolveVersion("SPRING_BOOT_3_1_2"); // 3.1.2
+     * }</pre>
+     *
+     * @param name the enumeration name (e.g., "SPRING_BOOT_3_0_0" or "CURRENT")
+     * @return the resolved {@link Version} object
+     */
     static Version resolveVersion(String name) {
         String version = name.substring(12).replace(UNDER_SCORE_CHAR, DOT_CHAR);
         return of(version);
     }
 
+    /**
+     * Returns the underlying {@link Version} object representing the Spring Boot version.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion version = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   Version v = version.getVersion();
+     *   System.out.println("Major: " + v.getMajor()); // 3
+     *   System.out.println("Minor: " + v.getMinor()); // 0
+     *   System.out.println("Patch: " + v.getPatch()); // 0
+     * }</pre>
+     *
+     * @return the version object, never null
+     */
     public Version getVersion() {
         return version;
     }
 
+    /**
+     * Returns the major version number (e.g., 3 for version 3.0.0).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v = SpringBootVersion.SPRING_BOOT_3_2_1;
+     *   int major = v.getMajor(); // returns 3
+     *   if (major >= 3) {
+     *       // Use Spring Boot 3+ features
+     *   }
+     * }</pre>
+     *
+     * @return the major version number
+     */
     public int getMajor() {
         return version.getMajor();
     }
 
+    /**
+     * Returns the minor version number (e.g., 2 for version 3.2.1).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v = SpringBootVersion.SPRING_BOOT_3_2_1;
+     *   int minor = v.getMinor(); // returns 2
+     * }</pre>
+     *
+     * @return the minor version number
+     */
     public int getMinor() {
         return version.getMinor();
     }
 
+    /**
+     * Returns the patch/fix version number (e.g., 1 for version 3.2.1).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v = SpringBootVersion.SPRING_BOOT_3_2_1;
+     *   int patch = v.getPatch(); // returns 1
+     * }</pre>
+     *
+     * @return the patch version number
+     */
     public int getPatch() {
         return version.getPatch();
     }
 
+    /**
+     * Checks if this version is greater than the given version using strict comparison (> operator).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_1_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   boolean result = v1.gt(v2); // true, 3.1.0 > 3.0.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is strictly greater than the given version
+     */
     public boolean gt(SpringBootVersion that) {
         return version.gt(that.version);
     }
 
+    /**
+     * Checks if this version is greater than the given version using strict comparison (> operator).
+     * This is an alias for {@link #gt(SpringBootVersion)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_2_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_2_0;
+     *   boolean isGreaterThan = v1.isGreaterThan(v2); // false, 3.2.0 is not greater than 3.2.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is strictly greater than the given version
+     */
     public boolean isGreaterThan(SpringBootVersion that) {
         return version.isGreaterThan(that.version);
     }
 
+    /**
+     * Checks if this version is greater than or equal to the given version using non-strict comparison (>= operator).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_1_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   boolean result = v1.ge(v2); // true, 3.1.0 >= 3.0.0
+     *   boolean sameResult = v1.ge(v1); // true, 3.1.0 >= 3.1.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is greater than or equal to the given version
+     */
     public boolean ge(SpringBootVersion that) {
         return version.ge(that.version);
     }
 
+    /**
+     * Checks if this version is greater than or equal to the given version using non-strict comparison (>= operator).
+     * This is an alias for {@link #ge(SpringBootVersion)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion current = SpringBootVersion.CURRENT;
+     *   boolean supportsNewFeatures = current.isGreaterOrEqual(SpringBootVersion.SPRING_BOOT_3_0_0);
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is greater than or equal to the given version
+     */
     public boolean isGreaterOrEqual(SpringBootVersion that) {
         return version.isGreaterOrEqual(that.version);
     }
 
+    /**
+     * Checks if this version is less than the given version using strict comparison (< operator).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_1_0;
+     *   boolean result = v1.lt(v2); // true, 3.0.0 < 3.1.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is strictly less than the given version
+     */
     public boolean lt(SpringBootVersion that) {
         return version.lt(that.version);
     }
 
+    /**
+     * Checks if this version is less than the given version using strict comparison (< operator).
+     * This is an alias for {@link #lt(SpringBootVersion)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion oldVersion = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   boolean isOld = oldVersion.isLessThan(SpringBootVersion.SPRING_BOOT_3_1_0); // true
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is strictly less than the given version
+     */
     public boolean isLessThan(SpringBootVersion that) {
         return version.isLessThan(that.version);
     }
 
+    /**
+     * Checks if this version is less than or equal to the given version using non-strict comparison (<= operator).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_1_0;
+     *   boolean result1 = v1.le(v2); // true, 3.0.0 <= 3.1.0
+     *   boolean result2 = v1.le(v1); // true, 3.0.0 <= 3.0.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is less than or equal to the given version
+     */
     public boolean le(SpringBootVersion that) {
         return version.le(that.version);
     }
 
+    /**
+     * Checks if this version is less than or equal to the given version using non-strict comparison (<= operator).
+     * This is an alias for {@link #le(SpringBootVersion)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion requiredMin = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   boolean meetsMinimum = SpringBootVersion.CURRENT.le(requiredMin);
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is less than or equal to the given version
+     */
     public boolean isLessOrEqual(SpringBootVersion that) {
         return version.isLessOrEqual(that.version);
     }
 
+    /**
+     * Checks if this version is equal to the given version using exact comparison (== operator).
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion v1 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   SpringBootVersion v2 = SpringBootVersion.SPRING_BOOT_3_0_0;
+     *   boolean result = v1.eq(v2); // true, both are 3.0.0
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is equal to the given version
+     */
     public boolean eq(SpringBootVersion that) {
         return version.eq(that.version);
     }
 
+    /**
+     * Checks if this version is equal to the given version. This is an alias for {@link #eq(SpringBootVersion)}.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   SpringBootVersion target = SpringBootVersion.SPRING_BOOT_3_2_0;
+     *   boolean matches = SpringBootVersion.SPRING_BOOT_3_2_0.equals(target); // true
+     * }</pre>
+     *
+     * @param that the version to compare against, not null
+     * @return true if this version is equal to the given version
+     */
     public boolean equals(SpringBootVersion that) {
         return version.equals(that.version);
     }
