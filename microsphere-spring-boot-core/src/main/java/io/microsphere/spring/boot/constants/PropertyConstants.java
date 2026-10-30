@@ -30,17 +30,52 @@ import static io.microsphere.spring.constants.PropertyConstants.MICROSPHERE_SPRI
 public interface PropertyConstants {
 
     /**
-     * The property name prefix of Microsphere Spring Boot : "microsphere.spring.boot."
+     * The property name prefix of Microsphere Spring Boot: {@code "microsphere.spring.boot."}.
+     * All Microsphere-specific configuration properties should be prefixed with this value.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // In application.properties or application.yml
+     *   microsphere.spring.boot.logging.level=DEBUG
+     *   microsphere.spring.autoconfigure.exclude=com.example.MyConfig
+     * }</pre>
+     * or programmatically:
+     * <pre>{@code
+     *   String prefix = PropertyConstants.MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX;
+     *   String propertyName = prefix + "logging.level";
+     * }</pre>
      */
     String MICROSPHERE_SPRING_BOOT_PROPERTY_NAME_PREFIX = MICROSPHERE_SPRING_PROPERTY_NAME_PREFIX + "boot.";
 
     /**
-     * The default value of Microsphere Spring Boot logging level : "TRACE"
+     * The default value of Microsphere Spring Boot logging level: {@code "TRACE"}.
+     * This constant is used as the default when configuring the logging level for
+     * Microsphere Spring Boot components.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   System.out.println("Default logging level: " + PropertyConstants.DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL);
+     *   // Output: Default logging level: TRACE
+     * }</pre>
      */
     String DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL = "TRACE";
 
     /**
-     * The property name of Microsphere Spring Boot logging level
+     * The property name of Microsphere Spring Boot logging level:
+     * {@code "microsphere.spring.boot.logging.level"}.
+     * Configuring this property allows you to set the logging level for Microsphere Spring Boot components.
+     *
+     * <h3>Example Usage</h3>
+     * <pre>{@code
+     *   // In application.properties or application.yml
+     *   microsphere.spring.boot.logging.level=DEBUG
+     * }</pre>
+     * or programmatically:
+     * <pre>{@code
+     *   System.setProperty(PropertyConstants.MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL_PROPERTY_NAME, "INFO");
+     * }</pre>
+     *
+     * @see #DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL
      */
     @ConfigurationProperty(
             defaultValue = DEFAULT_MICROSPHERE_SPRING_BOOT_LOGGING_LEVEL,
